@@ -1,0 +1,39 @@
+# ============================================================
+# NewsSpike_Bot .gitignore
+# ============================================================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# MQL5 / MetaTrader 5
+*.ex5
+*.bak
+tester/
+
+# Backtest results
+tests/backtest_results/*.html
+tests/backtest_results/*.xml
+tests/backtest_results/*.gif
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS (Windows)
+Thumbs.db
+ehthumbs.db
+Desktop.ini

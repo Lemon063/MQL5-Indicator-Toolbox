@@ -1,22 +1,16 @@
 # CHANGELOG_ATR.md
 
+## v1.1 — 2026-04
+- 修正：`#pragma once` 改為 MQL5 標準 `#ifndef` include guard
+
 ## v1.2 — 2026-04
 - 修正根本 bug：`GetATR()` 唔再自己建立同釋放 handle
 - 新增 `CreateATRHandle()` — caller 喺 `OnInit()` 調用一次
 - 新增 `ReleaseATRHandle()` — caller 喺 `OnDeinit()` 調用
 - `GetATR()` 改為接受 handle 作第一個參數
-- 所有衍生 functions 同步更新 signature
-- `ATR.mq5`：加入 `g_atrHandle`，`OnInit()` 建立，`OnDeinit()` 釋放
-
-## v1.3 — 2026-04
-- 修正：`PERIOD_M5` 寫死改為 `PERIOD_CURRENT`
-- MT5 唔接受 indicator TF 同 chart TF 不一致，會強制 remove 再 reload
-- `PERIOD_CURRENT` = 跟 chart TF：attach M5 → 計 M5 ATR，attach H1 → 計 H1 ATR
-- Journal print 加入 TF 顯示，方便 verify
-- `ATR.mq5` version 改為 1.20
-
-## v1.1 — 2026-04
-- 修正：`#pragma once` 改為 MQL5 標準 `#ifndef` include guard
+- 所有衍生 functions（`GetATRPips`, `GetSL_ATR`, `GetSL_ATR_Pips`, `GetEffectiveSL_Pips`, `GetTrailingStop_ATR`, `GetFibProximityThreshold`）同步更新 signature
+- `ATR.mq5`：加入 `g_atrHandle` global variable，`OnInit()` 建立，`OnDeinit()` 釋放
+- `ATR.mq5`：version 改為 1.10
 
 ## v1.0 — 2026-04
 - 初版

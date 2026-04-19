@@ -5,7 +5,8 @@
 //|  冇圖表輸出，冇事件函數 No chart output, no event functions        |
 //|  #include <Toolbox/Stochastic.mqh>                               |
 //+------------------------------------------------------------------+
-#pragma once
+#ifndef __STOCHASTIC_MQH__
+#define __STOCHASTIC_MQH__
 
 //--- Struct：儲存一根 bar 嘅 Stoch 數值
 struct StochBar
@@ -104,3 +105,5 @@ int CreateStochHandle(string symbol, ENUM_TIMEFRAMES tf,
                        k_period, d_period, smooth,
                        MODE_SMA, STO_LOWHIGH);
 }
+
+#endif // __STOCHASTIC_MQH__

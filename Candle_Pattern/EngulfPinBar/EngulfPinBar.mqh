@@ -6,7 +6,8 @@
 //|  依賴 Depends on: ATR.mqh (GetPipSize)                           |
 //|  #include <Toolbox/EngulfPinBar.mqh>                             |
 //+------------------------------------------------------------------+
-#pragma once
+#ifndef __ENGULFPINBAR_MQH__
+#define __ENGULFPINBAR_MQH__
 #include <Toolbox/ATR.mqh>
 
 //--- Struct：單根 bar 嘅 OHLC 衍生值
@@ -146,3 +147,5 @@ CandleSignal DetectCandlePattern(string symbol,
 
     return sig;
 }
+
+#endif // __ENGULFPINBAR_MQH__

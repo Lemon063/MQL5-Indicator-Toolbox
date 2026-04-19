@@ -5,7 +5,8 @@
 //|  Depends on: SwingHighLow.mqh                                    |
 //|  #include <Toolbox/Fibonacci.mqh>                                |
 //+------------------------------------------------------------------+
-#pragma once
+#ifndef __FIBONACCI_MQH__
+#define __FIBONACCI_MQH__
 #include <Toolbox/SwingHighLow.mqh>
 
 //--- Struct holding all Fib levels for one direction
@@ -148,3 +149,5 @@ bool IsWickBeyond3618(double bar_high, double bar_low, const FibLevels &f)
     else
         return (bar_low < f.fib_3618);
 }
+
+#endif // __FIBONACCI_MQH__

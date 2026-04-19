@@ -60,8 +60,8 @@ Attach any `.mq5` to a chart. Values are drawn as lines and printed to the MT5 J
 
 | Indicator | Folder | Description |
 |---|---|---|
-| ATR | [`ATR/`](./ATR) | ATR value + derived calculations: SL distance, trailing stop distance, Fib proximity threshold, pip size per symbol |
-| Swing High / Low | [`SwingHighLow/`](./SwingHighLow) | Highest high and lowest low over N bars. Supports M5 and H1. Used as the anchor for Fibonacci and BOS |
+| ATR | [`Momentum/ATR/`](./Momentum/ATR) | ATR value + derived calculations: SL distance, trailing stop distance, Fib proximity threshold, pip size per symbol |
+| Swing High / Low | [`Market Structure/SwingHighLow/`](./Market%20Structure/SwingHighLow) | Highest high and lowest low over N bars. Supports M5 and H1. Used as the anchor for Fibonacci and BOS |
 | Fibonacci | [`Fibonacci/`](./Fibonacci) | Retracement levels (0.236–0.786) and extension levels (1.618–3.618) based on Swing High/Low. Includes proximity check and exhaustion signal at 3.618 |
 
 ### Signal layer
@@ -69,18 +69,20 @@ Attach any `.mq5` to a chart. Values are drawn as lines and printed to the MT5 J
 
 | Indicator | Folder | Description |
 |---|---|---|
-| BOS | `BOS/` | Break of Structure — close beyond swing high/low with momentum confirmation |
-| Reversal Candle | `ReversalCandle/` | Detects bullish-to-bearish or bearish-to-bullish candle direction flip |
-| Body Shrinkage | `BodyShrinkage/` | Detects candle body shrinking vs previous bar, used as momentum exhaustion signal |
-| Volume Relative | `VolumeRelative/` | Current bar volume vs N-bar average |
+| Stochastic | [`Momentum/Stochastic/`](./Momentum/Stochastic) | K/D cross detection, OB/OS zones, bar latch, CSV log |
+| Engulf / Pin Bar | [`Candle Pattern/EngulfPinBar/`](./Candle%20Pattern/EngulfPinBar) | Bullish/Bearish Engulfing and Pin Bar detection, bar latch, CSV log |
+| BOS | `Market Structure/BOS/` | Break of Structure — close beyond swing high/low with momentum confirmation |
+| Reversal Candle | `Candle Pattern/ReversalCandle/` | Detects bullish-to-bearish or bearish-to-bullish candle direction flip |
+| Body Shrinkage | `Candle Pattern/BodyShrinkage/` | Detects candle body shrinking vs previous bar, used as momentum exhaustion signal |
+| Volume Relative | `Momentum/VolumeRelative/` | Current bar volume vs N-bar average |
 
 ### Advanced layer
 *Pending signal layer verification*
 
 | Indicator | Folder | Description |
 |---|---|---|
-| VPIN | `VPIN/` | Volume-Synchronized Probability of Informed Trading. Uses BVC method to estimate buy/sell volume imbalance |
-| Regime | `Regime/` | EMA gap vs ATR for trend/range classification. ADX-based range detection |
+| VPIN | `Momentum/VPIN/` | Volume-Synchronized Probability of Informed Trading. Uses BVC method to estimate buy/sell volume imbalance |
+| Regime | `Momentum/Regime/` | EMA gap vs ATR for trend/range classification. ADX-based range detection |
 
 ---
 
@@ -92,8 +94,8 @@ Every indicator follows the same layout:
 IndicatorName/
 ├── IndicatorName.mqh     ← EA includes this
 ├── IndicatorName.mq5     ← attach to chart to verify
-├── SPEC.md               ← definition, parameters, edge cases
-├── CHANGELOG.md          ← version history
+├── SPEC_IndicatorName.md        ← definition, parameters, edge cases
+├── CHANGELOG_IndicatorName.md   ← version history
 ├── csv/                  ← output data from testing
 └── test/                 ← test scripts
 ```
@@ -106,10 +108,16 @@ IndicatorName/
 Fibonacci
 └── SwingHighLow
 
+EngulfPinBar
+└── ATR  (GetPipSize)
+
 BOS (coming)
 └── SwingHighLow
 
 ATR
+└── (none — standalone)
+
+Stochastic
 └── (none — standalone)
 ```
 
@@ -124,6 +132,17 @@ ATR
 | Account type | Hedging |
 | Tested symbols | USDJPY, GBPUSD, EURUSD, AUDUSD |
 | Chart timeframe | M5 (primary), H1 (veto / regime) |
+| Runtime | macOS + Wine |
+
+---
+
+## Notes for EA integration
+
+All `.mqh` files use `#ifndef` include guards (MQL5 standard). `#pragma once` is not supported in MQL5.
+
+Indicators that use MT5 built-in calculation engines (`iATR`, `iStochastic`) require a handle to be created in `OnInit()` and released in `OnDeinit()`. Do not create and release handles inside individual function calls.
+
+When specifying timeframes in an EA, always use explicit constants (e.g. `PERIOD_M5`) rather than `PERIOD_CURRENT`, and log the TF in `OnInit()` to confirm correct configuration.
 
 ---
 
@@ -131,9 +150,11 @@ ATR
 
 | Indicator | Status |
 |---|---|
-| ATR | ✅ v1.1 |
-| SwingHighLow | ✅ v1.1 |
-| Fibonacci | ✅ v1.1 |
+| ATR | 🔧 v1.3 — visual check in progress |
+| SwingHighLow | ⏳ Pending visual check |
+| Fibonacci | ⏳ Pending visual check |
+| Stochastic | ⏳ Pending visual check |
+| EngulfPinBar | ⏳ Pending visual check |
 | BOS | ⏳ Pending |
 | ReversalCandle | ⏳ Pending |
 | BodyShrinkage | ⏳ Pending |

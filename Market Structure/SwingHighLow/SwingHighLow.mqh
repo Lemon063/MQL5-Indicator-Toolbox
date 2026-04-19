@@ -4,7 +4,8 @@
 //|  Pure logic library — no chart output, no event functions        |
 //|  #include <Toolbox/SwingHighLow.mqh>                             |
 //+------------------------------------------------------------------+
-#pragma once
+#ifndef __SWINGHIGHLOW_MQH__
+#define __SWINGHIGHLOW_MQH__
 
 //--- Struct to hold both swing values together
 struct SwingResult
@@ -116,3 +117,5 @@ SwingResult GetSwing(string symbol, ENUM_TIMEFRAMES tf, int n_bars, int shift = 
     result.low_shift  = GetSwingLowShift(symbol, tf, n_bars, shift);
     return result;
 }
+
+#endif // __SWINGHIGHLOW_MQH__

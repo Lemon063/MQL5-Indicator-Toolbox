@@ -5,7 +5,7 @@
 //|  Sub-window 顯示 ATR 線 + 印出所有衍生數值                        |
 //+------------------------------------------------------------------+
 #property copyright   "MQL5 Indicator Toolbox"
-#property version     "1.20"
+#property version     "1.30"
 #property description "ATR with derived values: SL, trailing, Fib threshold. Prints to Journal."
 
 #property indicator_separate_window
@@ -61,9 +61,6 @@ int OnInit()
     ArraySetAsSeries(Buffer_SL,      true);
     ArraySetAsSeries(Buffer_EventSL, true);
 
-    //--- PERIOD_CURRENT：跟住 chart TF，唔寫死
-    //    attach M5 chart → 計 M5 ATR
-    //    attach H1 chart → 計 H1 ATR
     g_atrHandle = CreateATRHandle(_Symbol, PERIOD_CURRENT, InpATRPeriod);
     if(g_atrHandle == INVALID_HANDLE)
         return INIT_FAILED;
@@ -95,13 +92,13 @@ int OnCalculate(const int rates_total,
     if(rates_total < InpATRPeriod + 2)
         return 0;
 
-    int start = (prev_calculated == 0) ? rates_total - 1 : prev_calculated;
+    //--- 計算起點
+    int limit = (prev_calculated == 0) ? rates_total - InpATRPeriod - 1
+                                       : rates_total - prev_calculated;
 
-    //--- 填充 buffer
-    for(int i = start; i >= 0; i--)
+    for(int i = limit; i >= 0; i--)
     {
-        int shift = rates_total - 1 - i;
-        if(shift < 1) shift = 1;
+        int shift = i + 1;
 
         double atr        = GetATR(g_atrHandle, shift);
         Buffer_ATR[i]     = atr;

@@ -58,22 +58,22 @@ Attach any `.mq5` to a chart. Values are drawn as lines and printed to the MT5 J
 
 ### Foundation layer
 
-| Indicator | Folder | Description |
-|---|---|---|
-| ATR | [`Momentum/ATR/`](./Momentum/ATR) | ATR value + derived calculations: SL distance, trailing stop distance, Fib proximity threshold, pip size per symbol |
-| Swing High / Low | [`Market Structure/SwingHighLow/`](./Market%20Structure/SwingHighLow) | Highest high and lowest low over N bars. Supports M5 and H1. Used as the anchor for Fibonacci and BOS |
-| Fibonacci | [`Fibonacci/`](./Fibonacci) | Retracement levels (0.236–0.786) and extension levels (1.618–3.618) based on Swing High/Low. Includes proximity check and exhaustion signal at 3.618 |
+| Indicator | Folder | Files | Description |
+|---|---|---|---|
+| ATR | [`Momentum/ATR/`](./Momentum/ATR) | `ATR.mqh` | ATR value + derived calculations: SL distance, trailing stop, Fib proximity threshold, pip size. Visual check: use MT5 built-in ATR indicator |
+| Swing High / Low | [`Market Structure/SwingHighLow/`](./Market%20Structure/SwingHighLow) | `SwingHighLow.mqh` `SwingHighLow_M5.mq5` `SwingHighLow_H1.mq5` | Highest high and lowest low over N bars. M5 (20 bars) and H1 (30 bars). Anchor for Fibonacci and BOS |
+| Fibonacci | [`Fibonacci/`](./Fibonacci) | `Fibonacci.mqh` `Fibonacci.mq5` | Retracement (0.236–0.786) and extension (1.618–3.618) levels based on Swing High/Low. Proximity check and exhaustion signal at 3.618 |
 
 ### Signal layer
 *Coming after foundation layer is verified*
 
 | Indicator | Folder | Description |
 |---|---|---|
-| Stochastic | [`Momentum/Stochastic/`](./Momentum/Stochastic) | K/D cross detection, OB/OS zones, bar latch, CSV log |
+| Stochastic | [`Momentum/Stochastic/`](./Momentum/Stochastic) | K/D cross detection, OB/OS zones, bar latch, CSV log. Visual check: use MT5 built-in Stochastic indicator |
 | Engulf / Pin Bar | [`Candle Pattern/EngulfPinBar/`](./Candle%20Pattern/EngulfPinBar) | Bullish/Bearish Engulfing and Pin Bar detection, bar latch, CSV log |
 | BOS | `Market Structure/BOS/` | Break of Structure — close beyond swing high/low with momentum confirmation |
 | Reversal Candle | `Candle Pattern/ReversalCandle/` | Detects bullish-to-bearish or bearish-to-bullish candle direction flip |
-| Body Shrinkage | `Candle Pattern/BodyShrinkage/` | Detects candle body shrinking vs previous bar, used as momentum exhaustion signal |
+| Body Shrinkage | `Candle Pattern/BodyShrinkage/` | Detects candle body shrinking vs previous bar, momentum exhaustion signal |
 | Volume Relative | `Momentum/VolumeRelative/` | Current bar volume vs N-bar average |
 
 ### Advanced layer
@@ -81,8 +81,21 @@ Attach any `.mq5` to a chart. Values are drawn as lines and printed to the MT5 J
 
 | Indicator | Folder | Description |
 |---|---|---|
-| VPIN | `Momentum/VPIN/` | Volume-Synchronized Probability of Informed Trading. Uses BVC method to estimate buy/sell volume imbalance |
+| VPIN | `Momentum/VPIN/` | Volume-Synchronized Probability of Informed Trading. BVC method to estimate buy/sell volume imbalance |
 | Regime | `Momentum/Regime/` | EMA gap vs ATR for trend/range classification. ADX-based range detection |
+
+---
+
+## Visual check — which chart to use
+
+| Indicator | Attach to | Notes |
+|---|---|---|
+| ATR | Any chart | Use MT5 built-in ATR indicator instead |
+| SwingHighLow_M5 | M5 chart | Purple-red + blue dashed lines |
+| SwingHighLow_H1 | H1 chart | Dark red + dark blue solid lines |
+| Fibonacci | M5 or H1 chart | 9 horizontal lines, follows chart TF |
+| Stochastic | Any chart | Use MT5 built-in Stochastic instead |
+| EngulfPinBar | M5 chart | Green/red arrows on chart |
 
 ---
 
@@ -92,12 +105,12 @@ Every indicator follows the same layout:
 
 ```
 IndicatorName/
-├── IndicatorName.mqh     ← EA includes this
-├── IndicatorName.mq5     ← attach to chart to verify
-├── SPEC_IndicatorName.md        ← definition, parameters, edge cases
-├── CHANGELOG_IndicatorName.md   ← version history
-├── csv/                  ← output data from testing
-└── test/                 ← test scripts
+├── IndicatorName.mqh          ← EA includes this
+├── IndicatorName.mq5          ← attach to chart to verify
+├── SPEC_IndicatorName.md      ← definition, parameters, edge cases
+├── CHANGELOG_IndicatorName.md ← version history
+├── csv/                       ← output data from testing
+└── test/                      ← test scripts
 ```
 
 ---
@@ -138,11 +151,11 @@ Stochastic
 
 ## Notes for EA integration
 
-All `.mqh` files use `#ifndef` include guards (MQL5 standard). `#pragma once` is not supported in MQL5.
+All `.mqh` files use `#ifndef` include guards — `#pragma once` is not supported in MQL5.
 
-Indicators that use MT5 built-in calculation engines (`iATR`, `iStochastic`) require a handle to be created in `OnInit()` and released in `OnDeinit()`. Do not create and release handles inside individual function calls.
+Indicators using MT5 built-in engines (`iATR`, `iStochastic`) require a handle created in `OnInit()` and released in `OnDeinit()`. Never create and release handles inside individual function calls.
 
-When specifying timeframes in an EA, always use explicit constants (e.g. `PERIOD_M5`) rather than `PERIOD_CURRENT`, and log the TF in `OnInit()` to confirm correct configuration.
+All `.mq5` visual indicators use `PERIOD_CURRENT` to follow the chart timeframe. In EA code, always specify the timeframe explicitly (e.g. `PERIOD_M5`) and log it in `OnInit()` to confirm correct configuration.
 
 ---
 
@@ -150,9 +163,9 @@ When specifying timeframes in an EA, always use explicit constants (e.g. `PERIOD
 
 | Indicator | Status |
 |---|---|
-| ATR | 🔧 v1.3 — visual check in progress |
-| SwingHighLow | ⏳ Pending visual check |
-| Fibonacci | ⏳ Pending visual check |
+| ATR | ✅ v1.4 — `.mqh` verified. Visual check via MT5 built-in |
+| SwingHighLow | ✅ v1.3 — visual check passed |
+| Fibonacci | 🔧 v1.1 — visual check in progress |
 | Stochastic | ⏳ Pending visual check |
 | EngulfPinBar | ⏳ Pending visual check |
 | BOS | ⏳ Pending |

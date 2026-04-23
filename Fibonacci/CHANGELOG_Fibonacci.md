@@ -19,3 +19,20 @@
 - Extension: 1.618, 2.618, 3.618
 - 視覺：9 條 HLINE
 - Journal print：anchors, levels, ATR threshold, proximity alert
+
+## v1.2 — 2026-04
+- 每條線加 label 顯示 Fib level 數字同價格（例如 `0.618  159.392`）
+- Swing High / Low anchor 線加 label（`1.000` / `0.000`）
+- Journal print：錨點行加 `1.000` / `0.000` 標記，更易對應 TradingView
+
+## v1.3 — 2026-04
+- 加入 `OBJ_TEXT` label 喺每條線右邊顯示 level 同價格
+- 保留 `OBJPROP_TOOLTIP`（hover 顯示）
+- `DeleteFibLines()` 同時刪除線同 text label
+
+## v1.3 — 2026-04
+- 加入 `OBJ_TEXT` label 喺每條線右邊顯示 level + 價格
+- 加入 `OBJPROP_TOOLTIP`：mouse hover 見到 level + 價格
+- 新增 `DrawFibSet()` — 一次過畫線 + label
+- 新增 `DrawFibLabel()` — 建立 `OBJ_TEXT` object
+- `DeleteFibObjects()` 同時清除線同 label

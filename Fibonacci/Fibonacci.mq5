@@ -35,8 +35,8 @@ input int    InpAtrPeriod      = 14;    // ATR 週期
 input bool   InpPrintLog       = true;  // 輸出至 Journal
 
 //--- Prefixes
-string PREFIX       = "FIB_LINE_";
-string PREFIX_LABEL = "FIB_LBL_";
+const string PREFIX       = "FIB_LINE_";
+const string PREFIX_LABEL = "FIB_LBL_";
 
 //--- ATR handle
 int g_atrHandle = INVALID_HANDLE;
@@ -62,9 +62,8 @@ void DrawFibLine(string name, double price, color clr,
 void DrawFibLabel(string name, double price, color clr, string label_text)
 {
     string obj     = PREFIX_LABEL + name;
-    int    visible = (int)ChartGetInteger(0, CHART_VISIBLE_BARS);
-    int    first   = (int)ChartGetInteger(0, CHART_FIRST_VISIBLE_BAR);
-    datetime t     = iTime(_Symbol, PERIOD_CURRENT, MathMax(first - visible + 2, 0));
+    //--- 固定喺最新 bar 左邊 5 格，唔會隨 scroll 跳動
+    datetime t     = iTime(_Symbol, PERIOD_CURRENT, 5);
 
     if(ObjectFind(0, obj) < 0)
         ObjectCreate(0, obj, OBJ_TEXT, 0, t, price);
@@ -149,8 +148,12 @@ int OnCalculate(const int rates_total,
     if(rates_total < InpPivotLook + InpPivotN * 2 + 2)
         return 0;
 
-    if(prev_calculated == rates_total)
+    //--- 只喺新 bar 重新計算（避免每個 tick 重複計算 PivotSR）
+    ArraySetAsSeries(time, true);
+    static datetime last_bar_time = 0;
+    if(time[0] == last_bar_time)
         return rates_total;
+    last_bar_time = time[0];
 
     //--- Fib levels via PivotSR
     FibLevels f = CalcFibAuto(
@@ -174,7 +177,7 @@ int OnCalculate(const int rates_total,
         atr = atr_buf[0];
 
     double threshold = atr * InpAtrMult;
-    double pip       = SymbolInfoDouble(_Symbol, SYMBOL_POINT) * 10;
+    double pip       = GetPipSize(_Symbol);   // 統一用 ATR.mqh，支援 JPY + 所有品種
 
     //--- 畫線 + label
     DrawFibSet("SwingHigh", f.swing_high, clrWhite,       STYLE_DOT,  1, "1.000");

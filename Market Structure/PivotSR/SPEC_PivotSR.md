@@ -160,3 +160,38 @@ PivotSR.mqh
 ## 11. Changelog
 
 見 `CHANGELOG_PivotSR.md`
+
+---
+
+## 12. 版本記錄 Version Notes
+
+### v1.1 變更
+
+**Bug 3 — `SelectBestAnchor` tiebreaker 修正**
+```
+舊版：same_dist 容忍度 = 0.000001（price units）
+      → forex 兩個 Pivot 差 0.5 pips 都唔會觸發 tiebreaker
+      → S/R 強度做 tiebreaker 幾乎永遠唔生效
+
+新版：same_dist 容忍度 = GetPipSize(symbol) × 5（5 pips）
+      → 距離差 <= 5 pips 視為相同，用 S/R 強度決定
+```
+
+**Bug 4 — High > Low 驗證**
+```
+橫行市場可能搵到：
+  Pivot High = 159.200（較舊）
+  Pivot Low  = 159.350（較新，但距離更近）
+  → high < low → range 係負數 → 所有 Fib levels 全錯
+
+修正：加入 anchor.high > anchor.low 驗證
+      唔符合 → valid = false + PrintFormat 警告
+```
+
+**已知設計限制**
+
+| 項目 | 說明 |
+|---|---|
+| Pivot 滯後 | 最新可確認 Pivot 係 bar[pivot_n]，唔係 bar[0]。正確行為，唔係 bug |
+| Buffer vs shift 對齊 | `PivotSR_M5/H1.mq5` 入面 buffer index 同 shift 因 AsSeries=true 啱啱對齊，屬 brittle design，改動時要小心 |
+| S/R 唔係強制條件 | 冇 S/R 支持嘅 Pivot 仍然有效，S/R 強度只係 tiebreaker。原因：部分 Pivot 喺 S/R 計算窗口之外 |

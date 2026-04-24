@@ -107,3 +107,18 @@ struct SRResult {
 ## 9. Changelog
 
 見 `CHANGELOG_SupportResistance.md`
+
+---
+
+## 10. 版本記錄 Version Notes
+
+### v1.1 變更
+- pip 計算改用 `ATR.mqh` 嘅 `GetPipSize()`
+- 加入 `#include <Toolbox/ATR.mqh>`
+- 原因：`SYMBOL_POINT * 10` 喺 JPY pair 計算錯誤
+
+### 依賴更新
+```
+SupportResistance.mqh
+└── ATR.mqh  (GetPipSize) ← v1.1 新增
+```

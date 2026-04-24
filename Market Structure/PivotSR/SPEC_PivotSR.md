@@ -195,3 +195,24 @@ PivotSR.mqh
 | Pivot 滯後 | 最新可確認 Pivot 係 bar[pivot_n]，唔係 bar[0]。正確行為，唔係 bug |
 | Buffer vs shift 對齊 | `PivotSR_M5/H1.mq5` 入面 buffer index 同 shift 因 AsSeries=true 啱啱對齊，屬 brittle design，改動時要小心 |
 | S/R 唔係強制條件 | 冇 S/R 支持嘅 Pivot 仍然有效，S/R 強度只係 tiebreaker。原因：部分 Pivot 喺 S/R 計算窗口之外 |
+
+### v1.2 變更
+
+**Fix 1 — PivotSR_M5/H1 pip 計算**
+```
+舊版：SymbolInfoDouble(_Symbol, SYMBOL_POINT) * 10
+      → JPY pair 顯示 Range pips 錯誤
+
+新版：GetPipSize(_Symbol)
+      → 支援所有品種
+```
+
+**Fix 2 — SelectBestAnchor 互斥邏輯**
+```
+舊版：if(closer || (same_dist && stronger))
+      → closer 同 same_dist 可同時 true → 邏輯衝突
+
+新版：if(closer && !same_dist)          → 明顯更近，直接取
+      else if(same_dist && stronger)    → 距離相近，S/R 強度決定
+      → 兩個條件完全互斥，行為清晰
+```

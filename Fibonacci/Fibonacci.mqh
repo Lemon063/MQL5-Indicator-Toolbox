@@ -3,36 +3,14 @@
 //|  MQL5 Indicator Toolbox                                          |
 //|  純邏輯庫 Pure logic library                                      |
 //|  依賴 Depends on: PivotSR.mqh → SupportResistance.mqh           |
+//|                                  FibTypes.mqh                   |
 //|  #include <Toolbox/Fibonacci.mqh>                                |
 //+------------------------------------------------------------------+
 #ifndef __FIBONACCI_MQH__
 #define __FIBONACCI_MQH__
 
 #include <Toolbox/PivotSR.mqh>
-
-//--- 所有 Fib levels struct
-struct FibLevels
-{
-    //--- 錨點
-    double swing_high;
-    double swing_low;
-    double range;
-
-    //--- 回撤 Retracement levels
-    double fib_236;
-    double fib_382;
-    double fib_500;
-    double fib_618;
-    double fib_786;
-
-    //--- 延伸 Extension levels
-    double fib_1000;
-    double fib_1618;
-    double fib_2618;
-    double fib_3618;
-
-    bool   is_buy;
-};
+// FibTypes.mqh 已經由 PivotSR.mqh include
 
 //+------------------------------------------------------------------+
 //|  CalcFibLevels                                                   |
@@ -77,18 +55,19 @@ FibLevels CalcFibLevels(double swing_high, double swing_low, bool is_buy)
 //+------------------------------------------------------------------+
 //|  CalcFibAuto                                                     |
 //|  用 PivotSR 自動搵錨點再計算 Fib levels                          |
-//|  取代舊版 N-bar SwingHighLow 方法                                 |
 //+------------------------------------------------------------------+
 FibLevels CalcFibAuto(string symbol,
-                      ENUM_TIMEFRAMES tf,
+                      ENUM_TIMEFRAMES  tf,
+                      ENUM_ANCHOR_MODE mode,
                       bool   is_buy,
-                      int    pivot_n     = 3,
-                      int    pivot_look  = 50,
-                      int    sr_lookback = 100,
-                      double sr_pips     = 10.0,
-                      int    sr_min      = 4,
-                      double sr_tol_pips = 10.0,
-                      int    shift       = 1)
+                      int    pivot_n        = 3,
+                      int    pivot_look     = 50,
+                      int    sr_lookback    = 100,
+                      double sr_pips        = 10.0,
+                      int    sr_min         = 4,
+                      double sr_tol_pips    = 10.0,
+                      double min_range_pips = 0.0,
+                      int    shift          = 1)
 {
     FibLevels f;
     f.swing_high = 0;
@@ -97,11 +76,11 @@ FibLevels CalcFibAuto(string symbol,
     f.is_buy     = is_buy;
 
     AnchorResult anchor = GetAnchorPoints(
-        symbol, tf,
+        symbol, tf, mode,
         pivot_n, pivot_look,
         sr_lookback, sr_pips,
         sr_min, sr_tol_pips,
-        shift);
+        min_range_pips, shift);
 
     if(!anchor.valid)
         return f;
@@ -129,8 +108,8 @@ bool IsFibNear(double price, const FibLevels &f, double threshold,
     levels[7] = f.fib_2618; labels[7] = "2.618";
     levels[8] = f.fib_3618; labels[8] = "3.618";
 
-    double   closest_dist  = DBL_MAX;
-    bool     found         = false;
+    double   closest_dist = DBL_MAX;
+    bool     found        = false;
     nearest_label = "none";
     nearest_price = 0;
 

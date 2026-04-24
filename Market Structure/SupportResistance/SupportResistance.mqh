@@ -8,26 +8,25 @@
 #ifndef __SUPPORTRESISTANCE_MQH__
 #define __SUPPORTRESISTANCE_MQH__
 
+#include <Toolbox/ATR.mqh>   // GetPipSize()
+
 //--- 單個 S/R 密集區
 struct SRZone
 {
-    double price;      // 密集區中心價格
-    int    count;      // 出現次數（High + Low 合計）
-    bool   valid;      // 係咪符合最低門檻
+    double price;
+    int    count;
+    bool   valid;
 };
 
 //--- S/R 分析結果
 struct SRResult
 {
-    SRZone zones[200]; // 最多 200 個密集區
-    int    total;      // 實際密集區數量
+    SRZone zones[200];
+    int    total;
 };
 
 //+------------------------------------------------------------------+
 //|  RoundToGrid                                                     |
-//|  將價格四捨五入到最近嘅格（grid）                                  |
-//|  price    : 輸入價格                                              |
-//|  grid_size: 格距（price units，唔係 pips）                        |
 //+------------------------------------------------------------------+
 double RoundToGrid(double price, double grid_size)
 {
@@ -36,13 +35,7 @@ double RoundToGrid(double price, double grid_size)
 
 //+------------------------------------------------------------------+
 //|  CalcSRZones                                                     |
-//|  計算過去 lookback bars 嘅 S/R 密集區                             |
-//|  symbol    : 交易品種                                              |
-//|  tf        : 時間框架                                              |
-//|  lookback  : 回望 bars 數（預設 100）                              |
-//|  zone_pips : 密集區格距 pips（預設 10）                            |
-//|  min_count : 最低出現次數門檻（預設 4）                            |
-//|  shift     : 從第幾根 bar 開始（1 = 最後收盤 bar）                |
+//|  修正：用 GetPipSize() 統一 pip 計算，修正 JPY pair 問題          |
 //+------------------------------------------------------------------+
 SRResult CalcSRZones(string symbol,
                      ENUM_TIMEFRAMES tf,
@@ -54,24 +47,22 @@ SRResult CalcSRZones(string symbol,
     SRResult result;
     result.total = 0;
 
-    double pip       = SymbolInfoDouble(symbol, SYMBOL_POINT) * 10;
+    //--- 修正：統一用 GetPipSize()，唔用 _Point * 10
+    double pip       = GetPipSize(symbol);
     double grid_size = zone_pips * pip;
 
-    //--- 臨時儲存：price → count
     double temp_prices[400];
     int    temp_counts[400];
     int    temp_total = 0;
 
-    //--- 遍歷過去 lookback bars，High + Low 各貢獻一個點
     for(int i = shift; i < shift + lookback; i++)
     {
-        double h = iHigh(symbol, tf, i);
-        double l = iLow (symbol, tf, i);
-
+        double h      = iHigh(symbol, tf, i);
+        double l      = iLow (symbol, tf, i);
         double grid_h = RoundToGrid(h, grid_size);
         double grid_l = RoundToGrid(l, grid_size);
 
-        //--- 處理 High
+        //--- High
         bool found_h = false;
         for(int j = 0; j < temp_total; j++)
         {
@@ -89,7 +80,7 @@ SRResult CalcSRZones(string symbol,
             temp_total++;
         }
 
-        //--- 處理 Low
+        //--- Low
         bool found_l = false;
         for(int j = 0; j < temp_total; j++)
         {
@@ -108,7 +99,6 @@ SRResult CalcSRZones(string symbol,
         }
     }
 
-    //--- 過濾：只保留 >= min_count 嘅密集區
     for(int i = 0; i < temp_total && result.total < 200; i++)
     {
         if(temp_counts[i] >= min_count)
@@ -125,11 +115,6 @@ SRResult CalcSRZones(string symbol,
 
 //+------------------------------------------------------------------+
 //|  IsPriceNearSR                                                   |
-//|  檢查某個價格係咪喺任何 S/R 密集區附近                             |
-//|  price     : 要檢查嘅價格（通常係 Pivot High/Low）                |
-//|  sr        : CalcSRZones() 嘅輸出                                 |
-//|  tolerance : 接受誤差（price units）                               |
-//|  best_zone : 輸出最近嘅 S/R zone                                  |
 //+------------------------------------------------------------------+
 bool IsPriceNearSR(double price, const SRResult &sr,
                    double tolerance, SRZone &best_zone)
@@ -157,7 +142,6 @@ bool IsPriceNearSR(double price, const SRResult &sr,
 
 //+------------------------------------------------------------------+
 //|  GetStrongestSR                                                  |
-//|  返回出現次數最多嘅 S/R zone                                       |
 //+------------------------------------------------------------------+
 SRZone GetStrongestSR(const SRResult &sr)
 {

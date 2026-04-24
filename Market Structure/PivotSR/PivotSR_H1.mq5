@@ -15,13 +15,13 @@
 //--- Pivot High（深紅實線箭咀向下）
 #property indicator_label1  "H1 Pivot High"
 #property indicator_type1   DRAW_ARROW
-#property indicator_color1  clrDarkRed
+#property indicator_color1  clrWhite
 #property indicator_width1  2
 
 //--- Pivot Low（深藍實線箭咀向上）
 #property indicator_label2  "H1 Pivot Low"
 #property indicator_type2   DRAW_ARROW
-#property indicator_color2  clrMidnightBlue
+#property indicator_color2  clrSkyBlue
 #property indicator_width2  2
 
 #include <Toolbox/PivotSR.mqh>

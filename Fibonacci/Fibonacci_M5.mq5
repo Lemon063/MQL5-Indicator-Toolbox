@@ -1,14 +1,12 @@
 //+------------------------------------------------------------------+
-//|  Fibonacci.mq5                                                   |
+//|  Fibonacci_M5.mq5                                                |
 //|  MQL5 Indicator Toolbox                                          |
-//|  視覺圖表 indicator — attach 到 chart 驗證邏輯                    |
 //|  M5 mode：距離優先 + Fib-SR 評分 + 鎖定/解鎖機制                 |
-//|  H1 mode：S/R 強度優先 + 波段完整性驗證，唔鎖定                   |
-//|  v3.20：DrawFibLine 改用 OBJ_TREND 限制線長（唔延伸）             |
+//|  Attach 到 M5 chart                                              |
 //+------------------------------------------------------------------+
 #property copyright   "MQL5 Indicator Toolbox"
-#property version     "3.20"
-#property description "Fib levels via PivotSR. M5=lock/unlock. H1=wave integrity+strength."
+#property version     "1.00"
+#property description "M5 Fib levels via PivotSR. Distance priority + lock/unlock."
 
 #property indicator_chart_window
 #property indicator_buffers 0
@@ -16,46 +14,45 @@
 
 #include <Toolbox/Fibonacci.mqh>
 
-enum ENUM_FIB_MODE
-{
-    FIB_MODE_M5,
-    FIB_MODE_H1
-};
+//--- Inputs: Pivot
+input int    InpPivotN       = 5;     // Pivot 左右確認 bars
+input int    InpPivotLook    = 96;    // Pivot 回望 bars（8小時）
 
-input ENUM_FIB_MODE InpFibMode      = FIB_MODE_M5;
-input int    InpPivotN_M5           = 5;     // M5 Pivot 確認 bars
-input int    InpPivotN_H1           = 8;     // H1 Pivot 確認 bars
-input int    InpPivotLook_M5        = 96;    // M5 回望 bars（8小時）
-input int    InpPivotLook_H1        = 336;   // H1 回望 bars（14日）
-input int    InpSRLookback          = 100;
-input double InpSRZonePips          = 10.0;
-input int    InpSRMinCount          = 4;
-input double InpSRTolPips           = 10.0;
-input bool   InpIsBuy               = true;
-input bool   InpShowExtensions      = true;
-input double InpAtrMult             = 0.20;
-input int    InpAtrPeriod           = 14;
-input int    InpMinOverlap          = 3;
-input double InpMinScore            = 6.0;
-input double InpMinRangePips        = 10.0;
-input int    InpLineLookback        = 100;   // Fib 線往左延伸幾多 bars
-input bool   InpPrintLog            = true;
+//--- Inputs: S/R
+input int    InpSRLookback   = 100;   // S/R 回望 bars
+input double InpSRZonePips   = 10.0;  // S/R 格距 pips
+input int    InpSRMinCount   = 4;     // S/R 最低出現次數
+input double InpSRTolPips    = 10.0;  // Pivot-SR 配對容忍度 pips
 
-string g_prefix;
-string g_prefix_label;
-int    g_atrHandle = INVALID_HANDLE;
+//--- Inputs: Fib
+input bool   InpIsBuy        = true;  // true = BUY，false = SELL
+input bool   InpShowExtensions = true;
+input double InpAtrMult      = 0.20;
+input int    InpAtrPeriod    = 14;
+input int    InpLineLookback = 100;   // Fib 線往左延伸幾多 bars
+
+//--- Inputs: 鎖定機制
+input int    InpMinOverlap   = 3;     // 最少 Fib-SR 重疊數量
+input double InpMinScore     = 6.0;   // 最低 Fib-SR 分數
+input double InpMinRangePips = 10.0;  // 最小波段 pips
+
+//--- Inputs: Display
+input bool   InpPrintLog     = true;
+
+//--- Globals
+const string PREFIX       = "FIB_M5_LINE_";
+const string PREFIX_LABEL = "FIB_M5_LBL_";
+int       g_atrHandle  = INVALID_HANDLE;
 FibLevels g_locked_fib;
-bool      g_is_locked    = false;
-int       g_locked_hbar  = 0;   // 鎖定錨點嘅 high_bar
-int       g_locked_lbar  = 0;   // 鎖定錨點嘅 low_bar
+bool      g_is_locked  = false;
+int       g_locked_hbar = 0;
+int       g_locked_lbar = 0;
 
-//+------------------------------------------------------------------+
-//|  DrawFibLine — 改用 OBJ_TREND，固定起點終點，唔延伸              |
 //+------------------------------------------------------------------+
 void DrawFibLine(string name, double price, color clr,
                  ENUM_LINE_STYLE style, int width, string tooltip)
 {
-    string   obj     = g_prefix + name;
+    string   obj     = PREFIX + name;
     datetime t_end   = iTime(_Symbol, PERIOD_CURRENT, 0);
     datetime t_start = iTime(_Symbol, PERIOD_CURRENT, InpLineLookback);
 
@@ -78,7 +75,7 @@ void DrawFibLine(string name, double price, color clr,
 //+------------------------------------------------------------------+
 void DrawFibLabel(string name, double price, color clr, string label_text)
 {
-    string   obj = g_prefix_label + name;
+    string   obj = PREFIX_LABEL + name;
     datetime t   = iTime(_Symbol, PERIOD_CURRENT, 5);
 
     if(ObjectFind(0, obj) < 0)
@@ -101,14 +98,14 @@ void DeleteFibObjects()
     for(int i = total - 1; i >= 0; i--)
     {
         string name = ObjectName(0, i, 0, OBJ_TREND);
-        if(StringFind(name, g_prefix) == 0)
+        if(StringFind(name, PREFIX) == 0)
             ObjectDelete(0, name);
     }
     total = ObjectsTotal(0, 0, OBJ_TEXT);
     for(int i = total - 1; i >= 0; i--)
     {
         string name = ObjectName(0, i, 0, OBJ_TEXT);
-        if(StringFind(name, g_prefix_label) == 0)
+        if(StringFind(name, PREFIX_LABEL) == 0)
             ObjectDelete(0, name);
     }
 }
@@ -146,9 +143,6 @@ void DrawAllFibLines(const FibLevels &f)
 //+------------------------------------------------------------------+
 int OnInit()
 {
-    g_prefix       = (InpFibMode == FIB_MODE_M5) ? "FIB_M5_LINE_" : "FIB_H1_LINE_";
-    g_prefix_label = (InpFibMode == FIB_MODE_M5) ? "FIB_M5_LBL_"  : "FIB_H1_LBL_";
-
     g_atrHandle = iATR(_Symbol, PERIOD_CURRENT, InpAtrPeriod);
     if(g_atrHandle == INVALID_HANDLE)
     {
@@ -156,13 +150,12 @@ int OnInit()
         return INIT_FAILED;
     }
 
-    g_is_locked = false;
+    g_is_locked  = false;
+    g_locked_hbar = 0;
+    g_locked_lbar = 0;
 
     IndicatorSetString(INDICATOR_SHORTNAME,
-        StringFormat("Fib_%s(%s,N=%d)",
-                     InpFibMode == FIB_MODE_M5 ? "M5" : "H1",
-                     InpIsBuy ? "BUY" : "SELL",
-                     InpFibMode == FIB_MODE_H1 ? InpPivotN_H1 : InpPivotN_M5));
+        StringFormat("Fib_M5(%s,N=%d)", InpIsBuy ? "BUY" : "SELL", InpPivotN));
 
     return INIT_SUCCEEDED;
 }
@@ -179,51 +172,6 @@ void OnDeinit(const int reason)
 }
 
 //+------------------------------------------------------------------+
-void PrintFibLog(const FibLevels &f,
-                 double atr, double threshold, double pip,
-                 double current_price,
-                 string mode_str, bool is_locked,
-                 int overlap_count, double score,
-                 int high_bar, int low_bar)
-{
-    PrintFormat("=== Fibonacci 費波那契 | %s | %s | %s | %s ===",
-                _Symbol,
-                InpIsBuy ? "BUY" : "SELL",
-                mode_str,
-                TimeToString(TimeCurrent(), TIME_DATE|TIME_MINUTES));
-
-    if(mode_str == "M5")
-    {
-        string lock_str = is_locked
-            ? StringFormat("🔒 已鎖定 | 重疊:%d 分數:%.1f", overlap_count, score)
-            : "🔓 未鎖定";
-        PrintFormat("  狀態 Status  | %s", lock_str);
-    }
-
-    PrintFormat("  錨點 Anchors | 波段高 1.000: %.5f (bar %d)  波段低 0.000: %.5f (bar %d)  幅度 Range: %.1f pips",
-                f.swing_high, high_bar, f.swing_low, low_bar, f.range / pip);
-
-    PrintFormat("  回撤 Retrace | 0.236: %.5f  0.382: %.5f  0.500: %.5f  0.618: %.5f  0.786: %.5f",
-                f.fib_236, f.fib_382, f.fib_500, f.fib_618, f.fib_786);
-
-    if(InpShowExtensions)
-        PrintFormat("  延伸 Ext     | 1.618: %.5f  2.618: %.5f  3.618: %.5f（耗盡位）",
-                    f.fib_1618, f.fib_2618, f.fib_3618);
-
-    PrintFormat("  ATR 接近閾值 | ATR: %.5f  閾值: %.5f (%.1f pips)",
-                atr, threshold, threshold / pip);
-
-    string near_label;
-    double near_price;
-    if(IsFibNear(current_price, f, threshold, near_label, near_price))
-        PrintFormat("  >>> 價格接近 Fib %s (%.5f) — 當前價: %.5f  距離: %.1f pips",
-                    near_label, near_price, current_price,
-                    MathAbs(current_price - near_price) / pip);
-    else
-        PrintFormat("  當前價 %.5f — 未接近任何 Fib level", current_price);
-}
-
-//+------------------------------------------------------------------+
 int OnCalculate(const int rates_total,
                 const int prev_calculated,
                 const datetime &time[],
@@ -235,11 +183,7 @@ int OnCalculate(const int rates_total,
                 const long     &volume[],
                 const int      &spread[])
 {
-    //--- 按 mode 決定實際用嘅 pivot 參數
-    int pivot_n    = (InpFibMode == FIB_MODE_H1) ? InpPivotN_H1    : InpPivotN_M5;
-    int pivot_look = (InpFibMode == FIB_MODE_H1) ? InpPivotLook_H1 : InpPivotLook_M5;
-
-    if(rates_total < pivot_look + pivot_n * 2 + 2)
+    if(rates_total < InpPivotLook + InpPivotN * 2 + 2)
         return 0;
 
     ArraySetAsSeries(time, true);
@@ -257,48 +201,6 @@ int OnCalculate(const int rates_total,
     double threshold = atr * InpAtrMult;
     double pip       = GetPipSize(_Symbol);
 
-    //================================================================
-    //  H1 mode
-    //================================================================
-    if(InpFibMode == FIB_MODE_H1)
-    {
-        AnchorResult anchor_h1 = GetAnchorPoints(
-            _Symbol, PERIOD_CURRENT, ANCHOR_H1, InpIsBuy,
-            pivot_n, pivot_look,
-            InpSRLookback, InpSRZonePips,
-            InpSRMinCount, InpSRTolPips,
-            0.0, 1);
-
-        if(!anchor_h1.valid)
-        {
-            if(InpPrintLog)
-                Print("  錨點搵唔到 — 調整 Pivot / S/R 參數或切換 BUY/SELL");
-            return rates_total;
-        }
-
-        FibLevels f = CalcFibLevels(anchor_h1.high, anchor_h1.low, InpIsBuy);
-
-        DrawAllFibLines(f);
-
-        if(InpPrintLog)
-        {
-            SRResult sr_h1 = CalcSRZones(_Symbol, PERIOD_CURRENT,
-                                          InpSRLookback, InpSRZonePips,
-                                          InpSRMinCount, 1);
-            double tol_h1 = InpSRTolPips * pip;
-            int    ol_h1  = 0;
-            double sc_h1  = CalcFibSRScore(f, sr_h1, tol_h1, ol_h1, true);
-            PrintFibLog(f, atr, threshold, pip,
-                        close[rates_total - 1], "H1", false, ol_h1, sc_h1,
-                        anchor_h1.high_bar, anchor_h1.low_bar);
-        }
-
-        return rates_total;
-    }
-
-    //================================================================
-    //  M5 mode
-    //================================================================
     SRResult sr  = CalcSRZones(_Symbol, PERIOD_CURRENT,
                                 InpSRLookback, InpSRZonePips,
                                 InpSRMinCount, 1);
@@ -325,7 +227,7 @@ int OnCalculate(const int rates_total,
         AnchorResult anchor = GetAnchorPoints(
             _Symbol, PERIOD_CURRENT, ANCHOR_M5,
             InpIsBuy,
-            pivot_n, pivot_look,
+            InpPivotN, InpPivotLook,
             InpSRLookback, InpSRZonePips,
             InpSRMinCount, InpSRTolPips,
             InpMinRangePips, 1);
@@ -367,9 +269,38 @@ int OnCalculate(const int rates_total,
         {
             int    lock_ol = 0;
             double lock_sc = CalcFibSRScore(g_locked_fib, sr, tol, lock_ol, true);
-            PrintFibLog(g_locked_fib, atr, threshold, pip,
-                        close[rates_total - 1], "M5", true, lock_ol, lock_sc,
-                        g_locked_hbar, g_locked_lbar);
+
+            PrintFormat("=== Fibonacci M5 | %s | %s | %s ===",
+                        _Symbol,
+                        InpIsBuy ? "BUY" : "SELL",
+                        TimeToString(TimeCurrent(), TIME_DATE|TIME_MINUTES));
+
+            PrintFormat("  狀態 Status  | 🔒 已鎖定 | 重疊:%d 分數:%.1f", lock_ol, lock_sc);
+
+            PrintFormat("  錨點 Anchors | 波段高 1.000: %.5f (bar %d)  波段低 0.000: %.5f (bar %d)  幅度: %.1f pips",
+                        g_locked_fib.swing_high, g_locked_hbar,
+                        g_locked_fib.swing_low,  g_locked_lbar,
+                        g_locked_fib.range / pip);
+
+            PrintFormat("  回撤 Retrace | 0.236: %.5f  0.382: %.5f  0.500: %.5f  0.618: %.5f  0.786: %.5f",
+                        g_locked_fib.fib_236, g_locked_fib.fib_382,
+                        g_locked_fib.fib_500, g_locked_fib.fib_618, g_locked_fib.fib_786);
+
+            if(InpShowExtensions)
+                PrintFormat("  延伸 Ext     | 1.618: %.5f  2.618: %.5f  3.618: %.5f（耗盡位）",
+                            g_locked_fib.fib_1618, g_locked_fib.fib_2618, g_locked_fib.fib_3618);
+
+            PrintFormat("  ATR 接近閾值 | ATR: %.5f  閾值: %.5f (%.1f pips)",
+                        atr, threshold, threshold / pip);
+
+            string near_label;
+            double near_price;
+            if(IsFibNear(close[rates_total - 1], g_locked_fib, threshold, near_label, near_price))
+                PrintFormat("  >>> 價格接近 Fib %s (%.5f) — 當前價: %.5f  距離: %.1f pips",
+                            near_label, near_price, close[rates_total - 1],
+                            MathAbs(close[rates_total - 1] - near_price) / pip);
+            else
+                PrintFormat("  當前價 %.5f — 未接近任何 Fib level", close[rates_total - 1]);
         }
     }
     else if(InpPrintLog)

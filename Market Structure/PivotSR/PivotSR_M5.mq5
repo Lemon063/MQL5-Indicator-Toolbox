@@ -2,23 +2,21 @@
 //|  PivotSR_M5.mq5                                                  |
 //|  MQL5 Indicator Toolbox                                          |
 //|  視覺圖表 indicator — attach 到 M5 chart 驗證邏輯                |
-//|  M5 mode：距離優先                                                |
+//|  M5 mode：距離優先，8小時窗口，冇方向/波段限制                    |
 //+------------------------------------------------------------------+
 #property copyright   "MQL5 Indicator Toolbox"
-#property version     "2.10"
-#property description "M5 Pivot High/Low + S/R zones. Distance priority. Attach to M5 chart."
+#property version     "2.20"
+#property description "M5 Pivot High/Low + S/R zones. Distance priority, 8hr window."
 
 #property indicator_chart_window
 #property indicator_buffers 2
 #property indicator_plots   2
 
-//--- Pivot High（紫紅色箭咀向下）
 #property indicator_label1  "M5 Pivot High"
 #property indicator_type1   DRAW_ARROW
 #property indicator_color1  clrMediumVioletRed
 #property indicator_width1  2
 
-//--- Pivot Low（藍色箭咀向上）
 #property indicator_label2  "M5 Pivot Low"
 #property indicator_type2   DRAW_ARROW
 #property indicator_color2  clrDodgerBlue
@@ -26,18 +24,16 @@
 
 #include <Toolbox/PivotSR.mqh>
 
-//--- Inputs
 input bool   InpIsBuy        = true;   // true = BUY 方向，false = SELL 方向
 input int    InpPivotN       = 5;      // Pivot 左右確認 bars（M5 建議 5-8）
-input int    InpPivotLook    = 50;     // Pivot 回望 bars
+input int    InpPivotLook    = 96;     // Pivot 回望 bars（96 bars = 8小時）
 input int    InpSRLookback   = 100;    // S/R 回望 bars
 input double InpSRZonePips   = 10.0;   // S/R 格距 pips
 input int    InpSRMinCount   = 4;      // S/R 最低出現次數
 input double InpSRTolPips    = 10.0;   // Pivot-SR 配對容忍度 pips
-input double InpMinRangePips = 10.0;   // M5 最小波段 pips
+input double InpMinRangePips = 10.0;   // 最小波段 pips
 input bool   InpPrintLog     = true;   // 輸出至 Journal
 
-//--- Buffers
 double Buffer_PivotHigh[];
 double Buffer_PivotLow[];
 
@@ -54,8 +50,7 @@ int OnInit()
     PlotIndexSetInteger(1, PLOT_ARROW, 233);
 
     IndicatorSetString(INDICATOR_SHORTNAME,
-        StringFormat("PivotSR_M5(%s,N=%d,Dist_Priority)",
-                     InpIsBuy ? "BUY" : "SELL", InpPivotN));
+        StringFormat("PivotSR_M5(%s,N=%d,8hr)", InpIsBuy ? "BUY" : "SELL", InpPivotN));
 
     return INIT_SUCCEEDED;
 }
@@ -94,10 +89,9 @@ int OnCalculate(const int rates_total,
 
     if(InpPrintLog && prev_calculated != rates_total)
     {
-        //--- ANCHOR_M5：距離優先，加入 InpIsBuy 方向性驗證
         AnchorResult anchor = GetAnchorPoints(
             _Symbol, PERIOD_M5, ANCHOR_M5,
-            InpIsBuy,        // ← v2.10：傳入方向
+            InpIsBuy,
             InpPivotN, InpPivotLook,
             InpSRLookback, InpSRZonePips,
             InpSRMinCount, InpSRTolPips,
@@ -117,7 +111,7 @@ int OnCalculate(const int rates_total,
                         (anchor.high - anchor.low) / pip,
                         anchor.range_ok ? "" : " ⚠️ range 太細");
         else
-            Print("  錨點搵唔到（或方向性驗證失敗）— 調整 Pivot / S/R 參數或切換 BUY/SELL");
+            Print("  錨點搵唔到 — 調整 Pivot / S/R / MinRange 參數");
     }
 
     return rates_total;

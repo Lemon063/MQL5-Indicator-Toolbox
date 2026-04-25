@@ -3,6 +3,7 @@
 //|  MQL5 Indicator Toolbox                                          |
 //|  Pivot V字算法 + S/R 密集區錨點選擇 + Fib-SR 評分系統            |
 //|  取代 SwingHighLow.mqh v1.x                                      |
+//|  v2.0：配對驗證架構，取代獨立揀 High/Low                          |
 //|  #include <Toolbox/PivotSR.mqh>                                  |
 //+------------------------------------------------------------------+
 #ifndef __PIVOTSR_MQH__
@@ -14,31 +15,43 @@
 //--- 錨點模式
 enum ENUM_ANCHOR_MODE
 {
-    ANCHOR_H1,   // H1：S/R 強度優先（市場結構錨點）
-    ANCHOR_M5    // M5：距離優先 + MinRange 扣分（入場參考錨點）
+    ANCHOR_H1,   // H1：S/R 強度優先，方向+波段完整性驗證
+    ANCHOR_M5    // M5：距離優先，8小時窗口，冇方向/波段限制
 };
 
 //--- Pivot 候選點
 struct PivotPoint
 {
-    double price;    // Pivot 價格
-    int    bar;      // Bar index（shift）
-    int    sr_count; // 對應 S/R 密集區強度（0 = 冇對應）
-    double dist;     // 距離現價嘅距離（price units）
-    bool   valid;    // 係咪符合所有條件
+    double price;
+    int    bar;
+    int    sr_count;
+    double dist;
+    bool   valid;
 };
 
 //--- 錨點結果
 struct AnchorResult
 {
-    double high;        // 選定嘅 Pivot High 錨點價格
-    double low;         // 選定嘅 Pivot Low 錨點價格
-    int    high_bar;    // Pivot High 發生嘅 bar index
-    int    low_bar;     // Pivot Low 發生嘅 bar index
-    int    high_sr;     // Pivot High 對應 S/R 強度
-    int    low_sr;      // Pivot Low 對應 S/R 強度
-    bool   range_ok;    // range 係咪符合 MinRange（M5 用）
+    double high;
+    double low;
+    int    high_bar;
+    int    low_bar;
+    int    high_sr;
+    int    low_sr;
+    double score;
+    double range_pips;
+    int    span_bars;
+    bool   range_ok;
     bool   valid;
+};
+
+//--- High/Low 配對
+struct WavePair
+{
+    PivotPoint high;
+    PivotPoint low;
+    double     score;    // H1 = sr_count 總和，M5 = -(dist 總和)
+    bool       range_ok; // range 係咪符合 MinRange
 };
 
 //+------------------------------------------------------------------+
@@ -76,11 +89,11 @@ int FindPivotHighs(string symbol, ENUM_TIMEFRAMES tf,
                    PivotPoint &results[], double current_price)
 {
     int count = 0;
-    ArrayResize(results, 50);
+    ArrayResize(results, MathMax(lookback, 1));
     int start = shift + pivot_n;
     int end   = shift + lookback;
 
-    for(int i = start; i < end && count < 50; i++)
+    for(int i = start; i < end; i++)
     {
         if(IsPivotHigh(symbol, tf, i, pivot_n))
         {
@@ -101,11 +114,11 @@ int FindPivotLows(string symbol, ENUM_TIMEFRAMES tf,
                   PivotPoint &results[], double current_price)
 {
     int count = 0;
-    ArrayResize(results, 50);
+    ArrayResize(results, MathMax(lookback, 1));
     int start = shift + pivot_n;
     int end   = shift + lookback;
 
-    for(int i = start; i < end && count < 50; i++)
+    for(int i = start; i < end; i++)
     {
         if(IsPivotLow(symbol, tf, i, pivot_n))
         {
@@ -122,58 +135,36 @@ int FindPivotLows(string symbol, ENUM_TIMEFRAMES tf,
 }
 
 //+------------------------------------------------------------------+
-//|  SelectBestAnchor                                                |
-//|  H1 mode：S/R 強度優先，強度相同先比距離                          |
-//|  M5 mode：距離優先（MinRange 扣分喺 CalcFibSRScore 處理）         |
+//|  IsWaveIntact                                                    |
+//|  H1 only：驗證 High 到 Low 之間冇出現破壞波段嘅價格              |
+//|  BUY：low_bar 到 high_bar 之間（中間 bars）冇更高嘅 High         |
+//|  SELL：high_bar 到 low_bar 之間（中間 bars）冇更低嘅 Low         |
+//|  注意：bar index 越大 = 越舊                                      |
 //+------------------------------------------------------------------+
-PivotPoint SelectBestAnchor(PivotPoint &candidates[], int count,
-                             string symbol, ENUM_ANCHOR_MODE mode)
+bool IsWaveIntact(string symbol, ENUM_TIMEFRAMES tf,
+                  const PivotPoint &ph, const PivotPoint &pl,
+                  bool is_buy)
 {
-    PivotPoint best;
-    best.price    = 0;
-    best.bar      = 0;
-    best.sr_count = 0;
-    best.dist     = DBL_MAX;
-    best.valid    = false;
-
-    if(count == 0) return best;
-
-    double pip_tol = GetPipSize(symbol) * 5.0;
-
-    for(int i = 0; i < count; i++)
+    if(is_buy)
     {
-        if(!candidates[i].valid) continue;
-
-        if(mode == ANCHOR_H1)
-        {
-            //--- H1：強度優先，強度相同先比距離
-            bool stronger = candidates[i].sr_count > best.sr_count;
-            bool same_str = candidates[i].sr_count == best.sr_count;
-            bool closer   = candidates[i].dist < best.dist;
-
-            if(!best.valid || stronger || (same_str && closer))
-                best = candidates[i];
-        }
-        else // ANCHOR_M5
-        {
-            //--- M5：距離優先，5 pips 容忍範圍內用 S/R 強度做 tiebreaker
-            bool closer    = candidates[i].dist < best.dist - pip_tol;
-            bool same_dist = MathAbs(candidates[i].dist - best.dist) <= pip_tol;
-            bool stronger  = candidates[i].sr_count > best.sr_count;
-
-            if(!best.valid || (closer && !same_dist) || (same_dist && stronger))
-                best = candidates[i];
-        }
+        //--- BUY：ph 係較舊（大 bar index），pl 係較新（細 bar index）
+        //    掃 ph.bar-1 到 pl.bar+1（中間 bars）
+        for(int b = ph.bar - 1; b > pl.bar; b--)
+            if(iHigh(symbol, tf, b) > ph.price)
+                return false;
     }
-
-    return best;
+    else
+    {
+        //--- SELL：pl 係較舊，ph 係較新
+        for(int b = pl.bar - 1; b > ph.bar; b--)
+            if(iLow(symbol, tf, b) < pl.price)
+                return false;
+    }
+    return true;
 }
 
 //+------------------------------------------------------------------+
 //|  GetFibWeight                                                    |
-//|  返回各 Fib level 嘅評分權重                                      |
-//|  index: 0=236, 1=382, 2=500, 3=618, 4=786                       |
-//|          5=1000, 6=1618, 7=2618, 8=3618                          |
 //+------------------------------------------------------------------+
 double GetFibWeight(int level_index)
 {
@@ -183,11 +174,75 @@ double GetFibWeight(int level_index)
 }
 
 //+------------------------------------------------------------------+
+//|  Clamp01                                                         |
+//+------------------------------------------------------------------+
+double Clamp01(double value)
+{
+    if(value < 0.0) return 0.0;
+    if(value > 1.0) return 1.0;
+    return value;
+}
+
+//+------------------------------------------------------------------+
+//|  GetWindowExtremes                                               |
+//+------------------------------------------------------------------+
+void GetWindowExtremes(string symbol, ENUM_TIMEFRAMES tf,
+                       int lookback, int shift,
+                       double &window_high, double &window_low)
+{
+    window_high = -DBL_MAX;
+    window_low  =  DBL_MAX;
+
+    int start = MathMax(shift, 0);
+    int end   = shift + lookback;
+
+    for(int i = start; i < end; i++)
+    {
+        double h = iHigh(symbol, tf, i);
+        double l = iLow(symbol, tf, i);
+
+        if(h > window_high) window_high = h;
+        if(l < window_low)  window_low  = l;
+    }
+
+    if(window_high == -DBL_MAX) window_high = 0.0;
+    if(window_low  ==  DBL_MAX) window_low  = 0.0;
+}
+
+//+------------------------------------------------------------------+
+//|  CalcH1PairScore                                                 |
+//+------------------------------------------------------------------+
+double CalcH1PairScore(const PivotPoint &high,
+                       const PivotPoint &low,
+                       int lookback,
+                       double window_high,
+                       double window_low,
+                       bool range_ok)
+{
+    double window_range = MathMax(window_high - window_low, _Point);
+    double wave_range   = high.price - low.price;
+    double range_ratio  = Clamp01(wave_range / window_range);
+    double span_ratio   = Clamp01((double)MathAbs(high.bar - low.bar) / MathMax(lookback, 1));
+
+    double high_edge = Clamp01(1.0 - ((window_high - high.price) / window_range));
+    double low_edge  = Clamp01(1.0 - ((low.price - window_low) / window_range));
+    double edge_score = (high_edge + low_edge) * 0.5;
+
+    int    recent_bar      = MathMin(high.bar, low.bar);
+    double recency_ratio   = 1.0 - Clamp01((double)recent_bar / MathMax(lookback, 1));
+    double sr_score        = (double)(high.sr_count + low.sr_count);
+    double range_ok_bonus  = range_ok ? 0.0 : -20.0;
+
+    return (sr_score   * 4.0) +
+           (range_ratio * 8.0) +
+           (span_ratio  * 5.0) +
+           (edge_score  * 6.0) -
+           (recency_ratio * 3.0) +
+           range_ok_bonus;
+}
+
+//+------------------------------------------------------------------+
 //|  CalcFibSRScore                                                  |
-//|  計算 Fib levels 同 S/R 密集區嘅重疊分數                          |
-//|  tolerance    : 接近閾值（price units）                           |
-//|  overlap_count: 輸出參數，重疊數量                                 |
-//|  min_range_ok : 如果 range 太細，扣 3 分                          |
 //+------------------------------------------------------------------+
 double CalcFibSRScore(const FibLevels &f,
                       const SRResult  &sr,
@@ -216,7 +271,6 @@ double CalcFibSRScore(const FibLevels &f,
         }
     }
 
-    //--- range 太細扣 3 分（令分數唔夠 InpMinScore）
     if(!range_ok)
         score -= 3.0;
 
@@ -224,11 +278,130 @@ double CalcFibSRScore(const FibLevels &f,
 }
 
 //+------------------------------------------------------------------+
+//|  BuildWavePairs                                                  |
+//|  生成所有合格 (High, Low) 配對，按 mode 計分並排序               |
+//|                                                                  |
+//|  H1 mode：                                                       |
+//|    ✓ 方向性驗證（BUY: low_bar < high_bar）                        |
+//|    ✓ 波段完整性驗證（IsWaveIntact）                               |
+//|    score = high.sr_count + low.sr_count                          |
+//|                                                                  |
+//|  M5 mode：                                                       |
+//|    ✓ 8小時窗口：high_bar <= 96 AND low_bar <= 96                 |
+//|    ✗ 冇方向性驗證                                                 |
+//|    ✗ 冇波段完整性驗證                                             |
+//|    score = -(high.dist + low.dist)                               |
+//+------------------------------------------------------------------+
+int BuildWavePairs(PivotPoint &highs[], int hcount,
+                   PivotPoint &lows[],  int lcount,
+                   string symbol, ENUM_TIMEFRAMES tf,
+                   ENUM_ANCHOR_MODE mode, bool is_buy,
+                   int lookback,
+                   double min_range_pips,
+                   double window_high,
+                   double window_low,
+                   WavePair &pairs[])
+{
+    int    pair_count = 0;
+    double pip        = GetPipSize(symbol);
+    double min_r      = min_range_pips * pip;
+    int    max_pairs  = MathMax(hcount * lcount, 1);
+    ArrayResize(pairs, max_pairs);
+
+    for(int h = 0; h < hcount; h++)
+    {
+        if(!highs[h].valid) continue;
+
+        for(int l = 0; l < lcount; l++)
+        {
+            if(!lows[l].valid) continue;
+            if(pair_count >= max_pairs) break;
+
+            //--- high > low 驗證（所有 mode）
+            if(highs[h].price <= lows[l].price) continue;
+
+            if(mode == ANCHOR_H1)
+            {
+                //--- 方向性驗證
+                bool dir_ok = is_buy ? (lows[l].bar < highs[h].bar)
+                                     : (highs[h].bar < lows[l].bar);
+                if(!dir_ok) continue;
+
+                //--- 波段完整性驗證
+                if(!IsWaveIntact(symbol, tf, highs[h], lows[l], is_buy))
+                    continue;
+            }
+            else // ANCHOR_M5
+            {
+                //--- 8小時窗口（96 bars × 5min = 8hr）
+                if(highs[h].bar > 96 || lows[l].bar > 96) continue;
+            }
+
+            //--- MinRange 驗證
+            double range    = highs[h].price - lows[l].price;
+            bool   range_ok = (min_range_pips <= 0 || range >= min_r);
+
+            //--- 排序分數
+            double score;
+            if(mode == ANCHOR_H1)
+                score = CalcH1PairScore(
+                    highs[h], lows[l], lookback,
+                    window_high, window_low, range_ok);
+            else
+                score = -(highs[h].dist + lows[l].dist); // 負數令近嘅排前
+
+            pairs[pair_count].high     = highs[h];
+            pairs[pair_count].low      = lows[l];
+            pairs[pair_count].score    = score;
+            pairs[pair_count].range_ok = range_ok;
+            pair_count++;
+        }
+    }
+
+    ArrayResize(pairs, pair_count);
+
+    //--- Bubble sort：score 高優先
+    for(int i = 0; i < pair_count - 1; i++)
+        for(int j = i + 1; j < pair_count; j++)
+        {
+            bool swap = false;
+
+            if(pairs[j].score > pairs[i].score)
+                swap = true;
+            else if(MathAbs(pairs[j].score - pairs[i].score) <= 0.000001)
+            {
+                double range_j = pairs[j].high.price - pairs[j].low.price;
+                double range_i = pairs[i].high.price - pairs[i].low.price;
+                int    span_j  = MathAbs(pairs[j].high.bar - pairs[j].low.bar);
+                int    span_i  = MathAbs(pairs[i].high.bar - pairs[i].low.bar);
+                int    rec_j   = MathMin(pairs[j].high.bar, pairs[j].low.bar);
+                int    rec_i   = MathMin(pairs[i].high.bar, pairs[i].low.bar);
+
+                if(range_j > range_i + _Point)
+                    swap = true;
+                else if(MathAbs(range_j - range_i) <= _Point && span_j > span_i)
+                    swap = true;
+                else if(MathAbs(range_j - range_i) <= _Point &&
+                        span_j == span_i &&
+                        rec_j > rec_i)
+                    swap = true;
+            }
+
+            if(swap)
+            {
+                WavePair tmp = pairs[i];
+                pairs[i]     = pairs[j];
+                pairs[j]     = tmp;
+            }
+        }
+
+    return pair_count;
+}
+
+//+------------------------------------------------------------------+
 //|  GetAnchorPoints                                                 |
-//|  主函數：結合 Pivot + S/R 搵最佳 Fibonacci 錨點                  |
-//|  v1.4：加入 is_buy 參數，Step 4b 方向性驗證                       |
-//|         BUY：low_bar < high_bar（Low 更近期，即先見頂後見底）      |
-//|         SELL：high_bar < low_bar（High 更近期，即先見底後見頂）    |
+//|  主函數：結合 Pivot + S/R + 配對驗證搵最佳 Fibonacci 錨點        |
+//|  v2.0：配對架構取代 SelectBestAnchor                             |
 //+------------------------------------------------------------------+
 AnchorResult GetAnchorPoints(string symbol,
                              ENUM_TIMEFRAMES    tf,
@@ -241,7 +414,8 @@ AnchorResult GetAnchorPoints(string symbol,
                              int    sr_min         = 4,
                              double sr_tol_pips    = 10.0,
                              double min_range_pips = 0.0,
-                             int    shift          = 1)
+                             int    shift          = 1,
+                             bool   debug_log      = false)
 {
     AnchorResult anchor;
     anchor.high      = 0;
@@ -250,12 +424,19 @@ AnchorResult GetAnchorPoints(string symbol,
     anchor.low_bar   = 0;
     anchor.high_sr   = 0;
     anchor.low_sr    = 0;
+    anchor.score     = 0;
+    anchor.range_pips = 0;
+    anchor.span_bars = 0;
     anchor.range_ok  = true;
     anchor.valid     = false;
 
     double pip           = GetPipSize(symbol);
     double current_price = iClose(symbol, tf, shift);
     double sr_tolerance  = sr_tol_pips * pip;
+    double window_high   = 0.0;
+    double window_low    = 0.0;
+
+    GetWindowExtremes(symbol, tf, pivot_look, shift, window_high, window_low);
 
     //--- Step 1：計算 S/R 密集區
     SRResult sr = CalcSRZones(symbol, tf, sr_lookback, sr_pips, sr_min, shift);
@@ -283,54 +464,85 @@ AnchorResult GetAnchorPoints(string symbol,
             pivot_lows[i].sr_count = zone.count;
     }
 
-    //--- Step 4：揀最佳錨點
-    PivotPoint best_high = SelectBestAnchor(pivot_highs, high_count, symbol, mode);
-    PivotPoint best_low  = SelectBestAnchor(pivot_lows,  low_count,  symbol, mode);
+    //--- Step 4：生成配對 + 驗證 + 排序
+    WavePair pairs[];
+    int pair_count = BuildWavePairs(
+        pivot_highs, high_count,
+        pivot_lows,  low_count,
+        symbol, tf, mode, is_buy,
+        pivot_look,
+        min_range_pips,
+        window_high, window_low,
+        pairs);
 
-    if(!best_high.valid || !best_low.valid)
-        return anchor;
-
-    //--- Step 4b：方向性驗證（v1.4 新增）
-    //    bar index 越細 = 越近期（bar 0 = 現在，bar 48 = 48根K線之前）
-    //    BUY  方向：先見頂，後見底 → Low 更近期 → low_bar < high_bar
-    //    SELL 方向：先見底，後見頂 → High 更近期 → high_bar < low_bar
-    bool direction_ok;
-    if(is_buy)
-        direction_ok = (best_low.bar < best_high.bar);
-    else
-        direction_ok = (best_high.bar < best_low.bar);
-
-    if(!direction_ok)
+    if(pair_count == 0)
     {
-        PrintFormat("⚠️ PivotSR：方向性驗證失敗 | High bar:%d  Low bar:%d | %s",
-                    best_high.bar, best_low.bar,
-                    is_buy ? "BUY 需要 Low 更近期（low_bar < high_bar）"
-                           : "SELL 需要 High 更近期（high_bar < low_bar）");
+        PrintFormat("⚠️ PivotSR：冇任何合格配對 | mode=%s is_buy=%s pivot_look=%d",
+                    mode == ANCHOR_H1 ? "H1" : "M5",
+                    is_buy ? "BUY" : "SELL",
+                    pivot_look);
         return anchor;
     }
 
-    //--- Step 5：high > low 驗證
-    if(best_high.price <= best_low.price)
-    {
-        PrintFormat("⚠️ PivotSR：Pivot High (%.5f) <= Pivot Low (%.5f)，錨點無效",
-                    best_high.price, best_low.price);
-        return anchor;
-    }
+    //--- Step 5：揀 score 最高配對
+    //    H1：S/R 強度最強嘅完整波段
+    //    M5：距離最近嘅 8小時內配對
+    WavePair best   = pairs[0];
 
-    //--- Step 6：M5 MinRange check（記錄係咪 range_ok，扣分由 CalcFibSRScore 處理）
-    if(mode == ANCHOR_M5 && min_range_pips > 0)
-    {
-        double min_range = min_range_pips * pip;
-        anchor.range_ok  = (best_high.price - best_low.price >= min_range);
-    }
-
-    anchor.high     = best_high.price;
-    anchor.low      = best_low.price;
-    anchor.high_bar = best_high.bar;
-    anchor.low_bar  = best_low.bar;
-    anchor.high_sr  = best_high.sr_count;
-    anchor.low_sr   = best_low.sr_count;
+    anchor.high     = best.high.price;
+    anchor.low      = best.low.price;
+    anchor.high_bar = best.high.bar;
+    anchor.low_bar  = best.low.bar;
+    anchor.high_sr  = best.high.sr_count;
+    anchor.low_sr   = best.low.sr_count;
+    anchor.score    = best.score;
+    anchor.range_pips = (best.high.price - best.low.price) / pip;
+    anchor.span_bars  = MathAbs(best.high.bar - best.low.bar);
+    anchor.range_ok = best.range_ok;
     anchor.valid    = true;
+
+    if(debug_log)
+    {
+        PrintFormat("PivotSR DBG | lookback=%d window_high=%.5f window_low=%.5f window_range=%.1f pips highs=%d lows=%d pairs=%d",
+                    pivot_look,
+                    window_high,
+                    window_low,
+                    (window_high - window_low) / pip,
+                    high_count,
+                    low_count,
+                    pair_count);
+
+        int top = MathMin(pair_count, 5);
+        for(int i = 0; i < top; i++)
+        {
+            double pair_range_pips = (pairs[i].high.price - pairs[i].low.price) / pip;
+            int    pair_span       = MathAbs(pairs[i].high.bar - pairs[i].low.bar);
+            int    recent_bar      = MathMin(pairs[i].high.bar, pairs[i].low.bar);
+
+            PrintFormat("PivotSR DBG | rank=%d score=%.2f range=%.1f pips span=%d recent=%d high=%.5f(bar %d sr=%d %s) low=%.5f(bar %d sr=%d %s)",
+                        i + 1,
+                        pairs[i].score,
+                        pair_range_pips,
+                        pair_span,
+                        recent_bar,
+                        pairs[i].high.price,
+                        pairs[i].high.bar,
+                        pairs[i].high.sr_count,
+                        TimeToString(iTime(symbol, tf, pairs[i].high.bar), TIME_DATE|TIME_MINUTES),
+                        pairs[i].low.price,
+                        pairs[i].low.bar,
+                        pairs[i].low.sr_count,
+                        TimeToString(iTime(symbol, tf, pairs[i].low.bar), TIME_DATE|TIME_MINUTES));
+        }
+
+        PrintFormat("PivotSR DBG | chosen score=%.2f range=%.1f pips span=%d high_time=%s low_time=%s range_ok=%s",
+                    anchor.score,
+                    anchor.range_pips,
+                    anchor.span_bars,
+                    TimeToString(iTime(symbol, tf, anchor.high_bar), TIME_DATE|TIME_MINUTES),
+                    TimeToString(iTime(symbol, tf, anchor.low_bar), TIME_DATE|TIME_MINUTES),
+                    anchor.range_ok ? "true" : "false");
+    }
 
     return anchor;
 }

@@ -1,6 +1,6 @@
 # SPEC_Fibonacci.md
 
-版本 Version: 2.1
+版本 Version: 4.1
 最後更新 Last updated: 2026-04
 狀態 Status: Active
 
@@ -105,12 +105,13 @@ fib_3618 = swing_high + 2.618 × range
 
 ---
 
-## 6. 錨點來源（v2.0 起）
+## 6. 錨點來源（v4.1 更新）
 
-v2.0 開始，錨點由 `PivotSR.mqh` 嘅 `GetAnchorPoints()` 提供：
+v2.0 開始，錨點由 `PivotSR.mqh` 嘅 `GetAnchorPoints()` 提供。  
+v4.1 起，H1 會用 representative swing scoring 喺 `InpPivotLook` 窗口內揀最具代表性 high/low：
 - 必須係真正嘅 V 字結構轉折點（Pivot）
-- 優先揀距離現價最近嘅 Pivot
-- S/R 密集區強度做 tiebreaker
+- H1：優先揀完整、幅度夠、接近窗口極值、跨 bars 較長嘅 swing
+- M5：仍然係 8 小時窗口內距離現價最近配對優先
 - 確保 `high > low`，否則 `CalcFibAuto()` 返回空 `FibLevels`（range = 0）
 
 舊版（v1.x）用 N-bar 最高/最低，已棄用。見 `PivotSR` SPEC 嘅 Legacy Note。
@@ -140,6 +141,7 @@ v2.0 開始，錨點由 `PivotSR.mqh` 嘅 `GetAnchorPoints()` 提供：
 | `InpShowExtensions` | true | 顯示 1.618 / 2.618 / 3.618 |
 | `InpAtrMult` | 0.20 | Fib 接近閾值乘數（× ATR）|
 | `InpAtrPeriod` | 14 | ATR 週期 |
+| `InpLineLookback` | 100 | H1 已保留兼容；`OBJ_FIBO` 畫法唔再使用固定左延伸 bars |
 
 ---
 
@@ -158,16 +160,36 @@ v2.0 開始，錨點由 `PivotSR.mqh` 嘅 `GetAnchorPoints()` 提供：
 | 2.618 | 深紫 | 虛線 |
 | 3.618 | 暗紫 | 實線粗（Exhaustion）|
 
-每條線右邊有 `OBJ_TEXT` label 顯示 level + 價格，mouse hover 顯示 tooltip。
+### H1 畫法（v4.1）
+- `Fibonacci_H1.mq5` 使用單一 `OBJ_FIBO`
+- 起點/終點直接綁定真實 anchor time：
+  - BUY：`low_bar -> high_bar`
+  - SELL：`high_bar -> low_bar`
+- 唔再固定畫到最新 bar，所以 Fib 唔會再視覺上永遠痴住最尾
+- tooltip 顯示 representative `score / span / range`
+
+### 舊畫法
+- 舊版 H1 用 `OBJ_TREND` + `OBJ_TEXT`
+- v4.1 `DeleteFibObjects()` 仍會清理舊 objects，避免升級後圖上殘留舊線
 
 ### Journal Print 格式
 ```
-=== Fibonacci 費波那契 | USDJPY | BUY | 2026.04.23 02:17 ===
-  錨點 Anchors    | 波段高 1.000: 159.493  波段低 0.000: 159.230  幅度 Range: 26.3 pips
-  回撤 Retrace    | 0.236: 159.292  0.382: 159.330  0.500: 159.362  0.618: 159.393  0.786: 159.437
-  延伸 Extensions | 1.618: 159.656  2.618: 159.919  3.618: 160.182（耗盡位 Exhaustion）
-  ATR 接近閾值    | ATR: 0.00069  閾值 Threshold: 0.00014 (1.4 pips)
-  >>> 價格接近 Fib 0.236 (159.292) — 當前價 Current: 159.300  距離 Dist: 0.8 pips
+=== Fibonacci H1 | USDJPY | BUY | 2026.04.23 02:17 ===
+  窗口 Window    | lookback: 336 bars (~14.0 days)  pivotN: 8
+  錨點 Anchors   | 波段高 1.000: 159.49300 (bar 84 @ 2026.04.20 09:00)  波段低 0.000: 159.23000 (bar 24 @ 2026.04.22 21:00)  幅度: 26.3 pips
+  代表性評分 Rep | anchor_score: 38.72  span: 60 bars  range: 26.3 pips  range_ok: true
+  回撤 Retrace   | 0.236: 159.29200  0.382: 159.33000  0.500: 159.36200  0.618: 159.39300  0.786: 159.43700
+  延伸 Ext       | 1.618: 159.65600  2.618: 159.91900  3.618: 160.18200（耗盡位）
+  重疊 Overlap   | 3  Fib-SR 分數 Score: 8.0
+  ATR 接近閾值   | ATR: 0.00069  閾值: 0.00014 (1.4 pips)
+  >>> 價格接近 Fib 0.236 (159.29200) — 當前價: 159.30000  距離: 0.8 pips
+```
+
+### PivotSR Debug（當 `InpPrintLog=true`）
+```
+PivotSR DBG | lookback=336 ...
+PivotSR DBG | rank=1 ...
+PivotSR DBG | chosen score=...
 ```
 
 ---
@@ -180,6 +202,7 @@ v2.0 開始，錨點由 `PivotSR.mqh` 嘅 `GetAnchorPoints()` 提供：
 | `high <= low`（橫行市況）| `GetAnchorPoints()` 返回 valid=false，同上 |
 | ATR = 0 | threshold = 0，`IsFibNear()` 永遠返回 false |
 | `InpShowExtensions = false` | 唔畫 1.618–3.618，Journal 唔印延伸位 |
+| `OBJ_FIBO` 建立失敗 | `Fibonacci_H1.mq5` Journal 印出 `OBJ_FIBO 建立/更新失敗` |
 
 ---
 
@@ -187,10 +210,11 @@ v2.0 開始，錨點由 `PivotSR.mqh` 嘅 `GetAnchorPoints()` 提供：
 
 | 項目 | 狀態 | 說明 |
 |---|---|---|
-| `PREFIX` / `PREFIX_LABEL` | ✅ const | 防止意外修改影響 `DeleteFibObjects()` |
+| H1 畫法 | ✅ `OBJ_FIBO` | 真實 anchor time 畫 Fib，唔再固定畫到最新 bar |
+| 舊 objects 清理 | ✅ backward compatible | 會刪除舊版 `OBJ_TREND` / `OBJ_TEXT` |
 | pip 計算 | ✅ `GetPipSize()` | 支援 JPY + 所有品種 |
 | 新 bar 判斷 | ✅ `static datetime` | 避免每 tick 重算 PivotSR |
-| Label 位置 | ✅ 固定 bar[5] | 唔隨 scroll 跳動 |
+| `InpLineLookback` | ⚠️ Legacy | H1 保留 input，但 v4.1 已唔影響 `OBJ_FIBO` 畫法 |
 | Buffer vs shift（PivotSR）| ⚠️ Brittle | AsSeries=true 令兩者對齊，改動時要小心 |
 
 ---
@@ -198,9 +222,9 @@ v2.0 開始，錨點由 `PivotSR.mqh` 嘅 `GetAnchorPoints()` 提供：
 ## 11. 待調教 Pending Tuning
 
 - [ ] `InpAtrMult = 0.20` — Pro spec 預設，forward test 後驗證
-- [ ] `InpPivotN = 3` — forward test 比較 n=2,3,5
+- [ ] H1 representative swing 權重 — 配合不同品種檢查會唔會過分偏向大 swing
+- [ ] `InpPivotN = 8`（H1）— forward test 比較 n=5,8,10
 - [ ] `InpSRZonePips = 10.0` — forward test 後驗證最優格距
-- [ ] Label 固定位置 bar[5] — 如果 chart zoom 太大可能睇唔到，考慮動態調整
 
 ---
 

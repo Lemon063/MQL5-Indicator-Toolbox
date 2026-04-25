@@ -1,6 +1,6 @@
 # SPEC_PivotSR.md
 
-版本 Version: 1.0
+版本 Version: 2.1
 最後更新 Last updated: 2026-04
 狀態 Status: Active
 取代 Replaces: SwingHighLow.mqh v1.x
@@ -23,10 +23,13 @@
 ```mql5
 // 主函數：搵最佳錨點
 AnchorResult GetAnchorPoints(string symbol, ENUM_TIMEFRAMES tf,
+                             ENUM_ANCHOR_MODE mode, bool is_buy,
                              int pivot_n = 3, int pivot_look = 50,
                              int sr_lookback = 100, double sr_pips = 10.0,
                              int sr_min = 4, double sr_tol_pips = 10.0,
-                             int shift = 1)
+                             double min_range_pips = 0.0,
+                             int shift = 1,
+                             bool debug_log = false)
 
 // Pivot 判斷
 bool IsPivotHigh(string symbol, ENUM_TIMEFRAMES tf, int i, int n)
@@ -38,8 +41,11 @@ int FindPivotHighs(string symbol, ENUM_TIMEFRAMES tf,
                    PivotPoint &results[], double current_price)
 int FindPivotLows (...)
 
-// 揀最佳錨點
-PivotPoint SelectBestAnchor(PivotPoint &candidates[], int count)
+// 生成/排序配對
+int BuildWavePairs(...)
+
+// H1 representative swing scoring
+double CalcH1PairScore(...)
 ```
 
 ---
@@ -62,6 +68,10 @@ struct AnchorResult {
     int    low_bar;   // Pivot Low bar index
     int    high_sr;   // Pivot High S/R 強度
     int    low_sr;    // Pivot Low S/R 強度
+    double score;     // 最終配對分數
+    double range_pips;// 波段幅度（pips）
+    int    span_bars; // 波段跨越 bars 數
+    bool   range_ok;
     bool   valid;
 }
 ```
@@ -88,14 +98,32 @@ Pivot Low：bar[i].low 係左右各 N bars 入面每一條都高過佢
 Step 1：CalcSRZones() 計算 S/R 密集區
 Step 2：FindPivotHighs() / FindPivotLows() 搵所有 Pivot 候選
 Step 3：Cross-reference — 每個 Pivot 同 S/R 配對，記錄強度
-Step 4：SelectBestAnchor() 揀最佳錨點
+Step 4：BuildWavePairs() 生成所有合格 high/low 配對
+Step 5：按 mode 排序，揀最高 score 配對
 
-選擇優先順序：
-1. 距離現價最近（主要條件）
-2. S/R 強度最高（tiebreaker）
+H1 mode（`ANCHOR_H1`）：
+1. 方向性驗證
+   - BUY：`low_bar < high_bar`
+   - SELL：`high_bar < low_bar`
+2. 波段完整性驗證（`IsWaveIntact()`）
+3. Representative swing scoring（主要條件）
+   - S/R 強度
+   - 波段 range 佔 `pivot_look` 窗口比例
+   - High/Low 與窗口極值貼近程度
+   - 波段 span bars
+   - 過分貼近最新 bars 會有輕微懲罰
+4. 同分 tie-breaker：
+   - range 較大優先
+   - span 較長優先
+   - 較舊配對優先
 
-注意：冇 S/R 支持嘅 Pivot 仍然有效，S/R 強度只係加分
-      因為部分 Pivot 喺 S/R 計算窗口之外
+M5 mode（`ANCHOR_M5`）：
+1. 限制 high/low 都必須喺最近 96 bars（8 小時）內
+2. 冇方向性驗證
+3. 冇波段完整性驗證
+4. 以距離現價最近為主：`score = -(high.dist + low.dist)`
+
+注意：冇 S/R 支持嘅 Pivot 仍然有效，S/R 強度只係評分一部分
 ```
 
 ---
@@ -110,6 +138,8 @@ Step 4：SelectBestAnchor() 揀最佳錨點
 | `sr_pips` | 10.0 | S/R 格距 pips |
 | `sr_min` | 4 | S/R 最低出現次數 |
 | `sr_tol_pips` | 10.0 | Pivot-SR 配對容忍度 pips |
+| `min_range_pips` | 0.0 | 最低波段幅度，0 = 唔限制 |
+| `debug_log` | false | 輸出 top candidates / chosen pair Journal log |
 
 ---
 
@@ -125,6 +155,13 @@ Step 4：SelectBestAnchor() 揀最佳錨點
 === PivotSR M5 | USDJPY | 2026.04.23 02:17 ===
   錨點 Anchors | 高 Pivot High: 159.493 (bar 8, S/R強度:6)  低 Pivot Low: 159.230 (bar 15, S/R強度:4)
   幅度 Range   | 26.3 pips
+```
+
+### Debug Journal（可選）
+```
+PivotSR DBG | lookback=336 window_high=... window_low=... window_range=... highs=... lows=... pairs=...
+PivotSR DBG | rank=1 score=... range=... span=... recent=... high=...(bar ... sr=... time) low=...(bar ... sr=... time)
+PivotSR DBG | chosen score=... range=... span=... high_time=... low_time=... range_ok=true
 ```
 
 ---
@@ -151,9 +188,10 @@ PivotSR.mqh
 
 ## 10. 待調教 Pending Tuning
 
+- [ ] H1 representative score 權重 — S/R / range / span / recency 比例再 forward test
 - [ ] `pivot_n = 3` — forward test 比較 n=2,3,5
 - [ ] `sr_tol_pips = 10.0` — 配對容忍度是否需要動態調整
-- [ ] 加權排序 — 距離 vs S/R 強度嘅最優比例
+- [ ] `min_range_pips` 是否要按品種 / timeframe 動態設定
 
 ---
 
@@ -164,6 +202,24 @@ PivotSR.mqh
 ---
 
 ## 12. 版本記錄 Version Notes
+
+### v2.1 變更
+
+**H1 representative swing scoring**
+```
+舊版 H1：score = high.sr_count + low.sr_count
+        → 336 bars 只係搜尋範圍，唔會真正偏向最具代表性 swing
+        → 同分時容易留低較近期 pair
+
+新版 H1：score = f(S/R 強度, window range ratio, edge proximity, span, recency penalty)
+        → 14 日窗口內會更偏向完整、幅度夠、接近窗口極值嘅 swing
+```
+
+**Pivot 候選數量**
+```
+舊版：FindPivotHighs/Lows 最多只收 50 個候選
+新版：候選數量覆蓋完整 lookback
+```
 
 ### v1.1 變更
 

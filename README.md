@@ -44,7 +44,7 @@ repo/IndicatorName/IndicatorName.mq5
 **Step 3 — Use in your EA**
 ```mql5
 #include <Toolbox/ATR.mqh>
-#include <Toolbox/SwingHighLow.mqh>
+#include <Toolbox/PivotSR.mqh>
 #include <Toolbox/Fibonacci.mqh>
 ```
 
@@ -61,16 +61,18 @@ Attach any `.mq5` to a chart. Values are drawn as lines and printed to the MT5 J
 | Indicator | Folder | Files | Description |
 |---|---|---|---|
 | ATR | [`Momentum/ATR/`](./Momentum/ATR) | `ATR.mqh` | ATR value + derived calculations: SL distance, trailing stop, Fib proximity threshold, pip size. Visual check: use MT5 built-in ATR indicator |
-| Swing High / Low | [`Market Structure/SwingHighLow/`](./Market%20Structure/SwingHighLow) | `SwingHighLow.mqh` `SwingHighLow_M5.mq5` `SwingHighLow_H1.mq5` | Highest high and lowest low over N bars. M5 (20 bars) and H1 (30 bars). Anchor for Fibonacci and BOS |
-| Fibonacci | [`Fibonacci/`](./Fibonacci) | `Fibonacci.mqh` `Fibonacci.mq5` | Retracement (0.236–0.786) and extension (1.618–3.618) levels based on Swing High/Low. Proximity check and exhaustion signal at 3.618 |
+| SupportResistance | [`Market Structure/SupportResistance/`](./Market%20Structure/SupportResistance) | `SupportResistance.mqh` | High/Low price density zones over N bars. Outputs S/R zones with strength scores. Used by PivotSR |
+| PivotSR | [`Market Structure/PivotSR/`](./Market%20Structure/PivotSR) | `PivotSR.mqh` `PivotSR_M5.mq5` `PivotSR_H1.mq5` | V-structure pivot detection + S/R validation. Replaces SwingHighLow. Outputs best High/Low anchor for Fibonacci |
+| FibTypes | [`Fibonacci/`](./Fibonacci) | `FibTypes.mqh` | `FibLevels` struct definition only. Extracted to avoid circular dependency between PivotSR and Fibonacci |
+| Fibonacci | [`Fibonacci/`](./Fibonacci) | `Fibonacci.mqh` `Fibonacci.mq5` | Retracement (0.236–0.786) and extension (1.618–3.618) levels via PivotSR anchors. M5: distance priority + lock/unlock. H1: S/R strength priority |
 
 ### Signal layer
 *Coming after foundation layer is verified*
 
 | Indicator | Folder | Description |
 |---|---|---|
-| Stochastic | [`Momentum/Stochastic/`](./Momentum/Stochastic) | K/D cross detection, OB/OS zones, bar latch, CSV log. Visual check: use MT5 built-in Stochastic indicator |
-| Engulf / Pin Bar | [`Candle Pattern/EngulfPinBar/`](./Candle%20Pattern/EngulfPinBar) | Bullish/Bearish Engulfing and Pin Bar detection, bar latch, CSV log |
+| Stochastic | [`Momentum/Stochastic/`](./Momentum/Stochastic) | K/D cross detection, OB/OS zones, bar latch, CSV log. No external dependencies. Visual check: use MT5 built-in Stochastic |
+| Engulf / Pin Bar | [`Candle_Pattern/EngulfPinBar/`](./Candle_Pattern/EngulfPinBar) | Bullish/Bearish Engulfing and Pin Bar detection, bar latch, CSV log. Depends on ATR.mqh (GetPipSize) |
 | BOS | `Market Structure/BOS/` | Break of Structure — close beyond swing high/low with momentum confirmation |
 | Reversal Candle | `Candle Pattern/ReversalCandle/` | Detects bullish-to-bearish or bearish-to-bullish candle direction flip |
 | Body Shrinkage | `Candle Pattern/BodyShrinkage/` | Detects candle body shrinking vs previous bar, momentum exhaustion signal |
@@ -91,9 +93,9 @@ Attach any `.mq5` to a chart. Values are drawn as lines and printed to the MT5 J
 | Indicator | Attach to | Notes |
 |---|---|---|
 | ATR | Any chart | Use MT5 built-in ATR indicator instead |
-| SwingHighLow_M5 | M5 chart | Purple-red + blue dashed lines |
-| SwingHighLow_H1 | H1 chart | Dark red + dark blue solid lines |
-| Fibonacci | M5 or H1 chart | 9 horizontal lines, follows chart TF |
+| PivotSR_M5 | M5 chart | Purple-red + blue arrows on pivot highs/lows |
+| PivotSR_H1 | H1 chart | White + sky-blue arrows on pivot highs/lows |
+| Fibonacci | M5 or H1 chart | 9 horizontal lines + labels, follows chart TF |
 | Stochastic | Any chart | Use MT5 built-in Stochastic instead |
 | EngulfPinBar | M5 chart | Green/red arrows on chart |
 
@@ -118,19 +120,19 @@ IndicatorName/
 ## Dependencies
 
 ```
-Fibonacci
-└── SwingHighLow
+Fibonacci.mqh
+└── PivotSR.mqh
+    ├── SupportResistance.mqh
+    │   └── ATR.mqh  (GetPipSize)
+    └── FibTypes.mqh  (FibLevels struct)
 
-EngulfPinBar
-└── ATR  (GetPipSize)
+EngulfPinBar.mqh
+└── ATR.mqh  (GetPipSize)
 
-BOS (coming)
-└── SwingHighLow
-
-ATR
+Stochastic.mqh
 └── (none — standalone)
 
-Stochastic
+ATR.mqh
 └── (none — standalone)
 ```
 
@@ -157,6 +159,8 @@ Indicators using MT5 built-in engines (`iATR`, `iStochastic`) require a handle c
 
 All `.mq5` visual indicators use `PERIOD_CURRENT` to follow the chart timeframe. In EA code, always specify the timeframe explicitly (e.g. `PERIOD_M5`) and log it in `OnInit()` to confirm correct configuration.
 
+`GetAnchorPoints()` requires an `is_buy` direction parameter. The function enforces directionality — BUY requires Low bar to be more recent than High bar, SELL requires the opposite. If validation fails, `valid = false` is returned and nothing is drawn.
+
 ---
 
 ## Status
@@ -164,10 +168,12 @@ All `.mq5` visual indicators use `PERIOD_CURRENT` to follow the chart timeframe.
 | Indicator | Status |
 |---|---|
 | ATR | ✅ v1.4 — `.mqh` verified. Visual check via MT5 built-in |
-| SwingHighLow | ✅ v1.3 — visual check passed |
-| Fibonacci | 🔧 v1.1 — visual check in progress |
-| Stochastic | ⏳ Pending visual check |
-| EngulfPinBar | ⏳ Pending visual check |
+| SupportResistance | ✅ v1.1 — logic verified |
+| PivotSR | ✅ v1.4 — V-structure pivot + direction validation |
+| FibTypes | ✅ v1.0 — struct only |
+| Fibonacci | ✅ v3.10 — M5 lock/unlock + H1 S/R priority + direction validation |
+| Stochastic | ✅ v1.0 — K/D cross + OB/OS. Visual check via MT5 built-in |
+| EngulfPinBar | ✅ v1.0 — Engulfing + Pin Bar detection. Visual check passed |
 | BOS | ⏳ Pending |
 | ReversalCandle | ⏳ Pending |
 | BodyShrinkage | ⏳ Pending |

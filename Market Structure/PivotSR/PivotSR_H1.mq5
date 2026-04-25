@@ -5,7 +5,7 @@
 //|  H1 mode：S/R 強度優先                                            |
 //+------------------------------------------------------------------+
 #property copyright   "MQL5 Indicator Toolbox"
-#property version     "2.00"
+#property version     "2.10"
 #property description "H1 Pivot High/Low + S/R zones. Strength priority. Attach to H1 chart."
 
 #property indicator_chart_window
@@ -27,13 +27,14 @@
 #include <Toolbox/PivotSR.mqh>
 
 //--- Inputs
-input int    InpPivotN      = 3;     // Pivot 左右確認 bars
-input int    InpPivotLook   = 50;    // Pivot 回望 bars
-input int    InpSRLookback  = 100;   // S/R 回望 bars
-input double InpSRZonePips  = 10.0;  // S/R 格距 pips
-input int    InpSRMinCount  = 4;     // S/R 最低出現次數
-input double InpSRTolPips   = 10.0;  // Pivot-SR 配對容忍度 pips
-input bool   InpPrintLog    = true;  // 輸出至 Journal
+input bool   InpIsBuy       = true;   // true = BUY 方向，false = SELL 方向
+input int    InpPivotN      = 3;      // Pivot 左右確認 bars
+input int    InpPivotLook   = 50;     // Pivot 回望 bars
+input int    InpSRLookback  = 100;    // S/R 回望 bars
+input double InpSRZonePips  = 10.0;   // S/R 格距 pips
+input int    InpSRMinCount  = 4;      // S/R 最低出現次數
+input double InpSRTolPips   = 10.0;   // Pivot-SR 配對容忍度 pips
+input bool   InpPrintLog    = true;   // 輸出至 Journal
 
 //--- Buffers
 double Buffer_PivotHigh[];
@@ -52,7 +53,8 @@ int OnInit()
     PlotIndexSetInteger(1, PLOT_ARROW, 233);
 
     IndicatorSetString(INDICATOR_SHORTNAME,
-        StringFormat("PivotSR_H1(N=%d,SR_Priority)", InpPivotN));
+        StringFormat("PivotSR_H1(%s,N=%d,SR_Priority)",
+                     InpIsBuy ? "BUY" : "SELL", InpPivotN));
 
     return INIT_SUCCEEDED;
 }
@@ -91,9 +93,10 @@ int OnCalculate(const int rates_total,
 
     if(InpPrintLog && prev_calculated != rates_total)
     {
-        //--- ANCHOR_H1：S/R 強度優先
+        //--- ANCHOR_H1：S/R 強度優先，加入 InpIsBuy 方向性驗證
         AnchorResult anchor = GetAnchorPoints(
             _Symbol, PERIOD_H1, ANCHOR_H1,
+            InpIsBuy,       // ← v2.10：傳入方向
             InpPivotN, InpPivotLook,
             InpSRLookback, InpSRZonePips,
             InpSRMinCount, InpSRTolPips,
@@ -101,8 +104,9 @@ int OnCalculate(const int rates_total,
 
         double pip = GetPipSize(_Symbol);
 
-        PrintFormat("=== PivotSR H1 | %s | %s ===",
+        PrintFormat("=== PivotSR H1 | %s | %s | %s ===",
                     _Symbol,
+                    InpIsBuy ? "BUY" : "SELL",
                     TimeToString(TimeCurrent(), TIME_DATE|TIME_MINUTES));
 
         if(anchor.valid)
@@ -111,7 +115,7 @@ int OnCalculate(const int rates_total,
                         anchor.low,  anchor.low_bar,  anchor.low_sr,
                         (anchor.high - anchor.low) / pip);
         else
-            Print("  錨點搵唔到 — 調整 Pivot 或 S/R 參數");
+            Print("  錨點搵唔到（或方向性驗證失敗）— 調整 Pivot / S/R 參數或切換 BUY/SELL");
     }
 
     return rates_total;

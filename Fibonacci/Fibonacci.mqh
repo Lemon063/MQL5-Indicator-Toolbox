@@ -55,6 +55,7 @@ FibLevels CalcFibLevels(double swing_high, double swing_low, bool is_buy)
 //+------------------------------------------------------------------+
 //|  CalcFibAuto                                                     |
 //|  用 PivotSR 自動搵錨點再計算 Fib levels                          |
+//|  v2.2：傳入 is_buy 至 GetAnchorPoints，確保方向性驗證             |
 //+------------------------------------------------------------------+
 FibLevels CalcFibAuto(string symbol,
                       ENUM_TIMEFRAMES  tf,
@@ -77,6 +78,7 @@ FibLevels CalcFibAuto(string symbol,
 
     AnchorResult anchor = GetAnchorPoints(
         symbol, tf, mode,
+        is_buy,        // ← v2.2：傳入方向，觸發 Step 4b 方向性驗證
         pivot_n, pivot_look,
         sr_lookback, sr_pips,
         sr_min, sr_tol_pips,

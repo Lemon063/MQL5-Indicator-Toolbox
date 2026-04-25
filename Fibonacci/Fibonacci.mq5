@@ -6,7 +6,7 @@
 //|  H1 mode：S/R 強度優先，唔鎖定                                    |
 //+------------------------------------------------------------------+
 #property copyright   "MQL5 Indicator Toolbox"
-#property version     "3.00"
+#property version     "3.10"
 #property description "Fib levels via PivotSR. M5=lock/unlock. H1=strength priority."
 
 #property indicator_chart_window
@@ -170,8 +170,9 @@ int OnInit()
     g_is_locked = false;
 
     IndicatorSetString(INDICATOR_SHORTNAME,
-        StringFormat("Fib_%s(N=%d)",
+        StringFormat("Fib_%s(%s,N=%d)",
                      InpFibMode == FIB_MODE_M5 ? "M5" : "H1",
+                     InpIsBuy ? "BUY" : "SELL",
                      InpPivotN));
 
     return INIT_SUCCEEDED;
@@ -212,8 +213,8 @@ void PrintFibLog(const FibLevels &f,
         PrintFormat("  狀態 Status  | %s", lock_str);
     }
 
-    PrintFormat("  錨點 Anchors | 波段高 1.000: %.5f  波段低 0.000: %.5f  幅度 Range: %.1f pips",
-                f.swing_high, f.swing_low, f.range / pip);
+    PrintFormat("  錨點 Anchors | 波段高 1.000: %.5f (bar %d)  波段低 0.000: %.5f (bar %d)  幅度 Range: %.1f pips",
+                f.swing_high, 0, f.swing_low, 0, f.range / pip);
 
     PrintFormat("  回撤 Retrace | 0.236: %.5f  0.382: %.5f  0.500: %.5f  0.618: %.5f  0.786: %.5f",
                 f.fib_236, f.fib_382, f.fib_500, f.fib_618, f.fib_786);
@@ -267,16 +268,13 @@ int OnCalculate(const int rates_total,
     double threshold = atr * InpAtrMult;
     double pip       = GetPipSize(_Symbol);
 
-    //--- anchor mode
-    ENUM_ANCHOR_MODE anchor_mode = (InpFibMode == FIB_MODE_M5) ? ANCHOR_M5 : ANCHOR_H1;
-
     //================================================================
     //  H1 模式：每根 bar 重算，S/R 強度優先，唔鎖定
     //================================================================
     if(InpFibMode == FIB_MODE_H1)
     {
         FibLevels f = CalcFibAuto(
-            _Symbol, PERIOD_CURRENT, ANCHOR_H1, InpIsBuy,
+            _Symbol, PERIOD_CURRENT, ANCHOR_H1, InpIsBuy,  // ← v3.10：傳入 InpIsBuy
             InpPivotN, InpPivotLook,
             InpSRLookback, InpSRZonePips,
             InpSRMinCount, InpSRTolPips,
@@ -285,7 +283,7 @@ int OnCalculate(const int rates_total,
         if(f.range == 0)
         {
             if(InpPrintLog)
-                Print("  錨點搵唔到 — 調整 Pivot 或 S/R 參數");
+                Print("  錨點搵唔到（或方向性驗證失敗）— 調整 Pivot / S/R 參數或切換 BUY/SELL");
             return rates_total;
         }
 
@@ -336,6 +334,7 @@ int OnCalculate(const int rates_total,
     {
         AnchorResult anchor = GetAnchorPoints(
             _Symbol, PERIOD_CURRENT, ANCHOR_M5,
+            InpIsBuy,        // ← v3.10：傳入 InpIsBuy，觸發方向性驗證
             InpPivotN, InpPivotLook,
             InpSRLookback, InpSRZonePips,
             InpSRMinCount, InpSRTolPips,
@@ -355,8 +354,10 @@ int OnCalculate(const int rates_total,
                 g_is_locked  = true;
 
                 if(InpPrintLog)
-                    PrintFormat("✅ 新錨點鎖定 | High:%.5f Low:%.5f | 重疊:%d 分數:%.1f",
-                                anchor.high, anchor.low, cand_count, cand_score);
+                    PrintFormat("✅ 新錨點鎖定 | High:%.5f (bar %d)  Low:%.5f (bar %d) | 重疊:%d 分數:%.1f",
+                                anchor.high, anchor.high_bar,
+                                anchor.low,  anchor.low_bar,
+                                cand_count, cand_score);
             }
             else if(InpPrintLog)
                 PrintFormat("⚠️ 候選錨點分數唔夠 | 重疊:%d 分數:%.1f（需要 >=%d / %.1f）%s",
@@ -372,7 +373,6 @@ int OnCalculate(const int rates_total,
 
         if(InpPrintLog)
         {
-            //--- 重新計算鎖定中錨點嘅分數，印出鎖定質素
             int    lock_ol = 0;
             double lock_sc = CalcFibSRScore(g_locked_fib, sr, tol,
                                             lock_ol, true);
@@ -387,4 +387,3 @@ int OnCalculate(const int rates_total,
 
     return rates_total;
 }
-

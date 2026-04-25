@@ -226,10 +226,14 @@ double CalcFibSRScore(const FibLevels &f,
 //+------------------------------------------------------------------+
 //|  GetAnchorPoints                                                 |
 //|  主函數：結合 Pivot + S/R 搵最佳 Fibonacci 錨點                  |
+//|  v1.4：加入 is_buy 參數，Step 4b 方向性驗證                       |
+//|         BUY：low_bar < high_bar（Low 更近期，即先見頂後見底）      |
+//|         SELL：high_bar < low_bar（High 更近期，即先見底後見頂）    |
 //+------------------------------------------------------------------+
 AnchorResult GetAnchorPoints(string symbol,
                              ENUM_TIMEFRAMES    tf,
                              ENUM_ANCHOR_MODE   mode,
+                             bool   is_buy,
                              int    pivot_n        = 3,
                              int    pivot_look     = 50,
                              int    sr_lookback    = 100,
@@ -285,6 +289,25 @@ AnchorResult GetAnchorPoints(string symbol,
 
     if(!best_high.valid || !best_low.valid)
         return anchor;
+
+    //--- Step 4b：方向性驗證（v1.4 新增）
+    //    bar index 越細 = 越近期（bar 0 = 現在，bar 48 = 48根K線之前）
+    //    BUY  方向：先見頂，後見底 → Low 更近期 → low_bar < high_bar
+    //    SELL 方向：先見底，後見頂 → High 更近期 → high_bar < low_bar
+    bool direction_ok;
+    if(is_buy)
+        direction_ok = (best_low.bar < best_high.bar);
+    else
+        direction_ok = (best_high.bar < best_low.bar);
+
+    if(!direction_ok)
+    {
+        PrintFormat("⚠️ PivotSR：方向性驗證失敗 | High bar:%d  Low bar:%d | %s",
+                    best_high.bar, best_low.bar,
+                    is_buy ? "BUY 需要 Low 更近期（low_bar < high_bar）"
+                           : "SELL 需要 High 更近期（high_bar < low_bar）");
+        return anchor;
+    }
 
     //--- Step 5：high > low 驗證
     if(best_high.price <= best_low.price)

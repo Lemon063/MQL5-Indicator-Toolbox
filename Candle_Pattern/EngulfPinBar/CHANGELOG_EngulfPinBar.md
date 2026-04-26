@@ -1,5 +1,12 @@
 # CHANGELOG_EngulfPinBar.md
 
+## v1.1 — 2026-04
+- 加 `DetectCandlePatternAt(symbol, tf, engulf_shift, prior_shift, min_body_pips)`
+- 用途：支援任意 bar shift 嘅 Engulfing 偵測，供 M3Mode1 trigger 用（bar2 vs bar3）
+- Pin Bar 唔支援任意 shift（影線定義依賴 bar1 方向），此 function 只偵測 Engulfing
+- 原有 `DetectCandlePattern()` 保持不變（backward compatible）
+- Header comment 加版本標記 v1.1
+
 ## v1.0 — 2026-04
 - 初版，由 CandlePattern_Sandbox_1.mq5 sandbox EA 重構
 - 邏輯抽出至 `EngulfPinBar.mqh`（純 function，冇 input，冇 print）

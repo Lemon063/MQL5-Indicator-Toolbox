@@ -5,6 +5,7 @@
 //|  冇圖表輸出，冇事件函數 No chart output, no event functions        |
 //|  依賴 Depends on: ATR.mqh (GetPipSize)                           |
 //|  #include <Toolbox/EngulfPinBar.mqh>                             |
+//|  v1.1：加 DetectCandlePatternAt() 支援任意 bar shift             |
 //+------------------------------------------------------------------+
 #ifndef __ENGULFPINBAR_MQH__
 #define __ENGULFPINBAR_MQH__
@@ -144,6 +145,57 @@ CandleSignal DetectCandlePattern(string symbol,
         else
             sig.direction = "SELL";
     }
+
+    return sig;
+}
+
+//+------------------------------------------------------------------+
+//|  DetectCandlePatternAt                                           |
+//|  偵測任意 shift 嘅 Engulfing pattern                             |
+//|  用途：M3Mode1 trigger 睇 bar2 vs bar3                           |
+//|  engulf_shift : 吞噬 bar 嘅 index（e.g. 2 = bar2）              |
+//|  prior_shift  : 被吞噬嘅 bar index（e.g. 3 = bar3）             |
+//|  注意：Pin Bar 只適用 bar1（已收盤 + 影線定義），唔支援任意 shift  |
+//|        故此 function 只偵測 Engulfing，Pin Bar 永遠返回 false     |
+//+------------------------------------------------------------------+
+CandleSignal DetectCandlePatternAt(string symbol,
+                                   ENUM_TIMEFRAMES tf,
+                                   int    engulf_shift,
+                                   int    prior_shift,
+                                   double min_body_pips = 0.5)
+{
+    CandleSignal sig;
+    sig.bullEngulf = false;
+    sig.bearEngulf = false;
+    sig.bullPin    = false;
+    sig.bearPin    = false;
+    sig.detected   = false;
+    sig.direction  = "NONE";
+
+    CandleData b1 = GetCandleData(symbol, tf, engulf_shift);
+    CandleData b2 = GetCandleData(symbol, tf, prior_shift);
+
+    double pipSize     = GetPipSize(symbol);
+    double minBodySize = min_body_pips * pipSize;
+
+    //--- 看漲吞噬 Bullish Engulfing
+    sig.bullEngulf = b2.bearish
+                     && b1.bullish
+                     && (b1.open  < b2.close)
+                     && (b1.close > b2.open)
+                     && (b1.body  > minBodySize);
+
+    //--- 看跌吞噬 Bearish Engulfing
+    sig.bearEngulf = b2.bullish
+                     && b1.bearish
+                     && (b1.open  > b2.close)
+                     && (b1.close < b2.open)
+                     && (b1.body  > minBodySize);
+
+    sig.detected = (sig.bullEngulf || sig.bearEngulf);
+
+    if(sig.detected)
+        sig.direction = sig.bullEngulf ? "BUY" : "SELL";
 
     return sig;
 }

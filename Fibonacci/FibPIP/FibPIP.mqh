@@ -233,16 +233,16 @@ bool FindPIPAnchors(const PIPResult &pip,
     if(best_high_bar < 0 || best_low_bar < 0) return false;
     if(best_high <= best_low) return false;
 
-    // 方向性驗證（AsSeries：bar index 細 = 新）
-    // BUY：low 係較新端（low_bar < high_bar）
-    // SELL：high 係較新端（high_bar < low_bar）
+    // 方向性驗證（AsSeries：bar index 細 = 新，bar index 大 = 舊）
+    // BUY：price 由低升高 → low 係舊端（low_bar > high_bar）
+    // SELL：price 由高跌低 → high 係舊端（high_bar > low_bar）
     if(is_buy)
     {
-        if(best_low_bar >= best_high_bar) return false;
+        if(best_low_bar <= best_high_bar) return false;  // low 必須比 high 更舊
     }
     else
     {
-        if(best_high_bar >= best_low_bar) return false;
+        if(best_high_bar <= best_low_bar) return false;  // high 必須比 low 更舊
     }
 
     double range  = best_high - best_low;
@@ -355,7 +355,28 @@ PIPAnchorResult GetAnchorPoints_PIP(string         symbol,
     // 計算 PIP 點
     PIPResult pip;
     if(!CalcPIPPoints(prices, start_bar, end_bar, pip_order, dist_mode, pip))
+    {
+        PrintFormat("[PIP DBG] CalcPIPPoints 失敗 | start=%d end=%d order=%d",
+                    start_bar, end_bar, pip_order);
         return anchor;
+    }
+
+    // Debug：印出所有 PIP 點
+    PrintFormat("[PIP DBG] 搵到 %d 個 PIP 點 | is_buy=%s min_range=%.1f pips",
+                pip.count, is_buy ? "true" : "false", min_range_pips);
+    double best_h = -DBL_MAX, best_l = DBL_MAX;
+    int    best_h_bar = -1,   best_l_bar = -1;
+    for(int _i = 0; _i < pip.count; _i++)
+    {
+        PrintFormat("[PIP DBG]   point[%d] bar=%d price=%.5f",
+                    _i, pip.points[_i].bar, pip.points[_i].price);
+        if(pip.points[_i].price > best_h) { best_h = pip.points[_i].price; best_h_bar = pip.points[_i].bar; }
+        if(pip.points[_i].price < best_l) { best_l = pip.points[_i].price; best_l_bar = pip.points[_i].bar; }
+    }
+    PrintFormat("[PIP DBG] Best High=%.5f(bar %d)  Best Low=%.5f(bar %d) | BUY需要 low_bar(%d) > high_bar(%d): %s",
+                best_h, best_h_bar, best_l, best_l_bar,
+                best_l_bar, best_h_bar,
+                (best_l_bar > best_h_bar) ? "✅ PASS" : "❌ FAIL 方向錯");
 
     // 搵錨點
     int    h_bar; double h_prz;
@@ -364,7 +385,12 @@ PIPAnchorResult GetAnchorPoints_PIP(string         symbol,
 
     if(!FindPIPAnchors(pip, is_buy, min_range_pips, pip_size,
                        h_bar, h_prz, l_bar, l_prz, r_ok, geom_score))
+    {
+        PrintFormat("[PIP DBG] FindPIPAnchors 失敗 | range=%.1f pips  range_ok=%s",
+                    (best_h - best_l) / pip_size,
+                    ((best_h - best_l) >= min_range_pips * pip_size) ? "true" : "false — range 太細");
         return anchor;
+    }
 
     anchor.high        = h_prz;
     anchor.low         = l_prz;

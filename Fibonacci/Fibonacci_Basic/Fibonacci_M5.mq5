@@ -2,11 +2,13 @@
 //|  Fibonacci_M5.mq5                                                |
 //|  MQL5 Indicator Toolbox                                          |
 //|  M5 mode：距離優先 + Fib-SR 評分 + 鎖定/解鎖機制                 |
-//|  Attach 到 M5 chart                                              |
+//|  v1.10：加入雙 CSV logging，同 Fibonacci_PIP.mq5 格式一致        |
+//|    File A — 每 bar log（所有 Fib levels + 當前價）               |
+//|    File B — 錨點變化 log（錨點改變時記錄）                        |
 //+------------------------------------------------------------------+
 #property copyright   "MQL5 Indicator Toolbox"
-#property version     "1.00"
-#property description "M5 Fib levels via PivotSR. Distance priority + lock/unlock."
+#property version     "1.10"
+#property description "M5 Fib levels via PivotSR. Distance priority + lock/unlock. With CSV logging."
 
 #property indicator_chart_window
 #property indicator_buffers 0
@@ -15,26 +17,31 @@
 #include <Toolbox/Fibonacci.mqh>
 
 //--- Inputs: Pivot
-input int    InpPivotN       = 5;     // Pivot 左右確認 bars
-input int    InpPivotLook    = 96;    // Pivot 回望 bars（8小時）
+input int    InpPivotN       = 5;
+input int    InpPivotLook    = 96;
 
 //--- Inputs: S/R
-input int    InpSRLookback   = 100;   // S/R 回望 bars
-input double InpSRZonePips   = 10.0;  // S/R 格距 pips
-input int    InpSRMinCount   = 4;     // S/R 最低出現次數
-input double InpSRTolPips    = 10.0;  // Pivot-SR 配對容忍度 pips
+input int    InpSRLookback   = 100;
+input double InpSRZonePips   = 10.0;
+input int    InpSRMinCount   = 4;
+input double InpSRTolPips    = 10.0;
 
 //--- Inputs: Fib
-input bool   InpIsBuy        = true;  // true = BUY，false = SELL
+input bool   InpIsBuy        = true;
 input bool   InpShowExtensions = true;
 input double InpAtrMult      = 0.20;
 input int    InpAtrPeriod    = 14;
-input int    InpLineLookback = 100;   // Fib 線往左延伸幾多 bars
+input int    InpLineLookback = 100;
 
 //--- Inputs: 鎖定機制
-input int    InpMinOverlap   = 3;     // 最少 Fib-SR 重疊數量
-input double InpMinScore     = 6.0;   // 最低 Fib-SR 分數
-input double InpMinRangePips = 10.0;  // 最小波段 pips
+input int    InpMinOverlap   = 3;
+input double InpMinScore     = 6.0;
+input double InpMinRangePips = 10.0;
+
+//--- Inputs: CSV Logging
+input bool   InpLogBarCSV    = true;
+input bool   InpLogAnchorCSV = true;
+input string InpLogFolder    = "FibM5_Logs";
 
 //--- Inputs: Display
 input bool   InpPrintLog     = true;
@@ -47,7 +54,131 @@ FibLevels g_locked_fib;
 bool      g_is_locked  = false;
 int       g_locked_hbar = 0;
 int       g_locked_lbar = 0;
+int       g_locked_ol   = 0;
+double    g_locked_sr   = 0;
 
+// CSV file handles
+int    g_bar_csv    = INVALID_HANDLE;
+int    g_anchor_csv = INVALID_HANDLE;
+string g_bar_csv_path    = "";
+string g_anchor_csv_path = "";
+
+//+------------------------------------------------------------------+
+//|  CSV 工具                                                        |
+//+------------------------------------------------------------------+
+bool EnsureLogFolder()
+{
+    FolderCreate(InpLogFolder, FILE_COMMON);
+    return true;
+}
+
+string BuildFilePath(string suffix)
+{
+    string sym = _Symbol;
+    StringReplace(sym, ".", "_");
+    string tf_str = EnumToString(Period());
+    StringReplace(tf_str, "PERIOD_", "");
+    string dir_str = InpIsBuy ? "BUY" : "SELL";
+    return InpLogFolder + "\\" + sym + "_" + tf_str + "_" + dir_str
+           + "_N" + IntegerToString(InpPivotN)
+           + "_L" + IntegerToString(InpPivotLook)
+           + "_PSR"
+           + "_" + suffix + ".csv";
+}
+
+void WriteBarHeader()
+{
+    if(g_bar_csv == INVALID_HANDLE) return;
+    string hdr = "datetime,symbol,timeframe,direction,method,"
+                 "current_price,"
+                 "anchor_high,anchor_low,anchor_high_bar,anchor_low_bar,"
+                 "range_pips,sr_score,sr_overlap,"
+                 "fib_236,fib_382,fib_500,fib_618,fib_786,"
+                 "fib_1000,fib_1618,fib_2618,fib_3618,"
+                 "atr,locked\n";
+    FileWriteString(g_bar_csv, hdr);
+}
+
+void WriteAnchorHeader()
+{
+    if(g_anchor_csv == INVALID_HANDLE) return;
+    string hdr = "datetime,symbol,timeframe,direction,method,"
+                 "anchor_high,anchor_low,anchor_high_bar,anchor_low_bar,"
+                 "range_pips,sr_score,sr_overlap,range_ok,"
+                 "fib_236,fib_382,fib_500,fib_618,fib_786,"
+                 "fib_1000,fib_1618,fib_2618,fib_3618,"
+                 "event\n";
+    FileWriteString(g_anchor_csv, hdr);
+}
+
+string MetaPrefix()
+{
+    string tf_str = EnumToString(Period());
+    StringReplace(tf_str, "PERIOD_", "");
+    return _Symbol + "," + tf_str + ","
+         + (InpIsBuy ? "BUY" : "SELL") + ","
+         + "PSR,";   // method tag — PSR = PivotSR
+}
+
+string FibLevelsStr(const FibLevels &f)
+{
+    return DoubleToString(f.fib_236, 5) + ","
+         + DoubleToString(f.fib_382, 5) + ","
+         + DoubleToString(f.fib_500, 5) + ","
+         + DoubleToString(f.fib_618, 5) + ","
+         + DoubleToString(f.fib_786, 5) + ","
+         + DoubleToString(f.fib_1000, 5) + ","
+         + DoubleToString(f.fib_1618, 5) + ","
+         + DoubleToString(f.fib_2618, 5) + ","
+         + DoubleToString(f.fib_3618, 5);
+}
+
+void WriteBarRow(datetime dt, double current_price,
+                 double atr, bool locked)
+{
+    if(g_bar_csv == INVALID_HANDLE) return;
+    double pip_size = GetPipSize(_Symbol);
+    string row = TimeToString(dt, TIME_DATE|TIME_MINUTES|TIME_SECONDS) + ","
+               + MetaPrefix()
+               + DoubleToString(current_price, 5) + ","
+               + DoubleToString(g_locked_fib.swing_high, 5) + ","
+               + DoubleToString(g_locked_fib.swing_low, 5) + ","
+               + IntegerToString(g_locked_hbar) + ","
+               + IntegerToString(g_locked_lbar) + ","
+               + DoubleToString((g_locked_fib.swing_high - g_locked_fib.swing_low) / pip_size, 2) + ","
+               + DoubleToString(g_locked_sr, 2) + ","
+               + IntegerToString(g_locked_ol) + ","
+               + FibLevelsStr(g_locked_fib) + ","
+               + DoubleToString(atr, 5) + ","
+               + (locked ? "1" : "0") + "\n";
+    FileWriteString(g_bar_csv, row);
+    FileFlush(g_bar_csv);
+}
+
+void WriteAnchorRow(datetime dt,
+                    double sr_score, int sr_overlap,
+                    bool range_ok, string event)
+{
+    if(g_anchor_csv == INVALID_HANDLE) return;
+    double pip_size = GetPipSize(_Symbol);
+    string row = TimeToString(dt, TIME_DATE|TIME_MINUTES|TIME_SECONDS) + ","
+               + MetaPrefix()
+               + DoubleToString(g_locked_fib.swing_high, 5) + ","
+               + DoubleToString(g_locked_fib.swing_low, 5) + ","
+               + IntegerToString(g_locked_hbar) + ","
+               + IntegerToString(g_locked_lbar) + ","
+               + DoubleToString((g_locked_fib.swing_high - g_locked_fib.swing_low) / pip_size, 2) + ","
+               + DoubleToString(sr_score, 2) + ","
+               + IntegerToString(sr_overlap) + ","
+               + (range_ok ? "1" : "0") + ","
+               + FibLevelsStr(g_locked_fib) + ","
+               + event + "\n";
+    FileWriteString(g_anchor_csv, row);
+    FileFlush(g_anchor_csv);
+}
+
+//+------------------------------------------------------------------+
+//|  Chart 畫線（同原版完全一樣）                                    |
 //+------------------------------------------------------------------+
 void DrawFibLine(string name, double price, color clr,
                  ENUM_LINE_STYLE style, int width, string tooltip)
@@ -72,7 +203,6 @@ void DrawFibLine(string name, double price, color clr,
     ObjectSetInteger(0, obj, OBJPROP_BACK,       true);
 }
 
-//+------------------------------------------------------------------+
 void DrawFibLabel(string name, double price, color clr, string label_text)
 {
     string   obj = PREFIX_LABEL + name;
@@ -91,26 +221,22 @@ void DrawFibLabel(string name, double price, color clr, string label_text)
     ObjectSetInteger(0, obj, OBJPROP_BACK,       false);
 }
 
-//+------------------------------------------------------------------+
 void DeleteFibObjects()
 {
     int total = ObjectsTotal(0, 0, OBJ_TREND);
     for(int i = total - 1; i >= 0; i--)
     {
         string name = ObjectName(0, i, 0, OBJ_TREND);
-        if(StringFind(name, PREFIX) == 0)
-            ObjectDelete(0, name);
+        if(StringFind(name, PREFIX) == 0) ObjectDelete(0, name);
     }
     total = ObjectsTotal(0, 0, OBJ_TEXT);
     for(int i = total - 1; i >= 0; i--)
     {
         string name = ObjectName(0, i, 0, OBJ_TEXT);
-        if(StringFind(name, PREFIX_LABEL) == 0)
-            ObjectDelete(0, name);
+        if(StringFind(name, PREFIX_LABEL) == 0) ObjectDelete(0, name);
     }
 }
 
-//+------------------------------------------------------------------+
 void DrawFibSet(string name, double price, color clr,
                 ENUM_LINE_STYLE style, int width, string level_str)
 {
@@ -119,7 +245,6 @@ void DrawFibSet(string name, double price, color clr,
     DrawFibLabel(name, price, clr, text);
 }
 
-//+------------------------------------------------------------------+
 void DrawAllFibLines(const FibLevels &f)
 {
     DrawFibSet("SwingHigh", f.swing_high, clrWhite,        STYLE_DOT,   1, "1.000");
@@ -154,8 +279,31 @@ int OnInit()
     g_locked_hbar = 0;
     g_locked_lbar = 0;
 
+    // CSV 初始化
+    EnsureLogFolder();
+
+    if(InpLogBarCSV)
+    {
+        g_bar_csv_path = BuildFilePath("bar");
+        g_bar_csv = FileOpen(g_bar_csv_path, FILE_WRITE|FILE_CSV|FILE_COMMON|FILE_ANSI, ',');
+        if(g_bar_csv != INVALID_HANDLE) WriteBarHeader();
+        else PrintFormat("⚠️ 無法開啟 bar CSV: %s", g_bar_csv_path);
+    }
+
+    if(InpLogAnchorCSV)
+    {
+        g_anchor_csv_path = BuildFilePath("anchor");
+        g_anchor_csv = FileOpen(g_anchor_csv_path, FILE_WRITE|FILE_CSV|FILE_COMMON|FILE_ANSI, ',');
+        if(g_anchor_csv != INVALID_HANDLE) WriteAnchorHeader();
+        else PrintFormat("⚠️ 無法開啟 anchor CSV: %s", g_anchor_csv_path);
+    }
+
     IndicatorSetString(INDICATOR_SHORTNAME,
         StringFormat("Fib_M5(%s,N=%d)", InpIsBuy ? "BUY" : "SELL", InpPivotN));
+
+    PrintFormat("✅ Fib_M5 初始化 | Bar CSV: %s | Anchor CSV: %s",
+                g_bar_csv != INVALID_HANDLE ? g_bar_csv_path : "OFF",
+                g_anchor_csv != INVALID_HANDLE ? g_anchor_csv_path : "OFF");
 
     return INIT_SUCCEEDED;
 }
@@ -169,6 +317,8 @@ void OnDeinit(const int reason)
         IndicatorRelease(g_atrHandle);
         g_atrHandle = INVALID_HANDLE;
     }
+    if(g_bar_csv    != INVALID_HANDLE) { FileClose(g_bar_csv);    g_bar_csv    = INVALID_HANDLE; }
+    if(g_anchor_csv != INVALID_HANDLE) { FileClose(g_anchor_csv); g_anchor_csv = INVALID_HANDLE; }
 }
 
 //+------------------------------------------------------------------+
@@ -200,13 +350,14 @@ int OnCalculate(const int rates_total,
 
     double threshold = atr * InpAtrMult;
     double pip       = GetPipSize(_Symbol);
+    datetime bar_time = time[1];
 
     SRResult sr  = CalcSRZones(_Symbol, PERIOD_CURRENT,
                                 InpSRLookback, InpSRZonePips,
                                 InpSRMinCount, 1);
     double   tol = InpSRTolPips * pip;
 
-    //--- 解鎖 check
+    //--- 解鎖 check（原版邏輯不變）
     if(g_is_locked)
     {
         int    ol_count = 0;
@@ -214,6 +365,10 @@ int OnCalculate(const int rates_total,
 
         if(ol_count < InpMinOverlap || ol_score < InpMinScore)
         {
+            // 寫 anchor log：解鎖事件
+            if(InpLogAnchorCSV)
+                WriteAnchorRow(bar_time, ol_score, ol_count, true, "UNLOCK");
+
             g_is_locked = false;
             if(InpPrintLog)
                 PrintFormat("⚠️ 錨點解鎖 | 重疊:%d 分數:%.1f（門檻 >=%d / %.1f）",
@@ -221,7 +376,7 @@ int OnCalculate(const int rates_total,
         }
     }
 
-    //--- 搵新錨點
+    //--- 搵新錨點（原版邏輯不變）
     if(!g_is_locked)
     {
         AnchorResult anchor = GetAnchorPoints(
@@ -246,6 +401,12 @@ int OnCalculate(const int rates_total,
                 g_is_locked   = true;
                 g_locked_hbar = anchor.high_bar;
                 g_locked_lbar = anchor.low_bar;
+                g_locked_ol   = cand_count;
+                g_locked_sr   = cand_score;
+
+                // 寫 anchor log：新鎖定事件
+                if(InpLogAnchorCSV)
+                    WriteAnchorRow(bar_time, cand_score, cand_count, anchor.range_ok, "NEW_LOCK");
 
                 if(InpPrintLog)
                     PrintFormat("✅ 新錨點鎖定 | High:%.5f (bar %d)  Low:%.5f (bar %d) | 重疊:%d 分數:%.1f",
@@ -264,6 +425,10 @@ int OnCalculate(const int rates_total,
     if(g_is_locked)
     {
         DrawAllFibLines(g_locked_fib);
+
+        // 每 bar log
+        if(InpLogBarCSV)
+            WriteBarRow(bar_time, close[rates_total - 1], atr, true);
 
         if(InpPrintLog)
         {
@@ -289,9 +454,6 @@ int OnCalculate(const int rates_total,
             if(InpShowExtensions)
                 PrintFormat("  延伸 Ext     | 1.618: %.5f  2.618: %.5f  3.618: %.5f（耗盡位）",
                             g_locked_fib.fib_1618, g_locked_fib.fib_2618, g_locked_fib.fib_3618);
-
-            PrintFormat("  ATR 接近閾值 | ATR: %.5f  閾值: %.5f (%.1f pips)",
-                        atr, threshold, threshold / pip);
 
             string near_label;
             double near_price;

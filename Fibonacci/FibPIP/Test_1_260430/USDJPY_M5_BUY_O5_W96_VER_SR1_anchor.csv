@@ -1,0 +1,2 @@
+datetime,symbol,timeframe,direction,dist_mode,pip_order,window_size,use_sr,anchor_high,anchor_low,anchor_high_bar,anchor_low_bar,range_pips,geom_score,fib_sr_score,sr_overlap,range_ok,fib_236,fib_382,fib_500,fib_618,fib_786,fib_1000,fib_1618,fib_2618,fib_3618,event
+2026.04.30 00:50:00,USDJPY,M5,BUY,VER,5,96,1,160.42200,160.05800,39,85,36.40,36.40,16.00,6,160.14390,160.19705,160.24000,160.28295,160.34410,160.42200,160.64695,161.01095,161.37495,1,NEW_LOCK

@@ -1,0 +1,2161 @@
+{
+  "items": "50",
+  "sentiment_score_definition": "x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat_Bullish; x >= 0.35: Bullish",
+  "relevance_score_definition": "0 < x <= 1, with a higher score indicating higher relevance.",
+  "feed": [
+    {
+      "title": "Old Dominion Freight Line focuses on steady operations as freight demand evolves",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/old-dominion-freight-line-focuses-on-steady-operations-as-freight-demand/69683267",
+      "time_published": "20260703T213235",
+      "authors": [],
+      "summary": "Old Dominion Freight Line is maintaining its focus on network efficiency and disciplined pricing as freight demand changes across US industrial and retail customers. The company uses a hub-and-spoke LTL network to maximize trailer utilization and offers value-added services like guaranteed delivery and digital tracking. Old Dominion's strategy emphasizes yield management and a diverse customer base to sustain profitability in an evolving market.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405048_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.614857"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.637215"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.641404"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.644707"
+        }
+      ],
+      "overall_sentiment_score": 0.182922,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ODFL",
+          "relevance_score": "0.995744",
+          "ticker_sentiment_score": "0.340148",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "FDX",
+          "relevance_score": "0.639284",
+          "ticker_sentiment_score": "0.122370",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "UPS",
+          "relevance_score": "0.604907",
+          "ticker_sentiment_score": "0.149060",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Quanta Services stock stays centered on U.S. infrastructure demand.",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/quanta-services-stock-stays-centered-on-u-s-infrastructure-demand/69683262",
+      "time_published": "20260703T213134",
+      "authors": [
+        "Christina Vaughn"
+      ],
+      "summary": "Quanta Services (PWR) stock remains focused on U.S. infrastructure demand, driven by ongoing utility, energy, and communications spending on grid and network development. The company, a large-scale contractor, relies on efficient project execution and a strong backlog, making it sensitive to the pace of clean energy integration and power demand. Investors closely monitor backlog quality, labor availability, and project execution across its transmission and distribution work.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404998_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.938792"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.842074"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.725459"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.725881"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.610465"
+        }
+      ],
+      "overall_sentiment_score": 0.312053,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "PWR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.301316",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Mosaic Company focuses on fertilizer demand as agriculture navigates changing markets",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/mosaic-company-focuses-on-fertilizer-demand-as-agriculture-navigates/69683206",
+      "time_published": "20260703T211930",
+      "authors": [],
+      "summary": "Mosaic Company, a leading producer of phosphate and potash fertilizers, is deeply integrated into the global agricultural economy. Its performance is directly linked to farmers' planting decisions, commodity prices, and input spending, as it supplies essential nutrients for key crops. The company manages a vertically integrated business model from mining to distribution, with significant operations in North America and Latin America, and focuses on operational efficiency and balanced capital allocation to navigate volatile market conditions.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405020_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.846121"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.802744"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.710348"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.630215"
+        }
+      ],
+      "overall_sentiment_score": 0.27927,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MOS",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.325896",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "ADM",
+          "relevance_score": "0.623636",
+          "ticker_sentiment_score": "0.227653",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Royal Caribbean Group focuses on long-term growth as cruising demand recovers",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/royal-caribbean-group-focuses-on-long-term-growth-as-cruising-demand/69683198",
+      "time_published": "20260703T211734",
+      "authors": [],
+      "summary": "Royal Caribbean Group is investing in its fleet and onboard offerings, benefiting from recovering global demand for cruises. The company is positioning its business model for sustainable growth and improved profitability, focusing on expanding capacity with efficient vessels and optimizing its revenue mix from ticket and onboard sales. Operational efficiency and a strong guest experience are key to its long-term equity story and ability to generate consistent cash flow.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405012_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.949113"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.730411"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.611962"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.614577"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.632868"
+        }
+      ],
+      "overall_sentiment_score": 0.721708,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "RCL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.697865",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Weyerhaeuser builds value in timber and real estate operations",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/weyerhaeuser-builds-value-in-timber-and-real-estate-operations/69683195",
+      "time_published": "20260703T211710",
+      "authors": [],
+      "summary": "Weyerhaeuser Co. operates a large timberland and wood products platform in North America, integrating forestry assets with a real estate and natural resources portfolio. This business model is designed to generate resilient cash flows across various economic cycles by balancing current demand with long-term resource stewardship and capitalizing on real estate development opportunities. The company's integrated structure allows it to optimize timber supply, wood product manufacturing, and land monetization, providing a distinctive profile for investors interested in land, natural resources, and real estate.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405016_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.932531"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.701750"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.602963"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.625151"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.628293"
+        }
+      ],
+      "overall_sentiment_score": 0.471847,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WY",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.497689",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Vulcan Materials focuses on aggregates demand as US construction projects advance",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/vulcan-materials-focuses-on-aggregates-demand-as-us-construction-projects/69683187",
+      "time_published": "20260703T211406",
+      "authors": [],
+      "summary": "Vulcan Materials, a major US producer of construction aggregates and asphalt, is closely tied to the country's infrastructure and private construction. Its business model relies on the consistent demand for aggregates in various projects, from highways to residential developments, with strategic focus on optimizing its portfolio and efficiency. Investors view the stock as a way to participate in the ongoing demand for physical infrastructure in the US.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405011_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.932481"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.838906"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.732563"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.601289"
+        }
+      ],
+      "overall_sentiment_score": 0.374498,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VMC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.448402",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "MLM",
+          "relevance_score": "0.592537",
+          "ticker_sentiment_score": "0.302301",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NUE",
+          "relevance_score": "0.597212",
+          "ticker_sentiment_score": "0.317827",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "AES Corp. focuses on energy transition strategy as a global power producer",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/aes-corp-focuses-on-energy-transition-strategy-as-a-global-power-producer/69683166",
+      "time_published": "20260703T210706",
+      "authors": [],
+      "summary": "AES Corp. is a global power company emphasizing energy transition through lower-carbon technologies and long-term contracts. The company develops, owns, and operates a diversified portfolio of power generation and storage assets, including conventional and renewable sources, with a significant focus on battery energy storage solutions. Its strategy aims to provide stable cash flow for investors by balancing growth in renewables with financial discipline and managing legacy assets.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405022_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.927109"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.707668"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.620173"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.631522"
+        }
+      ],
+      "overall_sentiment_score": 0.460913,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AES",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.491586",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Waste Management Inc earnings and long-term growth story",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/waste-management-inc-earnings-and-long-term-growth-story/69682893",
+      "time_published": "20260703T205833",
+      "authors": [
+        "ad-hoc-news.de"
+      ],
+      "summary": "Waste Management Inc is a key player in the North American waste and recycling market, characterized by stable cash flows, recurring revenues from long-term contracts, and ongoing investments in sustainable infrastructure and technology. The company focuses on cost discipline, operational efficiency, and strategic capital allocation, blending essential service provision with environmental initiatives like recycling and renewable energy projects. Its long-term growth is driven by population growth, urbanization, and regulatory pressures for environmental responsibility, despite operating in a complex competitive and regulatory landscape.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405049_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.927027"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.805091"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.637356"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.622802"
+        }
+      ],
+      "overall_sentiment_score": 0.605491,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WM",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.619656",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "General Dynamics outlines defense growth prospects. Operations and strategy remain in focus for investors",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/general-dynamics-outlines-defense-growth-prospects-operations-and/69682887",
+      "time_published": "20260703T205750",
+      "authors": [],
+      "summary": "General Dynamics, a major US defense and aerospace contractor, focuses on defense growth prospects, particularly in its land combat systems, marine systems, and aerospace segments. Investors track its long-term order book, margin profile, and cash generation. The company's strategy involves maintaining a robust backlog, improving operating margins, and converting earnings into strong free cash flow, with its business jet line serving as a representative commercial product.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404988_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.936206"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.836346"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.707370"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.614630"
+        }
+      ],
+      "overall_sentiment_score": 0.047672,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "GD",
+          "relevance_score": "0.307773",
+          "ticker_sentiment_score": "0.042795",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Walmart Inc steady on U.S. consumer trends. Retail giant leans on everyday value",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/walmart-inc-steady-on-u-s-consumer-trends-retail-giant-leans-on-everyday/69683096",
+      "time_published": "20260703T205109",
+      "authors": [],
+      "summary": "Walmart Inc continues to leverage its extensive scale, diverse grocery offerings, and everyday low pricing strategy to attract U.S. consumers, even amidst intense competition from other retailers and online platforms. The company's strong performance, viewed as a key indicator of household economic health, is driven by its vast store network, digital capabilities, and focus on providing value to budget-conscious shoppers. Walmart remains a central player in the U.S. retail landscape, deeply integrated into daily consumer spending.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405055_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.922836"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.844853"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.712077"
+        }
+      ],
+      "overall_sentiment_score": 0.423089,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WMT",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.401839",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "General Electric (GE) Could Be 8% Overvalued As Jet Engine Demand Strengthens",
+      "url": "https://simplywall.st/stocks/us/capital-goods/nyse-ge/general-electric/news/general-electric-ge-could-be-8-overvalued-as-jet-engine-dema",
+      "time_published": "20260703T204641",
+      "authors": [
+        "Simply Wall St"
+      ],
+      "summary": "General Electric (GE) is currently estimated to be 8% overvalued based on a fair value calculation of $350.45 against its last closing price of $377.52, despite strong demand in its GE Aerospace division. The company has seen significant stock momentum with a 53.73% return over the last year, driven by major airline orders and long-term agreements. However, potential risks like air travel slowdowns or supply chain issues could challenge its optimistic cash flow projections.",
+      "banner_image": null,
+      "source": "Simply Wall Street",
+      "category_within_source": "General",
+      "source_domain": "Simply Wall Street",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.944641"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.840700"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.619779"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.730457"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.916400"
+        }
+      ],
+      "overall_sentiment_score": 0.000722,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "GE",
+          "relevance_score": "0.318247",
+          "ticker_sentiment_score": "0.028079",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Q1 Earnings Highlights: AbbVie (NYSE:ABBV) Vs The Rest Of The Therapeutics Stocks",
+      "url": "https://uk.finance.yahoo.com/news/q1-earnings-highlights-abbvie-nyse-204206648.html",
+      "time_published": "20260703T204158",
+      "authors": [
+        "Adam Hejl"
+      ],
+      "summary": "This article reviews the Q1 2026 earnings for AbbVie and other therapeutics companies, highlighting strong performance across the sector. While AbbVie reported increased revenues and an optimistic outlook, Moderna saw the fastest revenue growth, and United Therapeutics had the weakest performance. The article also touches on shifting market narratives from AI to geopolitical risks, emphasizing the importance of fundamental strength in investments.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/EFEE33F4704B6265C404A515805EF2AC8548D640EFC92EE5088DE22EA585BFC7/subgraphmysterio/resizefill_w136_h48;quality_100;format_webp/https:%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2023-10%2F7a17aaa0-71fd-11ee-bbf2-06d0c1f3a7ba",
+      "source": "Yahoo Finance UK",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance UK",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.920861"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.700912"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.641365"
+        }
+      ],
+      "overall_sentiment_score": 0.225263,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ABBV",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.289345",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MRNA",
+          "relevance_score": "0.734806",
+          "ticker_sentiment_score": "0.302806",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "VRTX",
+          "relevance_score": "0.586257",
+          "ticker_sentiment_score": "0.116874",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Monster Beverage Corp focuses on energy drinks as investors watch growth trends",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/monster-beverage-corp-focuses-on-energy-drinks-as-investors-watch-growth/69682969",
+      "time_published": "20260703T203822",
+      "authors": [],
+      "summary": "Monster Beverage Corp remains a key player in the global energy drink market, with investors closely watching its growth strategy, profitability, and competition. The company focuses on a diverse portfolio of energy drinks, distinctive branding, international expansion, and continuous innovation. Its stock performance is influenced by both company-specific factors and broader market sentiment, as it operates in a discretionary consumer category.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404987_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.838073"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.735588"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.634945"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.633792"
+        }
+      ],
+      "overall_sentiment_score": 0.040524,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MNST",
+          "relevance_score": "0.311261",
+          "ticker_sentiment_score": "0.015165",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Valero Energy focuses on refining margins as investors watch US fuel demand",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/valero-energy-focuses-on-refining-margins-as-investors-watch-us-fuel/69682975",
+      "time_published": "20260703T202010",
+      "authors": [],
+      "summary": "Valero Energy, a major US petroleum refiner, is navigating a challenging environment where its profitability is heavily influenced by refining margins and domestic fuel demand. The company's strategy involves optimizing its widespread refinery network, investing in renewable fuels like renewable diesel, and maintaining a strong balance sheet to ensure stable returns for shareholders amidst fluctuating market conditions and evolving environmental regulations.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405040_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.814561"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.728155"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.634429"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.639868"
+        }
+      ],
+      "overall_sentiment_score": 0.289282,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VLO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.287345",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Zions Bancorporation focuses on regional banking strength amid changing US credit cycle",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/zions-bancorporation-focuses-on-regional-banking-strength-amid-changing-us/69682938",
+      "time_published": "20260703T201010",
+      "authors": [],
+      "summary": "Zions Bancorporation is adapting to the evolving US credit cycle by emphasizing its regional banking strengths, including balance sheet resilience, strong deposit relationships, and a focused lending portfolio. The company's business model relies heavily on net interest income from loans and securities, complemented by fee-based services, and operates within the Western US economies. Key to its strategy are rigorous risk management, adaptation to interest rate changes, and a focus on relationship-based commercial and consumer banking.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405053_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.733211"
+        }
+      ],
+      "overall_sentiment_score": 0.227861,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ZION",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.213414",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Zions Bancorp focuses on regional banking strength as investors watch credit quality",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/zions-bancorp-focuses-on-regional-banking-strength-as-investors-watch/69682883",
+      "time_published": "20260703T200904",
+      "authors": [],
+      "summary": "Zions Bancorp, a regional bank in the Western U.S., is under investor scrutiny for its credit quality, loan growth, and deposit trends amidst the current interest rate environment. The bank focuses on a relationship-driven model for small to mid-sized commercial clients, offering traditional lending and treasury management services. Its strategy emphasizes local ties, diversified deposit base, and careful risk management to ensure stable earnings and capital resilience.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405020_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.808689"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.738331"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.639061"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.613830"
+        }
+      ],
+      "overall_sentiment_score": 0.205176,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ZION",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.240115",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Caterpillar picks Texas for next focus of $100 million workforce investment",
+      "url": "https://www.bizjournals.com/dallas/news/2026/07/03/caterpillar-100m-workforce-development-ai.html",
+      "time_published": "20260703T195715",
+      "authors": [
+        "Plamedie Ifasso"
+      ],
+      "summary": "Caterpillar is expanding its $100 million workforce investment program, selecting Texas as the next state to receive funding after Indiana. The initiative will involve a partnership between the Irving-headquartered manufacturer and Texas State Technical College. This move aims to further develop the manufacturing workforce in Texas.",
+      "banner_image": "https://media.bizj.us/view/img/12887949/cat-927-wheel-loader*20xx2500-1406-0-234.jpg",
+      "source": "The Business Journals",
+      "category_within_source": "General",
+      "source_domain": "The Business Journals",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.829382"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.607020"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.626080"
+        }
+      ],
+      "overall_sentiment_score": 0.417283,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "CAT",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.447171",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Otis Worldwide focuses on resilient elevator demand as investors watch long-term growth",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/otis-worldwide-focuses-on-resilient-elevator-demand-as-investors-watch/69682818",
+      "time_published": "20260703T194247",
+      "authors": [],
+      "summary": "Otis Worldwide Corp. is attracting investor attention due to its global elevator and escalator business, which benefits from recurring service revenue and urbanization. The company's business model relies heavily on its large installed base and modernization services, providing stable cash flow. Key growth drivers include global urbanization, the construction of high-rise buildings, and the ongoing demand for modernizing existing elevator systems.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405011_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.846804"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.703327"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.642567"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.647810"
+        }
+      ],
+      "overall_sentiment_score": 0.478909,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "OTIS",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.498424",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Southwest Airlines outlines post-pandemic growth plans as travel demand normalizes",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/southwest-airlines-outlines-post-pandemic-growth-plans-as-travel-demand/69682810",
+      "time_published": "20260703T194116",
+      "authors": [],
+      "summary": "Southwest Airlines is transitioning from a period of volatile pandemic recovery to a more stable demand environment, focusing on refining its network and cost structure. The airline's strategy includes balancing capacity with sustainable demand, enhancing operational reliability, and maintaining its simple fare strategy and single aircraft fleet to control costs and improve fuel efficiency. Emphasis is placed on customer satisfaction through predictable pricing and reliable service within its U.S.-focused network.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404979_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.905616"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.831710"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.734895"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.648469"
+        }
+      ],
+      "overall_sentiment_score": 0.407325,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "LUV",
+          "relevance_score": "0.999452",
+          "ticker_sentiment_score": "0.404384",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "MAYU - AllianzIM US Equity Buffer15 Uncapped May ETF Stock Price and Quote",
+      "url": "https://finviz.com/stock?t=MAYU&ty=c&r=ytd&p=d&b=1",
+      "time_published": "20260703T193959",
+      "authors": [],
+      "summary": "This article provides detailed stock information for the AllianzIM US Equity Buffer15 Uncapped May ETF (MAYU). It includes financial data such as price, changes, expense ratio, AUM, and return percentages. The fund aims to track the share price returns of the SPDR S&P 500 ETF Trust, primarily investing in FLexible EXchange Options.",
+      "banner_image": "https://finviz.com/gfx/discount_campaign/summer_sale/banner.webp?rev=2445753073",
+      "source": "Finviz",
+      "category_within_source": "General",
+      "source_domain": "Finviz",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.940727"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.812114"
+        },
+        {
+          "topic": "ipo",
+          "relevance_score": "0.711547"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.642168"
+        }
+      ],
+      "overall_sentiment_score": 0.022967,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MAYU",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.049665",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "SPGI",
+          "relevance_score": "0.574927",
+          "ticker_sentiment_score": "0.060035",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "CBOE",
+          "relevance_score": "0.580765",
+          "ticker_sentiment_score": "0.057567",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "3 Reasons to Avoid TFSL and 1 Stock to Buy Instead",
+      "url": "https://www.financialcontent.com/article/stockstory-2026-7-3-3-reasons-to-avoid-tfsl-and-1-stock-to-buy-instead",
+      "time_published": "20260703T193954",
+      "authors": [],
+      "summary": "The article advises investors to avoid TFS Financial (TFSL) despite its recent stock price increase, citing three main reasons for potential underperformance: weak net interest income growth, a low net interest margin indicating poor loan book profitability, and barely growing earnings per share. Instead, it suggests investing in a different all-weather company, specifically mentioning the owner of Taco Bell, and also promotes an AI-driven list of top growth stocks.",
+      "banner_image": "https://news-assets.stockstory.org/cover-images/_1400x700_crop_center-center_none/tfs-financial-cover-image-f7ca1146b195_2025-06-09-221208_ilhw.jpeg",
+      "source": "FinancialContent",
+      "category_within_source": "General",
+      "source_domain": "FinancialContent",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.944230"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.848236"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.827421"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.605847"
+        }
+      ],
+      "overall_sentiment_score": 0.133504,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "TFSL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.441144",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "YUM",
+          "relevance_score": "0.608026",
+          "ticker_sentiment_score": "0.319444",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.619895",
+          "ticker_sentiment_score": "0.516395",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Carrier Global Corp highlights its building solutions as investors assess long-term growth",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/carrier-global-corp-highlights-its-building-solutions-as-investors-assess/69682781",
+      "time_published": "20260703T193716",
+      "authors": [],
+      "summary": "Carrier Global Corp is highlighted as a diversified industrial company focusing on heating, ventilation, air conditioning, and refrigeration solutions globally. The article details its business segments including HVAC, refrigeration, and fire/security, and emphasizes its commitment to energy efficiency, sustainability, and smart building technologies. It explains how Carrier's stock offers investors exposure to long-term trends in construction, building modernization, and energy efficiency, while also discussing the competitive landscape and macroeconomic factors influencing the company’s performance.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405027_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.946814"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.811731"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.642354"
+        }
+      ],
+      "overall_sentiment_score": 0.411931,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "CARR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.400776",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Lamb Weston focuses on frozen potato growth as a global food supplier",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/lamb-weston-focuses-on-frozen-potato-growth-as-a-global-food-supplier/69682777",
+      "time_published": "20260703T193313",
+      "authors": [
+        "ad-hoc-news.de"
+      ],
+      "summary": "Lamb Weston is a leading global supplier of frozen potato products for restaurants and retailers, investing in processing capacity and innovation to meet long-term demand. The company's business model focuses on large-scale processing, efficient supply chain management, and optimizing product mix with a strong emphasis on customer relationships and product development. Lamb Weston's stock performance is influenced by restaurant traffic, retail demand, commodity prices, and the company's operational efficiency in the packaged foods sector.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405015_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.912309"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.801750"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.740155"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.629869"
+        }
+      ],
+      "overall_sentiment_score": 0.598879,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "LW",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.564590",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Fastenal Co. focuses on distribution scale as industrial demand evolves",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/fastenal-co-focuses-on-distribution-scale-as-industrial-demand-evolves/69682675",
+      "time_published": "20260703T191444",
+      "authors": [],
+      "summary": "Fastenal Co. leverages its extensive distribution network and vendor-managed inventory system to navigate the evolving industrial landscape. The company supplies industrial and construction products across North America, focusing on efficiency and reducing procurement complexity for its customers. By offering a wide range of products both at local branches and on-site, Fastenal aims to maintain reliable availability and support manufacturing, construction, and maintenance operations.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405026_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.940107"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.838549"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.725091"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.603054"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.638947"
+        }
+      ],
+      "overall_sentiment_score": 0.347681,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "FAST",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.347354",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Delta Air Lines stock follows a thin catalyst day. Trading remains tied to airline demand",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/delta-air-lines-stock-follows-a-thin-catalyst-day-trading-remains-tied-to/69682594",
+      "time_published": "20260703T190223",
+      "authors": [
+        "Christina Vaughn"
+      ],
+      "summary": "Delta Air Lines (DAL) stock continues to be influenced by airline demand and its U.S. listing on the New York Stock Exchange. Investors are closely monitoring its operational trends, upcoming earnings, and the broader travel environment, as these factors significantly impact the company's performance and share price. The airline's business model relies on passenger traffic, pricing power, and cost control, making its next earnings report crucial for evaluating revenue and margin trends.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405031_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.917096"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.844182"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.617941"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.916111"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.745917"
+        }
+      ],
+      "overall_sentiment_score": -0.080743,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "DAL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.040566",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "LUV",
+          "relevance_score": "0.618390",
+          "ticker_sentiment_score": "-0.069647",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "UAL",
+          "relevance_score": "0.594604",
+          "ticker_sentiment_score": "-0.062915",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "CCL",
+          "relevance_score": "0.614208",
+          "ticker_sentiment_score": "-0.052685",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Sempra (SRE) Following Five Year Low Gas Costs Faces A Fresh Valuation Test",
+      "url": "https://simplywall.st/stocks/us/utilities/nyse-sre/sempra/news/sempra-sre-following-five-year-low-gas-costs-faces-a-fresh-v",
+      "time_published": "20260703T185236",
+      "authors": [
+        "Simply Wall St"
+      ],
+      "summary": "Sempra (SRE) is being re-evaluated after its subsidiary reported five-year low natural gas costs. While the stock is currently seen as 10.1% undervalued based on a narrative fair value of $103.50, its high P/E ratio of 31.6x compared to the industry average raises questions about its valuation. Investors are encouraged to review the full picture, including risks and potential warnings, before making investment decisions.",
+      "banner_image": "https://images.ctfassets.net/n07nr2koi959/1txW1Rnk3fUjh2FW939y6e/a1bb305c92d46eae2c7f925893392fdd/avatar-v2.png?w=64&h=64&q=90&fit=fill&f=top",
+      "source": "Simply Wall Street",
+      "category_within_source": "General",
+      "source_domain": "Simply Wall Street",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.942073"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.803330"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.626880"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.714986"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.646496"
+        }
+      ],
+      "overall_sentiment_score": 0.121648,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "SRE",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.119053",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Does Molina Healthcare (MOH) Belong in Value Indices or Growth Portfolios After Its Russell Reclassification?",
+      "url": "https://simplywall.st/stocks/us/healthcare/nyse-moh/molina-healthcare/news/does-molina-healthcare-moh-belong-in-value-indices-or-growth",
+      "time_published": "20260703T185213",
+      "authors": [
+        "Simply Wall St"
+      ],
+      "summary": "Molina Healthcare (MOH) was recently reclassified into Russell 2500 Value indices, indicating a shift in its investor base towards value characteristics. This reclassification occurs amidst challenges such as exchange risk adjustment transfers and potential medical cost inflation, which could impact its Medicaid-focused business model. Despite these challenges, the article highlights varying analyst forecasts and encourages investors to conduct their own analysis, suggesting that the core investment narrative remains Medicaid-centric.",
+      "banner_image": "https://images.simplywall.st/asset/user/fbd72afd.1780278039538.448255906390bbae.png",
+      "source": "Simply Wall Street",
+      "category_within_source": "General",
+      "source_domain": "Simply Wall Street",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.941743"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.814088"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.840300"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.703388"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.625123"
+        }
+      ],
+      "overall_sentiment_score": -0.22965,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MOH",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.230093",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Wynn Resorts outlook shaped by global travel demand",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/wynn-resorts-outlook-shaped-by-global-travel-demand/69682501",
+      "time_published": "20260703T184752",
+      "authors": [
+        "Steven Krueger"
+      ],
+      "summary": "Wynn Resorts Ltd faces challenges in luxury gaming and hospitality due to evolving global travel patterns, consumer spending, and regulatory expectations. The company's long-term success hinges on balancing its Las Vegas and Macau operations with future development plans, maintaining a diversified revenue base, and managing its capital-intensive assets effectively.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405037_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.912682"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.940343"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.718555"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.631769"
+        }
+      ],
+      "overall_sentiment_score": 0.095852,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "WYNN",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.174812",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MGM",
+          "relevance_score": "0.559072",
+          "ticker_sentiment_score": "0.037701",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "AutoZone Inc focuses on steady aftermarket demand as investors weigh long-term growth",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/autozone-inc-focuses-on-steady-aftermarket-demand-as-investors-weigh/69682465",
+      "time_published": "20260703T184209",
+      "authors": [],
+      "summary": "AutoZone Inc, a major retailer of automotive replacement parts, is focusing on North American aftermarket demand, driven by an aging vehicle fleet. The company's strategy involves store expansion, a robust commercial program for professional repair shops, and digital initiatives to support long-term earnings growth. AutoZone's business model emphasizes an extensive product portfolio, including private labels, efficient supply chain management, and a focus on customer experience both in-store and through digital platforms.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405046_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.902040"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.832599"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.744968"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.610655"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.616302"
+        }
+      ],
+      "overall_sentiment_score": 0.425678,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AZO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.440601",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Sempra (SRE) Following Five Year Low Gas Costs Faces A Fresh Valuation Test",
+      "url": "https://simplywall.st/stocks/us/utilities/nyse-sre/sempra/news/sempra-sre-following-five-year-low-gas-costs-faces-a-fresh-v/amp",
+      "time_published": "20260703T183855",
+      "authors": [
+        "Simply Wall St"
+      ],
+      "summary": "Sempra (SRE) is under valuation scrutiny after its subsidiary reported a five-year low in natural gas costs for March-May 2026. While a popular narrative suggests the stock is 10.1% undervalued with a fair value of $103.50 based on anticipated revenue growth and increased profit margins, another perspective highlights its current P/E of 31.6x as expensive compared to industry averages. The article advises investors to consider both views, along with potential risks and opportunities, given the mixed signals.",
+      "banner_image": null,
+      "source": "Simply Wall Street",
+      "category_within_source": "General",
+      "source_domain": "Simply Wall Street",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.947844"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.833000"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.720589"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.612683"
+        }
+      ],
+      "overall_sentiment_score": 0.244595,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SRE",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.219602",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Is NVR, Inc. (NVR) A Good Stock To Buy Now?",
+      "url": "https://www.insidermonkey.com/blog/is-nvr-inc-nvr-a-good-stock-to-buy-now-2-1794311/",
+      "time_published": "20260703T183015",
+      "authors": [
+        "Ricardo Pillai"
+      ],
+      "summary": "NVR, Inc. (NVR) is highlighted as a high-quality homebuilder with an asset-light business model and strong capital efficiency, despite facing pressure from elevated mortgage rates and declining affordability. The article summarizes a bullish thesis, emphasizing NVR's competitive advantages like land option contracts and a disciplined capital allocation strategy focused on share repurchases. While acknowledging cyclical headwinds, the analysis suggests NVR is a best-in-class company undergoing a valuation reset, positioning it for long-term outperformance as housing fundamentals recover.",
+      "banner_image": "https://d2w7kw43nye0pi.cloudfront.net/LROzCKoDymwDZ5LJgQ9gZlv0ck_wQjGk4ePVp-58XCc/resize:fill:480:270:0/plain/https://imonkeyblog.s3.us-east-1.amazonaws.com/blog/wp-content/uploads/2023/09/28150837/NVR-insidermonkey-1695928114703.jpg",
+      "source": "Insider Monkey",
+      "category_within_source": "General",
+      "source_domain": "Insider Monkey",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.914429"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.835576"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.701233"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.636420"
+        }
+      ],
+      "overall_sentiment_score": 0.492059,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NVR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.506439",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Twin Disc focuses on drivetrain solutions as investors assess long-term demand",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/twin-disc-focuses-on-drivetrain-solutions-as-investors-assess-long-term/69682063",
+      "time_published": "20260703T180935",
+      "authors": [],
+      "summary": "Twin Disc Inc. specializes in power transmission equipment for heavy-duty off-highway vehicles, marine vessels, and industrial applications. The company's performance is tied to cyclical capital spending in sectors like construction, mining, energy, and marine transport. Investors analyze factors such as commodity cycles, infrastructure spending, and the company's ability to maintain margins and invest in product development to assess its long-term prospects.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405007_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.939246"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.846917"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.714014"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.603513"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.618326"
+        }
+      ],
+      "overall_sentiment_score": 0.276813,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "TWIN",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.259257",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Alphabet stock. Company context stays the focus.",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alphabet-stock-company-context-stays-the-focus/69682210",
+      "time_published": "20260703T180547",
+      "authors": [
+        "Christina Vaughn"
+      ],
+      "summary": "Alphabet stock's current trading is focused on the company's core businesses and identity rather than new catalysts, as the market evaluates its financial performance. The company's revenue heavily relies on digital advertising, with Google Cloud offering long-term diversification. Investors are keenly observing the balance between cash generation and intensive capital investment in AI, infrastructure, and cloud competition, which influences the stock's trading dynamics.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405049_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.947059"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.821091"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.703100"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.627335"
+        }
+      ],
+      "overall_sentiment_score": 0.028931,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.316879",
+          "ticker_sentiment_score": "0.000263",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Amcor plc focuses on sustainable packaging as investors weigh long-term growth",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/amcor-plc-focuses-on-sustainable-packaging-as-investors-weigh-long-term/69682196",
+      "time_published": "20260703T180400",
+      "authors": [],
+      "summary": "Amcor plc is a global packaging company specializing in sustainable solutions, including recyclable and reusable materials. The company's strategy focuses on innovation and long-term supply arrangements, particularly in flexible packaging for consumer goods and healthcare. Investors are keenly watching Amcor's ability to grow volumes, manage raw material costs, and capitalize on its sustainable packaging innovations, with steady cash generation and disciplined capital allocation being key to its investment case.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405025_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.935947"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.821538"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.710870"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.604487"
+        }
+      ],
+      "overall_sentiment_score": 0.435835,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AMCR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.417064",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Snap-on Inc navigates tool demand and industrial spending. Investors watch long-term fundamentals",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/snap-on-inc-navigates-tool-demand-and-industrial-spending-investors-watch/69682179",
+      "time_published": "20260703T180138",
+      "authors": [],
+      "summary": "Snap-on Inc (SNA) is a key player in professional tools and equipment, serving automotive and industrial markets crucial for daily operations. The company's business model focuses on premium tools, diagnostics, and equipment, which leads to recurring demand from professionals who view these tools as essential capital goods. Snap-on's stability is underpinned by its direct sales network, exposure to industrial production, and the persistent need for vehicle maintenance, making it a relatively resilient segment for investors despite economic shifts.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404984_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.946565"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.849622"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.742057"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.646122"
+        }
+      ],
+      "overall_sentiment_score": 0.329295,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SNA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.333169",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Dollar General highlights discount retail strategy for value-focused shoppers",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/dollar-general-highlights-discount-retail-strategy-for-value-focused/69682132",
+      "time_published": "20260703T175434",
+      "authors": [],
+      "summary": "Dollar General continues to expand its small-box discount retail model in the United States, targeting value-conscious consumers with low prices and neighborhood locations. The company focuses on a simple store format with limited assortments and high shelf productivity, aiming to serve value-conscious shoppers looking for quick trips close to home. Its strategy emphasizes cost discipline, a robust supply chain, and a focus on essential goods to attract customers during economic phases characterized by higher living costs.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405048_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.916229"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.708021"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.641288"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.613816"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.648013"
+        }
+      ],
+      "overall_sentiment_score": 0.484809,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "DG",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.462556",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Globe Life balances growth and risk in the US insurance market",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/globe-life-balances-growth-and-risk-in-the-us-insurance-market/69682065",
+      "time_published": "20260703T174549",
+      "authors": [],
+      "summary": "Globe Life Inc. navigates the competitive US life and supplemental health insurance market by focusing on disciplined underwriting, cost control, and targeting middle-income families with affordable protection products. The company utilizes a multi-channel distribution strategy and manages risks like mortality and investment volatility under state-based regulations. Investors assess Globe Life based on its balance of growth, risk management, and capital deployment strategies, against a backdrop of demographic shifts and economic conditions.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405013_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.942398"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.823783"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.600229"
+        }
+      ],
+      "overall_sentiment_score": 0.125182,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "GL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.134463",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Weyco Group Inc stock steady as footwear maker focuses on brand portfolio and wholesale strength",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/weyco-group-inc-stock-steady-as-footwear-maker-focuses-on-brand-portfolio/69681848",
+      "time_published": "20260703T174054",
+      "authors": [],
+      "summary": "Weyco Group Inc, a footwear company with ISIN US9621661043, maintains a steady stock performance by focusing on its brand portfolio and wholesale distribution in the North American market. The company specializes in designing, sourcing, and marketing dress and casual shoes, targeting a mid-range price segment with an emphasis on quality and brand recognition. Its strategy balances wholesale partnerships with direct-to-consumer channels, relying on consistent execution, efficient operations, and managing inventory to navigate the competitive footwear industry.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405021_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.917274"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.814505"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.713364"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.622440"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.649428"
+        }
+      ],
+      "overall_sentiment_score": 0.287833,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WEYS",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.259698",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Republic Services focuses on steady waste management operations as investors track long-term growth",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/republic-services-focuses-on-steady-waste-management-operations-as/69682018",
+      "time_published": "20260703T173737",
+      "authors": [],
+      "summary": "Republic Services, a major U.S. waste management company, is highlighted for its stable business model driven by essential services, long-term contracts, and essential environmental compliance. The company's strategic focus on capital-intensive operations, technological efficiency, and sustainability initiatives positions it for long-term growth despite the slow-growth nature of the sector. Investors view Republic Services as an infrastructure-like business with predictable revenue streams and a focus on managing debt and returning value to shareholders.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405002_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.927680"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.614868"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.638271"
+        }
+      ],
+      "overall_sentiment_score": 0.001876,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "RSG",
+          "relevance_score": "0.324593",
+          "ticker_sentiment_score": "0.017743",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "How Retirees Can Turn $100,000 Into Steady Monthly Income With This Dividend Stock",
+      "url": "https://247wallst.com/investing/2026/07/03/how-retirees-can-turn-100000-into-steady-monthly-income-with-this-dividend-stock/",
+      "time_published": "20260703T173023",
+      "authors": [
+        "Vandita Jadeja"
+      ],
+      "summary": "Realty Income (O), a monthly dividend payer, offers retirees a way to convert a $100,000 investment into approximately $424 in monthly income, equating to a 5.09% annual yield. The company boasts 670 consecutive monthly dividend payments and has consistently raised its quarterly dividend. Its robust financial performance, including increased AFFO per share and raised investment guidance, supports sustained dividend growth for income-focused investors.",
+      "banner_image": "https://247wallst.com/wp-content/uploads/2019/01/gettyimages-884678024.jpg",
+      "source": "24/7 Wall St.",
+      "category_within_source": "General",
+      "source_domain": "24/7 Wall St.",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.922060"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.816173"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.731065"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.634030"
+        }
+      ],
+      "overall_sentiment_score": 0.424993,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "O",
+          "relevance_score": "0.975272",
+          "ticker_sentiment_score": "0.729478",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "APO",
+          "relevance_score": "0.550100",
+          "ticker_sentiment_score": "0.309680",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GPC",
+          "relevance_score": "0.647888",
+          "ticker_sentiment_score": "0.305011",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MRNA",
+          "relevance_score": "0.638047",
+          "ticker_sentiment_score": "0.340816",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "EFX",
+          "relevance_score": "0.631512",
+          "ticker_sentiment_score": "0.307948",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Caesars Entertainment highlights its Las Vegas footprint as investors watch casino demand",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/caesars-entertainment-highlights-its-las-vegas-footprint-as-investors/69681880",
+      "time_published": "20260703T171822",
+      "authors": [],
+      "summary": "Caesars Entertainment operates a large network of casinos and resorts, particularly on the Las Vegas Strip, serving as a key indicator for investor interest in gaming and hospitality. The company's strategy focuses on an integrated resort model, data-driven marketing, and loyalty programs to drive guest spending and repeat visits. Caesars also emphasizes live entertainment and regular property modernizations to maintain competitiveness, with its stock performance reflecting travel trends, consumer spending, and competitive dynamics in the industry.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405041_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.914531"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.700899"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.621705"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.647948"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.727276"
+        }
+      ],
+      "overall_sentiment_score": 0.328917,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "CZR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.306597",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Ventas Inc. focuses on senior housing and healthcare properties as a long-term real estate investmen",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/ventas-inc-focuses-on-senior-housing-and-healthcare-properties-as-a/69681860",
+      "time_published": "20260703T171500",
+      "authors": [],
+      "summary": "Ventas Inc. is a real estate investment trust (REIT) specializing in senior housing and healthcare facilities, leveraging long-term leases and demographic trends to generate stable cash flows. The company focuses on high-quality assets across senior living communities (independent living, assisted living, memory care) and various healthcare properties (medical office buildings, outpatient facilities), partnering with experienced operators. Its financial strategy involves a mix of equity and debt financing, with a focus on maintaining appropriate leverage and distributing a substantial portion of taxable income as dividends.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404998_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.710271"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.710449"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.608963"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.634988"
+        }
+      ],
+      "overall_sentiment_score": 0.425278,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VTR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.436522",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "United States Lime focuses on industrial demand as investors watch sector trends",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/united-states-lime-focuses-on-industrial-demand-as-investors-watch-sector/69681795",
+      "time_published": "20260703T171021",
+      "authors": [],
+      "summary": "United States Lime & Minerals, Inc. (USLM) is attracting investor attention due to the significant industrial demand for its lime and limestone products. The company serves diverse sectors such as steel manufacturing, chemical production, construction, and environmental applications, positioning it to benefit from broader economic trends. Its strategy involves maintaining reliable supply, managing costs, and investing in efficiency within regional markets.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405012_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.949421"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.875818"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.759298"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.746656"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.605792"
+        }
+      ],
+      "overall_sentiment_score": 0.417366,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "USLM",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.428422",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "SkyWest Inc focuses on regional flying as US travel demand normalizes",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/skywest-inc-focuses-on-regional-flying-as-us-travel-demand-normalizes/69681685",
+      "time_published": "20260703T171015",
+      "authors": [],
+      "summary": "SkyWest Inc is refining its regional airline model to adapt to a normalized US travel demand environment after the post-pandemic surge. The company relies on a contract-based revenue model with major US carriers, which provides predictable cash flows. SkyWest adjusts its fleet and operations to align capacity with partner needs and pilot availability, emphasizing efficiency and reliable operations for long-term success.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405039_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.820594"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.620887"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.923995"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.720706"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.645278"
+        }
+      ],
+      "overall_sentiment_score": 0.015031,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "SKYW",
+          "relevance_score": "0.345726",
+          "ticker_sentiment_score": "0.006917",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Alexander's Inc navigates a thin data day as a New York real estate owner",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alexander-s-inc-navigates-a-thin-data-day-as-a-new-york-real-estate-owner/69681897",
+      "time_published": "20260703T170944",
+      "authors": [],
+      "summary": "Alexander's Inc is a specialized real estate investment trust (REIT) focusing on a concentrated portfolio of high-value properties in New York. The company's performance is closely tied to its few major assets, generating revenue from long-term leases with commercial tenants. As a REIT, Alexander's Inc distributes a significant portion of its taxable income as dividends, making it an income-oriented equity security for investors.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404996_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.924345"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.700362"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.634896"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.645705"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.627755"
+        }
+      ],
+      "overall_sentiment_score": 0.295667,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ALX",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.261344",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Rio Tinto plc focuses on long term metals demand as global industrial activity evolves",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/rio-tinto-plc-focuses-on-long-term-metals-demand-as-global-industrial/69681011",
+      "time_published": "20260703T170934",
+      "authors": [],
+      "summary": "Rio Tinto plc is a diversified mining group focusing on iron ore, copper, and aluminum, aligning its strategy with long-term global industrial and energy transition demands. The company emphasizes capital discipline, strong balance sheet management, and sustainable practices, while navigating risks associated with commodity price volatility and regulatory changes. Its operations are centered on high-volume production and efficient logistics, aiming to deliver consistent shareholder returns through dividends and share buybacks.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405031_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.922805"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.835508"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.703625"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.638459"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.621957"
+        }
+      ],
+      "overall_sentiment_score": 0.411142,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "RIO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.390676",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Federal Realty focuses on retail assets as investors track long-term rental income",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/federal-realty-focuses-on-retail-assets-as-investors-track-long-term/69681816",
+      "time_published": "20260703T170744",
+      "authors": [],
+      "summary": "Federal Realty, a real estate investment trust, specializes in retail-oriented properties and open-air shopping centers in densely populated U.S. markets. The company's strategy focuses on stable rental income through long-term leases and mixed-use redevelopments. Investors track metrics like occupancy, leasing spreads, and dividend sustainability, as the company's valuation is influenced by interest rates, property values, and the health of retail tenants.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405050_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.848123"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.709940"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.602197"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.624430"
+        }
+      ],
+      "overall_sentiment_score": 0.522849,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "FRT",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.536113",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Nordson Corp keeps the focus on industrial demand.",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/nordson-corp-keeps-the-focus-on-industrial-demand/69681787",
+      "time_published": "20260703T170322",
+      "authors": [
+        "Christina Vaughn"
+      ],
+      "summary": "Nordson Corp remains a key industrial stock, with its performance tied to manufacturing activity, capital spending, and demand for its dispensing, coating, and polymer-processing systems. The company's diversified model across electronics, medical, consumer, and industrial applications helps smooth revenue swings, making it an important indicator for investors tracking global industrial output and customer investment cycles.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405038_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.905250"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.827336"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.735598"
+        }
+      ],
+      "overall_sentiment_score": 0.309318,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "NDSN",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.305541",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Invitation Homes focuses on single-family rentals as a long-term growth story",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/invitation-homes-focuses-on-single-family-rentals-as-a-long-term-growth/69681728",
+      "time_published": "20260703T165257",
+      "authors": [],
+      "summary": "Invitation Homes operates a large portfolio of single-family rental homes in the United States, aiming for steady cash flows from rental income and long-term value creation for shareholders. The company's strategy focuses on professional property management, disciplined capital allocation, and optimizing occupancy in key metropolitan areas. Its business model benefits from the growing demand for rental housing and targets regions with strong employment and population growth.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405031_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.710606"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.603668"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.638464"
+        }
+      ],
+      "overall_sentiment_score": 0.004284,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "INVH",
+          "relevance_score": "0.345532",
+          "ticker_sentiment_score": "0.035475",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Unilever plc leans on global brands as investors eye long-term growth",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/unilever-plc-leans-on-global-brands-as-investors-eye-long-term-growth/69681619",
+      "time_published": "20260703T164054",
+      "authors": [],
+      "summary": "Unilever plc remains a key player in global consumer staples, utilizing its diverse portfolio of household and personal care brands to drive cash flow and market resilience. The company focuses on operational efficiency, streamlining its portfolio, and strategic marketing investments to maintain strong brand equity and adapt to evolving consumer preferences and market dynamics. For investors, Unilever offers a defensive holding with exposure to both developed and emerging markets, providing potential for dividends and capital appreciation.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405048_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.938730"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.708010"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.632802"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.629559"
+        }
+      ],
+      "overall_sentiment_score": 0.422528,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "UL",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.404801",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    }
+  ]
+}

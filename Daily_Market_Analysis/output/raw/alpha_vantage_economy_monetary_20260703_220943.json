@@ -1,0 +1,2236 @@
+{
+  "items": "50",
+  "sentiment_score_definition": "x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat_Bullish; x >= 0.35: Bullish",
+  "relevance_score_definition": "0 < x <= 1, with a higher score indicating higher relevance.",
+  "feed": [
+    {
+      "title": "Zions Bancorp focuses on regional banking strength as investors watch credit quality",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/zions-bancorp-focuses-on-regional-banking-strength-as-investors-watch/69682883",
+      "time_published": "20260703T200904",
+      "authors": [],
+      "summary": "Zions Bancorp, a regional bank in the Western U.S., is under investor scrutiny for its credit quality, loan growth, and deposit trends amidst the current interest rate environment. The bank focuses on a relationship-driven model for small to mid-sized commercial clients, offering traditional lending and treasury management services. Its strategy emphasizes local ties, diversified deposit base, and careful risk management to ensure stable earnings and capital resilience.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405020_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.812017"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.726044"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.608082"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.638135"
+        }
+      ],
+      "overall_sentiment_score": 0.24169,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ZION",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.214011",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "KeyCorp stock holds steady on a thin news day. Focus stays on earnings",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/keycorp-stock-holds-steady-on-a-thin-news-day-focus-stays-on-earnings/69682916",
+      "time_published": "20260703T200424",
+      "authors": [
+        "Thomas Clarke"
+      ],
+      "summary": "KeyCorp (KEY) stock remains steady, with its performance intrinsically linked to its banking business and upcoming earnings. The regional bank's profile focuses on commercial and consumer banking, wealth services, and is evaluated by investors based on balance-sheet execution, deposit trends, and net interest income. The stock trades on the NYSE and its future movements are expected to be driven by fundamental operating data rather than broad market sentiment.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404987_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.929099"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.812323"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.837685"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.637199"
+        }
+      ],
+      "overall_sentiment_score": 0.071148,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "KEY",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.078217",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Wintrust Financial focuses on regional banking strength as investors watch credit trends",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/wintrust-financial-focuses-on-regional-banking-strength-as-investors-watch/69682359",
+      "time_published": "20260703T184050",
+      "authors": [
+        "ad-hoc-news.de"
+      ],
+      "summary": "Wintrust Financial, an Illinois-based regional banking group, is highlighting its diversified community banking and mortgage franchise amidst investor scrutiny of credit quality, deposit dynamics, and interest-rate sensitivity in the U.S. banking sector. The company's model emphasizes traditional relationship banking, serving small to mid-sized businesses and households in the Chicago metropolitan area, and aims for resilience through a mix of commercial lending, consumer loans, mortgages, wealth management, and fee-based services. Key considerations for investors include credit quality, deposit stability, interest-rate sensitivity, and strategic expansion combined with robust digital offerings.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404981_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.944983"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.829796"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.732717"
+        }
+      ],
+      "overall_sentiment_score": 0.249979,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WTFC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.235178",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Fifth Third Bancorp outlines digital growth strategy. Regional lender balances efficiency and risk",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/fifth-third-bancorp-outlines-digital-growth-strategy-regional-lender/69682405",
+      "time_published": "20260703T183239",
+      "authors": [],
+      "summary": "Fifth Third Bancorp is investing in digital platforms and disciplined lending to support growth and manage credit risk. The regional bank focuses on a mix of consumer, small-business, and corporate banking, balancing loan growth with credit quality. Its strategy includes enhancing digital banking capabilities to improve customer experience and operational efficiency.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405012_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.821374"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.724185"
+        }
+      ],
+      "overall_sentiment_score": 0.326693,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "FITB",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.339740",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "West Bancorporation updates investors on its regional banking focus",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/west-bancorporation-updates-investors-on-its-regional-banking-focus/69681562",
+      "time_published": "20260703T164058",
+      "authors": [],
+      "summary": "West Bancorporation (WTBA) is a regional banking company in the United States that focuses on relationship-based community banking in the Midwest. The company emphasizes conservative lending, a stable deposit base, and sound asset quality and capital ratios. It aims to balance loan growth with risk management and adapts its strategies to the changing interest rate environment and regulatory backdrop.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404986_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.930333"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.835665"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.722483"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.628470"
+        }
+      ],
+      "overall_sentiment_score": 0.17578,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WTBA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.418105",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "JPM",
+          "relevance_score": "0.543694",
+          "ticker_sentiment_score": "0.117603",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.538089",
+          "ticker_sentiment_score": "0.100401",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "WFC",
+          "relevance_score": "0.545212",
+          "ticker_sentiment_score": "0.139312",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "PulteGroup stock holds the line as builders watch rates",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/pultegroup-stock-holds-the-line-as-builders-watch-rates/69681529",
+      "time_published": "20260703T162228",
+      "authors": [
+        "Christina Vaughn"
+      ],
+      "summary": "PulteGroup Inc. (PHM) stock remains highly sensitive to mortgage rates and the broader housing cycle, with its business performance tied to new-home demand, land costs, and order trends. Analysts focus on order trends, cancellation rates, incentives, and interest rates to gauge the company's financial health. PulteGroup builds single-family homes across various U.S. markets, catering to entry-level, move-up, and active-adult buyers, with its shares trading on the NYSE.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405047_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.910760"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.819283"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.719668"
+        }
+      ],
+      "overall_sentiment_score": 0.106269,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "PHM",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.122305",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Citizens Financial Group focuses on core banking strength as US regional lenders adapt",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/citizens-financial-group-focuses-on-core-banking-strength-as-us-regional/69681265",
+      "time_published": "20260703T154222",
+      "authors": [],
+      "summary": "Citizens Financial Group, a major regional bank in the US, is concentrating on its core banking activities, including diversified lending and deposit franchises, as other regional lenders adjust to challenging funding conditions and changing credit demands. The bank aims to balance net interest income, fee-based revenues, and risk management to maintain profitability amidst deposit competition and regulatory scrutiny. Its strategy involves refining deposit pricing, selectively growing loan portfolios, and investing in digital banking technology to serve both commercial and consumer clients.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405016_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.938590"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.820223"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.613868"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.605379"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.628109"
+        }
+      ],
+      "overall_sentiment_score": 0.326083,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "CFG",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.418793",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "JPM",
+          "relevance_score": "0.672245",
+          "ticker_sentiment_score": "0.307838",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.629463",
+          "ticker_sentiment_score": "0.318392",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "WFC",
+          "relevance_score": "0.604726",
+          "ticker_sentiment_score": "0.309815",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "PNC",
+          "relevance_score": "0.570034",
+          "ticker_sentiment_score": "0.274869",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "S&T Bancorp Inc focuses on core banking reliability as regional lenders adapt",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/s-and-t-bancorp-inc-focuses-on-core-banking-reliability-as-regional/69681378",
+      "time_published": "20260703T153920",
+      "authors": [],
+      "summary": "S&T Bancorp Inc continues to prioritize its traditional community banking model, focusing on stable lending and deposit relationships amidst a changing interest-rate and regulatory environment. The company's business model centers on fundamental banking principles like prudent underwriting, diversified loan categories, and a stable core deposit base to ensure reliability and profitability. S&T Bancorp's stock performance is closely linked to its core franchise stability, its ability to manage interest rate cycles, and its disciplined approach to credit and cost control.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405011_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.827870"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.642369"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.644648"
+        }
+      ],
+      "overall_sentiment_score": 0.42635,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "STBA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.415604",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Can Kimberly-Clark's Productivity Offset Rising Input Costs?",
+      "url": "https://www.tradingview.com/news/zacks:e1159d6f2094b:0-can-kimberly-clark-s-productivity-offset-rising-input-costs/",
+      "time_published": "20260703T143803",
+      "authors": [],
+      "summary": "Kimberly-Clark (KMB) is addressing rising input costs, potentially impacted by oil prices, through strong productivity initiatives and disciplined pricing. The company aims to achieve 6% gross productivity and has covered approximately 80% of its cost basket via contractual arrangements, with a long-term goal of recovering cost inflation while maintaining margin expansion. Shares of KMB have outperformed the industry in the past six months, and its valuation is lower than the industry average.",
+      "banner_image": null,
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.941663"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.821005"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.604415"
+        }
+      ],
+      "overall_sentiment_score": 0.283303,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "KMB",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.268262",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "CHD",
+          "relevance_score": "0.642102",
+          "ticker_sentiment_score": "0.329545",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Boston Properties highlights office portfolio strength amid evolving demand",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/boston-properties-highlights-office-portfolio-strength-amid-evolving/69680652",
+      "time_published": "20260703T142513",
+      "authors": [],
+      "summary": "Boston Properties, a major owner of Class A office properties, is navigating the evolving office market by focusing on high-quality assets in key gateway cities. The company emphasizes strong leasing progress and balance sheet resilience, targeting multi-tenant properties in central business districts that cater to tenants prioritizing modern, amenity-rich, and sustainable spaces. Their strategy involves long-term leases with creditworthy tenants and diversified financing to stabilize cash flows amidst changing interest rates and hybrid work trends.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405009_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.808161"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.724526"
+        }
+      ],
+      "overall_sentiment_score": 0.23271,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "BXP",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.239802",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Invesco KBW Bank ETF tracks US financials as sector sentiment shifts",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/invesco-kbw-bank-etf-tracks-us-financials-as-sector-sentiment-shifts/69680541",
+      "time_published": "20260703T141128",
+      "authors": [],
+      "summary": "The Invesco KBW Bank ETF (KBWB) provides diversified exposure to major US banking companies, tracking a rules-based index of large and mid-sized banks. This ETF allows investors to participate in sector trends related to interest rates, credit cycles, and regulatory changes without selecting individual stocks. It serves as a tactical tool for expressing views on the financial sector, offering intraday liquidity and transparency in its holdings to help investors assess risk and performance.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405000_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.925410"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.838831"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.746815"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.629847"
+        }
+      ],
+      "overall_sentiment_score": 0.225124,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "KBWB",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.267829",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "IVZ",
+          "relevance_score": "0.636198",
+          "ticker_sentiment_score": "0.241660",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Travelers Is Quietly Trading Near a Record High While Tech Grabs the Headlines. Can the Rally Last?",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/travelers-quietly-trading-near-record-190500124.html",
+      "time_published": "20260703T140500",
+      "authors": [
+        "Courtney Carlsen",
+        "The Motley Fool"
+      ],
+      "summary": "While technology stocks like Nvidia have dominated headlines with their strong performance, insurance company Travelers (NYSE: TRV) is also trading near a record high, up 15.4% this year. The article explores whether this rally can continue, attributing Travelers' growth to disciplined insurance underwriting and higher interest rates benefiting its investment portfolio. Despite its current high, the stock is considered attractively priced and offers diversification away from volatile tech stocks.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/267D09AFAEF68BCBEA06C0A51236DFA8DA779687728443B12BDEA23D9C5FA6B3/subgraphmysterio/resizefill_w182_h48;quality_100;format_webp/https:%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2020-10%2F515f50a0-0f30-11eb-9ebf-0273aacc9ef0",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.915988"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.902061"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.831808"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.804890"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.619145"
+        }
+      ],
+      "overall_sentiment_score": 0.318605,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "TRV",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.411878",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.619035",
+          "ticker_sentiment_score": "0.239653",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "D.R. Horton stock follows its homebuilding business. Investors watch rates and orders.",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/d-r-horton-stock-follows-its-homebuilding-business-investors-watch-rates/69680113",
+      "time_published": "20260703T131903",
+      "authors": [
+        "Thomas Clarke"
+      ],
+      "summary": "D.R. Horton, the largest U.S. homebuilder, has stock performance tied directly to housing demand, mortgage rates, and operational execution. The company builds various home types and sells land, indicating its exposure to new-home demand and inventory management. Investors closely monitor orders, gross margin, and cancellation rates as key indicators of pricing power and market conditions.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405024_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.921737"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.846762"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.706547"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.611522"
+        }
+      ],
+      "overall_sentiment_score": 0.149006,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "DHI",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.117562",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Stock Yards Bancorp focuses on core banking strength as regional lenders adapt",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/stock-yards-bancorp-focuses-on-core-banking-strength-as-regional-lenders/69680054",
+      "time_published": "20260703T131044",
+      "authors": [],
+      "summary": "Stock Yards Bancorp (SYBT) is concentrating on its core community banking and wealth management services to adapt to the evolving interest-rate and regulatory landscape. The company emphasizes relationship lending, stable deposit funding, and fee-based advisory services to ensure sustained profitability. Its strategy involves balancing interest income with noninterest revenue, maintaining strict balance sheet discipline, and leveraging market knowledge to compete effectively within the regional banking sector.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405042_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.846913"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.727831"
+        }
+      ],
+      "overall_sentiment_score": 0.413892,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SYBT",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.441300",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "ICICI Bank Plans To Raise $500 Mn In Dollar Bond Sale",
+      "url": "https://www.outlookbusiness.com/corporate/icici-bank-plans-to-raise-500-mn-in-dollar-bond-sale",
+      "time_published": "20260703T131015",
+      "authors": [
+        "Ritesh"
+      ],
+      "summary": "ICICI Bank is preparing to issue at least $500 million in benchmark US dollar bonds under its Global Medium-Term Note (GMTN) programme, marking its first such offering since 2017. This move follows the Reserve Bank of India's introduction of a concessional foreign exchange swap facility to encourage overseas borrowings by Indian institutions. Other banks like HDFC Bank and Axis Bank have also recently tapped international debt markets, indicating growing momentum for foreign fundraising.",
+      "banner_image": "https://media.assettype.com/outlookbusiness/2026-07-03/b3y391fy/h.jpg?w=801&auto=format%2Ccompress&fit=max&format=webp&dpr=1.0",
+      "source": "Outlook Business",
+      "category_within_source": "General",
+      "source_domain": "Outlook Business",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.909135"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.802146"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.740064"
+        }
+      ],
+      "overall_sentiment_score": 0.536705,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "IBN",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.504900",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "How T-Bills Beat 40% of Stocks in the QQQ ETF and No One Noticed",
+      "url": "https://www.barchart.com/story/news/3115890/how-t-bills-beat-40-of-stocks-in-the-qqq-etf-and-no-one-noticed",
+      "time_published": "20260703T123910",
+      "authors": [
+        "Rob Isbitts"
+      ],
+      "summary": "Over the past 52 weeks, U.S. Treasury bills have outperformed 39 companies within the Invesco QQQ Trust (QQQ), highlighting a significant opportunity for investors in cash-adjacent investments. With 3-month T-bills yielding nearly 4%, many investors are overlooking this attractive, lower-risk alternative to potentially overvalued equities, especially as the QQQ exhibits late-stage market behavior with internal degradation despite headline gains. The author suggests investors look beyond headlines and consider adding \"boring but friendly cash-like yield\" to their portfolios, referencing ETFs like BIL, SGOV, and SHV, while emphasizing the importance of understanding portfolio composition.",
+      "banner_image": "https://media.barchart.com/contributors-admin/common-images/images/Stocks%2C%20Markets%2C%20%26%20Global%20Economy/Charts%2C%20tickers%2C%20traders/3d%20illustration%20inflation%20and%20deflation%20graph%20by%20Deepadesigns%20via%20Shutterstock.jpg",
+      "source": "Barchart.com",
+      "category_within_source": "General",
+      "source_domain": "Barchart.com",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.848836"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.748760"
+        }
+      ],
+      "overall_sentiment_score": 0.048918,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "QQQ",
+          "relevance_score": "0.300260",
+          "ticker_sentiment_score": "0.002450",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "M&T Bank balances growth and stability as regional lender",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/m-and-t-bank-balances-growth-and-stability-as-regional-lender/69679915",
+      "time_published": "20260703T123816",
+      "authors": [],
+      "summary": "M&T Bank, a regional lender, is navigating changing interest rates and regulatory environments by balancing traditional lending with fee-based services. The bank focuses on maintaining a stable deposit base, managing funding costs, and growing its loan portfolio while upholding strong credit quality and investing in digital banking and wealth management. For investors, its stock performance is tied to regional banking profitability, credit risk, and broader economic and regulatory trends.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404984_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.804916"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.730698"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.632762"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.627351"
+        }
+      ],
+      "overall_sentiment_score": 0.155217,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MTB",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.285542",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.577167",
+          "ticker_sentiment_score": "0.122574",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "JPM",
+          "relevance_score": "0.574424",
+          "ticker_sentiment_score": "0.132080",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "WFC",
+          "relevance_score": "0.552771",
+          "ticker_sentiment_score": "0.144869",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "USB",
+          "relevance_score": "0.576868",
+          "ticker_sentiment_score": "0.145084",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "ING Groep N.V. adjusts strategy as banking landscape evolves",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/ing-groep-n-v-adjusts-strategy-as-banking-landscape-evolves/69679632",
+      "time_published": "20260703T121034",
+      "authors": [],
+      "summary": "ING Groep N.V. is refining its digital banking strategy and risk management approach to adapt to changing global interest rate dynamics, regulatory expectations, and evolving client behavior. The bank is balancing interest income with non-interest revenues and focusing on operational efficiency and user experience through digital channels. It maintains strong risk management frameworks while expanding its digital presence to sustain growth and profitability.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405027_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.947435"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.827400"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.734184"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.618217"
+        }
+      ],
+      "overall_sentiment_score": 0.281168,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ING",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.282361",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "OceanFirst Financial updates its strategy as regional banking landscape evolves",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/oceanfirst-financial-updates-its-strategy-as-regional-banking-landscape/69679214",
+      "time_published": "20260703T114106",
+      "authors": [],
+      "summary": "OceanFirst Financial is adapting its community banking strategy and digital capabilities to respond to changes in regulation, interest rates, and customer expectations in the regional banking sector. The company, which operates primarily along the Mid-Atlantic coast, focuses on balancing loan growth, deposit stability, and capital requirements while investing in digital platforms to compete in the evolving U.S. financial landscape. Its business model centers on gathering deposits and deploying them into various loans and investment securities, supported by a network of branches and digital channels.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404998_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.910016"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.819744"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.712647"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.620606"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.604990"
+        }
+      ],
+      "overall_sentiment_score": 0.257215,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "OCFC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.276025",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Essex Property Trust focuses on coastal multifamily growth",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/essex-property-trust-focuses-on-coastal-multifamily-growth/69679054",
+      "time_published": "20260703T111438",
+      "authors": [],
+      "summary": "Essex Property Trust, a REIT specializing in West Coast multifamily properties, continues to expand its portfolio in high-demand coastal markets. The company's strategy focuses on generating recurring rental income from professionally managed apartment communities, balancing occupancy with competitive rental rates. Investors are keenly observing how rental trends and interest rates will influence its returns in the US multifamily housing market.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405010_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.819586"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.720657"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.648410"
+        }
+      ],
+      "overall_sentiment_score": 0.444459,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ESS",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.402826",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "How W. P. Carey’s New 2036 Debt Issue Will Impact W. P. Carey (WPC) Investors",
+      "url": "https://simplywall.st/stocks/us/real-estate/nyse-wpc/w-p-carey/news/how-w-p-careys-new-2036-debt-issue-will-impact-w-p-carey-wpc/amp",
+      "time_published": "20260703T053937",
+      "authors": [
+        "Simply Wall St"
+      ],
+      "summary": "W. P. Carey Inc. recently issued US$350 million of 5.200% senior unsecured notes due 2036 to refinance existing 2026 debt and for general corporate purposes. This move slightly extends their maturity profile, with the primary focus remaining on property recycling and managing tenant and asset concentration. The company's consistent dividend increases and reliance on capital markets highlight the importance of asset dispositions and acquisition yields in sustaining future cash flows and margins.",
+      "banner_image": null,
+      "source": "Simply Wall Street",
+      "category_within_source": "General",
+      "source_domain": "Simply Wall Street",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.915965"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.733590"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.731429"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.608695"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.613984"
+        }
+      ],
+      "overall_sentiment_score": 0.134559,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "WPC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.109159",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Is NNN REIT’s (NNN) New Term Loan And Hedging Shift Refining Its Cost-of-Capital Edge?",
+      "url": "https://simplywall.st/stocks/us/real-estate/nyse-nnn/nnn-reit/news/is-nnn-reits-nnn-new-term-loan-and-hedging-shift-refining-it/amp",
+      "time_published": "20260703T041026",
+      "authors": [
+        "Simply Wall St"
+      ],
+      "summary": "NNN REIT recently expanded its senior unsecured term loan to US$500 million and amended pricing grids, entering a US$100 million forward starting swap to fix SOFR. This move may slightly reduce borrowing costs and increase visibility for future interest expenses. The changes support NNN's income-focused profile, with the reaffirmed 2026 earnings guidance remaining a key data point for investors.",
+      "banner_image": null,
+      "source": "Simply Wall Street",
+      "category_within_source": "General",
+      "source_domain": "Simply Wall Street",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.915176"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.836589"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.731829"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.639758"
+        }
+      ],
+      "overall_sentiment_score": -0.127202,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "NNN",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.107614",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Amtech and IPG Photonics Shares Plummet, What You Need To Know",
+      "url": "https://au.finance.yahoo.com/news/amtech-ipg-photonics-shares-plummet-023624275.html",
+      "time_published": "20260703T023957",
+      "authors": [
+        "Anthony Lee"
+      ],
+      "summary": "Shares of Amtech (ASYS) and IPG Photonics (IPGP) plummeted by over 8% after a semiconductor sector pullback fueled by fears that AI-driven chip demand may be cooling. Concerns arose from a Citi analyst's warning about large cloud platforms' AI spending and Meta's plan to sell access to its AI computing power, suggesting potential overcapacity. Despite the drops, the article posits that the underlying issue might be profit-taking and margin adjustments rather than a fundamental decline in AI demand, with some analysts viewing the dip as a buying opportunity.",
+      "banner_image": "https://s.yimg.com/lo/mysterio/api/EFEE33F4704B6265C404A515805EF2AC8548D640EFC92EE5088DE22EA585BFC7/subgraphmysterio/resizefill_w136_h48;quality_100;format_webp/https:%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2023-10%2F7a17aaa0-71fd-11ee-bbf2-06d0c1f3a7ba",
+      "source": "Yahoo Finance Australia",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance Australia",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.918969"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.814482"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.702745"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.624644"
+        }
+      ],
+      "overall_sentiment_score": 0.014589,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "IPGP",
+          "relevance_score": "0.302416",
+          "ticker_sentiment_score": "0.029861",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Form 4 International Money Express Inc For: 2 July By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/form-4-international-money-express-inc-for-2-july-93CH-4719322",
+      "time_published": "20260703T021437",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "This article from Investing.com reports on a Form 4 filing for International Money Express Inc. dated July 2nd. The article itself is brief and primarily serves as a notice of the filing, with no further details provided in the main text.",
+      "banner_image": "https://i-invdn-com.investing.com/news/LYNXNPEB6R0AQ_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.708113"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.622825"
+        }
+      ],
+      "overall_sentiment_score": 0.043627,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "IMXI",
+          "relevance_score": "0.329820",
+          "ticker_sentiment_score": "0.035523",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "VOO ETF Picks Up on Weaker Labor Market Data Amid Tech Stock Drag",
+      "url": "https://www.tipranks.com/news/voo-etf-surges-on-weaker-labor-market-data-amid-tech-stock-drag",
+      "time_published": "20260703T004153",
+      "authors": [
+        "Joy Iyke"
+      ],
+      "summary": "The Vanguard S&P 500 ETF (VOO) saw a slight rebound after a weaker-than-expected U.S. labor market report eased concerns about a Fed interest rate hike, despite initial premarket losses. However, the ETF remains under pressure due to the Federal Reserve's commitment to a 2% inflation target and recent profit-taking in the tech sector, which significantly impacts VOO due to its market-cap-weighted structure and large holdings in major tech companies. Despite these headwinds, Wall Street analysts maintain a Strong Buy rating for VOO, with an implied upside of over 22%.",
+      "banner_image": "https://blog.tipranks.com/wp-content/uploads/2026/07/shutterstock_2661420559-750x406.jpg",
+      "source": "TipRanks",
+      "category_within_source": "General",
+      "source_domain": "TipRanks",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.900308"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.845388"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.711260"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.649790"
+        }
+      ],
+      "overall_sentiment_score": -0.161883,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VOO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.125689",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MU",
+          "relevance_score": "0.714274",
+          "ticker_sentiment_score": "-0.222043",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.613407",
+          "ticker_sentiment_score": "-0.202140",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.620155",
+          "ticker_sentiment_score": "-0.201775",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.603247",
+          "ticker_sentiment_score": "-0.240959",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Form 4 SSR Mining Inc For: 2 July By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/form-4-ssr-mining-inc-for-2-july-93CH-4719140",
+      "time_published": "20260702T211014",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "This article announces the filing of Form 4 for SSR Mining Inc. on July 2. Form 4 is a document that must be filed with the U.S. Securities and Exchange Commission (SEC) whenever there is a change in the beneficial ownership of a company's securities by that company's officers, directors, or 10% principal shareholders. The article is very brief and does not provide further details regarding the contents of the Form 4.",
+      "banner_image": "https://i-invdn-com.investing.com/news/LYNXNPEB5S0BB_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.743324"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.612239"
+        }
+      ],
+      "overall_sentiment_score": 0.03211,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "SSRM",
+          "relevance_score": "0.326598",
+          "ticker_sentiment_score": "0.001283",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "[U.S. Equities] Dow Inc rebounds, rising 594 points on diminished expectations of U.S. rate hikes (2nd) ☆ Replacement",
+      "url": "https://www.moomoo.com/news/post/72418203/us-equities-dow-inc-rebounds-rising-594-points-on-diminished",
+      "time_published": "20260702T210231",
+      "authors": [],
+      "summary": "Dow Inc (DOW) saw a significant rebound, gaining 594 points, driven by investor optimism regarding reduced expectations of future interest rate hikes in the U.S. This positive movement suggests a market response to evolving economic outlooks and potential shifts in monetary policy.",
+      "banner_image": null,
+      "source": "Moomoo",
+      "category_within_source": "General",
+      "source_domain": "Moomoo",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.943538"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.803605"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.718251"
+        }
+      ],
+      "overall_sentiment_score": 0.415433,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "DOW",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.418314",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "W. P. Carey Completes $350 Million 5.200% Senior Notes Due 2036 to Refinance 2026 Debt",
+      "url": "https://www.tradingview.com/news/tradingview:f6251bc02276e:0-w-p-carey-completes-350-million-5-200-senior-notes-due-2036-to-refinance-2026-debt/",
+      "time_published": "20260702T203937",
+      "authors": [],
+      "summary": "W. P. Carey completed a public offering of $350 million in 5.200% Senior Notes due 2036. The proceeds will be used to refinance $350 million of 4.250% notes due in October 2026 and for general corporate purposes, including potential investments and revolver repayments. The new notes mature on September 15, 2036, with interest payments semi-annually.",
+      "banner_image": null,
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.825956"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.612217"
+        }
+      ],
+      "overall_sentiment_score": 0.269725,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WPC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.299479",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Great Ajax Corp focuses on mortgage credit. Investors weigh portfolio strategy and market risks",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/great-ajax-corp-focuses-on-mortgage-credit-investors-weigh-portfolio/69676380",
+      "time_published": "20260702T200918",
+      "authors": [],
+      "summary": "Great Ajax Corp, a real estate investment trust specializing in residential mortgage credit, is being closely watched by investors. The company's strategy involves balancing income from its loan portfolio with credit and interest-rate risks in a volatile housing and financing environment. Investors are keen to understand how Great Ajax manages its portfolio against shifts in financing costs and the broader credit cycle.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405005_1100_0.webp",
+      "source": "AD HOC NEWS",
+      "category_within_source": "General",
+      "source_domain": "AD HOC NEWS",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.910926"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.813694"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.719310"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.649336"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.613823"
+        }
+      ],
+      "overall_sentiment_score": 0.120834,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AJXA",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.121138",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "McCormick & Co. Tariff Refunds and Iran War Inflation Impact – Q2 2026 - News and Statistics",
+      "url": "https://www.indexbox.io/blog/mccormick-co-receives-28m-in-tariff-refunds-amid-iran-war-inflation/",
+      "time_published": "20260702T194037",
+      "authors": [],
+      "summary": "McCormick & Co. received $28 million in tariff refunds in Q2 2026, with an additional $3 million expected, which it plans to use to offset inflationary pressures. The Executive Vice President and CFO, Marcos Gabriel, attributed significant cost inflation, projected at 6% for the fiscal year, to the Iran war's impact on energy prices and logistics. Despite receiving these refunds, the company anticipates further tariff costs, mainly from a 10% global tariff imposed by President Donald Trump, which his administration is appealing after being ruled illegal by the U.S. Court of International Trade.",
+      "banner_image": "https://www.indexbox.io/landing/img/blog/telegram-fallback/9398322c7f9cbdbc8c4346f7ec3198e2.webp",
+      "source": "IndexBox",
+      "category_within_source": "General",
+      "source_domain": "IndexBox",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.925566"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.822016"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.747185"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.643995"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.630867"
+        }
+      ],
+      "overall_sentiment_score": 0.110482,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MKC-V",
+          "relevance_score": "0.321045",
+          "ticker_sentiment_score": "0.033147",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MKC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.220675",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "DE",
+          "relevance_score": "0.643074",
+          "ticker_sentiment_score": "0.122997",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "onsemi, Skyworks Solutions, and Microchip Technology Shares Plummet, What You Need To Know",
+      "url": "https://www.theglobeandmail.com/investing/markets/stocks/ON/pressreleases/3106078/onsemi-skyworks-solutions-and-microchip-technology-shares-plummet-what-you-need-to-know/",
+      "time_published": "20260702T193812",
+      "authors": [
+        "StockStory"
+      ],
+      "summary": "Shares of onsemi, Skyworks Solutions, and Microchip Technology plunged after a semiconductor sector pullback fueled by fears of cooling AI chip demand. A Citi analyst's warning about cloud platforms' AI spending and reports of Meta selling AI computing power intensified concerns about potential overcapacity. The drops also reflect profit-taking after significant market runs, with some analysts viewing the dip as a buying opportunity.",
+      "banner_image": "https://news-assets.stockstory.org/cover-images/_1400x700_crop_center-center_none/on-semiconductor-cover-image-a16fdd2f97e4_2025-02-10-140124_xwzh.jpeg",
+      "source": "The Globe and Mail",
+      "category_within_source": "General",
+      "source_domain": "The Globe and Mail",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.908778"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.604170"
+        }
+      ],
+      "overall_sentiment_score": -0.408002,
+      "overall_sentiment_label": "Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MCHP",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.426450",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "ON",
+          "relevance_score": "0.809032",
+          "ticker_sentiment_score": "-0.403761",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "SWKS",
+          "relevance_score": "0.814727",
+          "ticker_sentiment_score": "-0.423472",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "MU",
+          "relevance_score": "0.717525",
+          "ticker_sentiment_score": "-0.328365",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.625931",
+          "ticker_sentiment_score": "-0.335482",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Can American Express Company (AXP) Stock Benefit From Improving Inflation and Interest Rate Visibility?",
+      "url": "https://www.insidermonkey.com/blog/can-american-express-company-axp-stock-benefit-from-improving-inflation-and-interest-rate-visibility-1793965/",
+      "time_published": "20260702T193709",
+      "authors": [
+        "Laiba Immad"
+      ],
+      "summary": "American Express Company (AXP) is considered one of the most undervalued Dow stocks, with BTIG recently increasing its price target to $324 while maintaining a Sell rating. The company's financial strength was reaffirmed by its 2026 Dodd-Frank Act Stress Test results, maintaining its Stress Capital Buffer of 2.5% and confirming a 16% increase in its quarterly dividend. Improved inflation and interest rate visibility are expected to positively impact AXP and other specialty finance companies, although the article also highlights potentially higher returns from certain AI stocks.",
+      "banner_image": "https://d2w7kw43nye0pi.cloudfront.net/GZPxgWL1IFDDmRkZO6qLr8stApVoRoDyXoTbMiFp4I0/resize:fit:480:300:0/plain/https://imonkeyblog.s3.us-east-1.amazonaws.com/blog/wp-content/uploads/2015/06/american-express-89024_640.jpg",
+      "source": "Insider Monkey",
+      "category_within_source": "General",
+      "source_domain": "Insider Monkey",
+      "topics": [
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.918281"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.819937"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.744922"
+        }
+      ],
+      "overall_sentiment_score": 0.344279,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AXP",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.332028",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "KB Financial Group ADR trades steadily as investors weigh regional banking trends",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/kb-financial-group-adr-trades-steadily-as-investors-weigh-regional-banking/69675437",
+      "time_published": "20260702T193426",
+      "authors": [],
+      "summary": "KB Financial Group ADR offers US investors exposure to the South Korean banking sector, with its stock influenced by interest-rate dynamics, credit quality, and dividend stability. The ADR structure simplifies trading for US-based portfolios, mirroring the economic rights of local shareholders while managing currency and custody. The group operates as a diversified financial holding company, focusing on commercial banking, consumer lending, credit cards, insurance, and asset management, navigating a competitive regional banking landscape.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2404985_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.814565"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.649157"
+        }
+      ],
+      "overall_sentiment_score": 0.340396,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "KB",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.306424",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Lincoln National Corp focus article on business and stock context",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/lincoln-national-corp-focus-article-on-business-and-stock-context/69676034",
+      "time_published": "20260702T191022",
+      "authors": [],
+      "summary": "This article provides an in-depth analysis of Lincoln National Corp (LNC), a major US life insurance and retirement services provider. It covers the company's business model, strategic priorities, financial drivers, competitive landscape, and operating environment. The piece also discusses key factors for investors to consider regarding LNC stock, including its sensitivity to interest rates and equity markets, and capital management strategies.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405003_1100_0.webp",
+      "source": "Ad-hoc-news.de",
+      "category_within_source": "General",
+      "source_domain": "Ad-hoc-news.de",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.901152"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.829233"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.725099"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.647333"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.609656"
+        }
+      ],
+      "overall_sentiment_score": 0.183372,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "LNC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.296783",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "PRU",
+          "relevance_score": "0.609278",
+          "ticker_sentiment_score": "0.142715",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MET",
+          "relevance_score": "0.616965",
+          "ticker_sentiment_score": "0.139216",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "HIG",
+          "relevance_score": "0.591553",
+          "ticker_sentiment_score": "0.112783",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Q3 Stock Market Outlook: What’s In and What’s Out",
+      "url": "https://www.morningstar.com/markets/q3-stock-market-outlook-whats-whats-out",
+      "time_published": "20260702T184038",
+      "authors": [
+        "Leslie P. Norton"
+      ],
+      "summary": "Morningstar Wealth strategist Dominic Pappalardo recommends investors focus on small-cap stocks and Latin American equities, particularly Brazil, for the remainder of the year. He advises steering clear of overvalued US large-cap stocks and US corporate credit, instead suggesting developed market sovereign bonds for yield. This outlook is driven by factors like perceived undervaluation in small caps, the economic tailwind of high oil prices for Latin American energy exporters, and geopolitical uncertainties.",
+      "banner_image": "https://cloudfront-us-east-1.images.arcpublishing.com/morningstar/JCOWQWC7LZEX5N6QKD3EEDT7LM.png",
+      "source": "Morningstar",
+      "category_within_source": "General",
+      "source_domain": "Morningstar",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.943566"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.839845"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.637332"
+        }
+      ],
+      "overall_sentiment_score": 0.344811,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MORN",
+          "relevance_score": "0.934511",
+          "ticker_sentiment_score": "0.327207",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "McCormick gets $28M tariff refund as Iran war raises costs",
+      "url": "https://www.supplychaindive.com/news/mccormick-gets-28m-tariff-refund-as-iran-war-raises-costs/824294/",
+      "time_published": "20260702T184037",
+      "authors": [
+        "Antone Gonsalves"
+      ],
+      "summary": "McCormick & Co. received a $28 million tariff refund in Q2 2026 and expects another $3 million, which it plans to use to offset inflationary pressures, especially those caused by the Iran war. The conflict has significantly driven up logistics and material costs, contributing to an estimated 6% cost inflation for the fiscal year. Despite these refunds and similar ones received by other companies, McCormick still anticipates additional tariff costs this year.",
+      "banner_image": "https://imgproxy.divecdn.com/DyasM1AHKn2hUHqAXtK29u9juR1E3IRNkn91sffV0ps/g:nowe:0:163/c:2015:1138/rs:fill:1200:675:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9JTUdfMjc0Ny5qcGc=.webp",
+      "source": "Supply Chain Dive",
+      "category_within_source": "General",
+      "source_domain": "Supply Chain Dive",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.930503"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.837248"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.704371"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.734934"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.602210"
+        }
+      ],
+      "overall_sentiment_score": -0.040522,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MKC-V",
+          "relevance_score": "0.324763",
+          "ticker_sentiment_score": "0.023278",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MKC",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.189976",
+          "ticker_sentiment_label": "Somewhat-Bearish"
+        },
+        {
+          "ticker": "DE",
+          "relevance_score": "0.612156",
+          "ticker_sentiment_score": "0.120944",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "USFR Delivered 20% Returns Where TLT Lost 28%: Here’s the Catch",
+      "url": "https://247wallst.com/investing/2026/07/02/usfr-delivered-20-returns-where-tlt-lost-28-heres-the-catch/",
+      "time_published": "20260702T183953",
+      "authors": [
+        "David Beren"
+      ],
+      "summary": "The WisdomTree Floating Rate Treasury Fund (USFR) returned 20.01% over the past five years by investing in floating-rate Treasury notes with near-zero duration risk, while the iShares 20+ Year Treasury Bond ETF (TLT) lost 28.3%. USFR's design, where coupons reset weekly against the 13-week T-bill auction, allows its share price to remain stable and offers a current monthly yield of 3.84%. However, its yield quickly reprices with Fed rate changes, leading to a 16% decrease in trailing 12-month dividend growth after recent rate cuts.",
+      "banner_image": "https://247wallst.com/wp-content/uploads/2019/04/imageforentry13-h6i.jpg",
+      "source": "24/7 Wall St.",
+      "category_within_source": "General",
+      "source_domain": "24/7 Wall St.",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.921960"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.849199"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.605414"
+        }
+      ],
+      "overall_sentiment_score": 0.43809,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "USFR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.406712",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "BKGI ETF surpasses $1.1B AUM, offering inflatio...",
+      "url": "https://pluang.com/en/news-feed/etf-bkgi-mengubah-investasi-infrastruktur",
+      "time_published": "20260702T180949",
+      "authors": [],
+      "summary": "The BNY Mellon Global Infrastructure Income ETF (BKGI) has exceeded $1.1 billion in assets under management as of June 2026. This ETF provides inflation-protected income through investments in publicly traded infrastructure companies, offering both downside protection and low cyclicality. BKGI differentiates itself from traditional private market infrastructure investments by providing liquidity and flexibility, making it an attractive option for advisors seeking diversified, defensive income strategies.",
+      "banner_image": "https://image-cdn.pluang.com/web/icons/circlePluangLogo.webp",
+      "source": "Pluang",
+      "category_within_source": "General",
+      "source_domain": "Pluang",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.934627"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.802980"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.714098"
+        },
+        {
+          "topic": "energy_transportation",
+          "relevance_score": "0.622030"
+        }
+      ],
+      "overall_sentiment_score": 0.615708,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "BKGI",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.648114",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Regional Banks Stocks Q1 Results: Benchmarking QCR Holdings (NASDAQ:QCRH)",
+      "url": "https://stockstory.org/us/stocks/nasdaq/qcrh/news/earnings/regional-banks-stocks-q1-results-benchmarking-qcr-holdings-nasdaqqcrh",
+      "time_published": "20260702T180915",
+      "authors": [
+        "Adam Hejl"
+      ],
+      "summary": "This article analyzes the Q1 results for regional banks, focusing on QCR Holdings and benchmarking its performance against peers. It highlights the challenges and opportunities for regional banks, such as interest rate changes, fintech competition, and commercial real estate exposure. The report details QCR Holdings' revenue and EPS growth, compares it with top performer UMB Financial and weaker performer BankUnited, and discusses the broader market shift from AI concerns to geopolitical risks.",
+      "banner_image": "https://stockstory.org/stockstory/company-image/QCRH?size=1000x500",
+      "source": "StockStory",
+      "category_within_source": "General",
+      "source_domain": "StockStory",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.949482"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.810934"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.703692"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.629126"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.600270"
+        }
+      ],
+      "overall_sentiment_score": 0.255818,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "QCRH",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.271877",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Why Sprott Physical Platinum and Palladium Trust stock is rising today",
+      "url": "https://wealthawesome.com/why-sprott-physical-platinum-and-palladium-trust-stock-is-rising-today-07022026",
+      "time_published": "20260702T174057",
+      "authors": [
+        "Wealth Awesome Newsroom"
+      ],
+      "summary": "Sprott Physical Platinum and Palladium Trust (SPPP.TO) saw its stock surge by 3.90% in the last trading session, closing at CA$18.37 on the TSX. This increase reflects positive investor sentiment towards precious metals as a hedge against inflation and market uncertainty. While the trust shows solid performance and holdings, its lack of dividend yield and zero profit margin raise questions about long-term profitability, advising investors to monitor future reports closely.",
+      "banner_image": "https://wealthawesome.com/_next/image?url=https%3A%2F%2Flhajohzwizrsjmumhpjg.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fwealth-awesome%2Fnews-room%2Fpexels-12197267-1783013516243.jpg&w=3840&q=75",
+      "source": "Wealth Awesome",
+      "category_within_source": "General",
+      "source_domain": "Wealth Awesome",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.913691"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.607366"
+        }
+      ],
+      "overall_sentiment_score": 0.025207,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "SPPP",
+          "relevance_score": "0.344117",
+          "ticker_sentiment_score": "0.019928",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Form 4 Teradyne Inc For: 2 July By Investing.com",
+      "url": "https://ca.investing.com/news/stock-market-news/form-4-teradyne-inc-for-2-july-93CH-4718732",
+      "time_published": "20260702T172758",
+      "authors": [
+        "Investing.com"
+      ],
+      "summary": "This article reports on a Form 4 filing for Teradyne Inc. on July 2nd. Form 4 filings are legally required documents that must be submitted to the SEC whenever there is a material change in the holdings of company insiders. The content of the filing specifies the changes in ownership of company stock by its officers, directors, and any beneficial owners of more than 10% of the company's stock.",
+      "banner_image": "https://i-invdn-com.investing.com/news/LYNXMPEB59082_L.jpg",
+      "source": "Investing.com Canada",
+      "category_within_source": "General",
+      "source_domain": "Investing.com Canada",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.930094"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.837980"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.727564"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.601988"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.621819"
+        }
+      ],
+      "overall_sentiment_score": -0.200804,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "TER",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.370351",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "AVGO",
+          "relevance_score": "0.640818",
+          "ticker_sentiment_score": "-0.398859",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.616856",
+          "ticker_sentiment_score": "0.392213",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.617664",
+          "ticker_sentiment_score": "-0.364402",
+          "ticker_sentiment_label": "Bearish"
+        }
+      ]
+    },
+    {
+      "title": "Walmart Inc Stock (WMT) Moved Up by 3.15% on Jul 2: What Investors Need To Know",
+      "url": "https://www.tradingkey.com/news/market-movers/262007772-market-movers-wmt-20260702",
+      "time_published": "20260702T171516",
+      "authors": [
+        "TradingKey"
+      ],
+      "summary": "Walmart Inc (WMT) stock rose by 3.15% on July 2nd, driven by a rebound from oversold conditions, institutional dip-buying, and macroeconomic data easing fears of further Federal Reserve rate hikes. The positive movement occurred despite a previous sell-off caused by inventory concerns, with investors now focusing on Walmart's high-margin growth initiatives and market dominance. While technical indicators suggest a sell condition, fundamental analysis places Walmart as a top performer in its industry, although risks like slowing domestic sales and elevated valuation multiples remain.",
+      "banner_image": "https://resource.tradingkey.com/ai/wkrepot/c834ca65-1867-4044-a0cd-00a9151d8613_1783012511.png",
+      "source": "TradingKey",
+      "category_within_source": "General",
+      "source_domain": "TradingKey",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.921332"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.941897"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.824978"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.733242"
+        }
+      ],
+      "overall_sentiment_score": 0.326626,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WMT",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.472008",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "KR",
+          "relevance_score": "0.617506",
+          "ticker_sentiment_score": "0.238378",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MU",
+          "relevance_score": "0.602248",
+          "ticker_sentiment_score": "0.334560",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.641190",
+          "ticker_sentiment_score": "0.320612",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Invesco KBW Bank ETF : KBWB",
+      "url": "https://247wallst.com/companies/KBWB/?utm_source=msn&utm_medium=referral&utm_campaign=msn&tpid=1590060&utm_content=feed%7C%7C1590060",
+      "time_published": "20260702T170930",
+      "authors": [
+        "David Beren",
+        "Omor Ibne Ehsan",
+        "Michael Williams"
+      ],
+      "summary": "This article from 24/7 Wall St. provides information on the Invesco KBW Bank ETF (KBWB), including its current stock data and links to three recent articles discussing its performance and relationship to Federal Reserve actions. The articles suggest that the ETF has performed well amidst quiet rate shifts and when the Fed takes a less active role.",
+      "banner_image": "NULL",
+      "source": "24/7 Wall St.",
+      "category_within_source": "General",
+      "source_domain": "24/7 Wall St.",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.946525"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.841648"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.709275"
+        }
+      ],
+      "overall_sentiment_score": 0.426138,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "KBWB",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.404566",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "IVZ",
+          "relevance_score": "0.606622",
+          "ticker_sentiment_score": "0.424907",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Dow Hits Records, Nasdaq 100 Tumbles On Chip Rout - State Street SPDR S&P 500 ETF Trust (ARCA:SPY), Inves",
+      "url": "https://www.benzinga.com/markets/market-summary/26/07/60252913/dow-jones-record-highs-nasdaq-100-sinks-chipmakers-selloff",
+      "time_published": "20260702T165612",
+      "authors": [
+        "Piero Cingari"
+      ],
+      "summary": "The Dow Jones Industrial Average reached a new record high due to a weaker-than-expected June jobs report, easing concerns about interest rate hikes. However, the rally was not broad, with the Nasdaq 100 tumbling significantly as semiconductor stocks experienced a brutal selloff. Gold and silver prices rose, while crude oil eased and Bitcoin saw a modest gain.",
+      "banner_image": "https://cdn.benzinga.com/cdn-cgi/image/width=1300,format=auto,quality=85/files/images/story/2025/07/24/article-header-background-image.png",
+      "source": "Benzinga",
+      "category_within_source": "General",
+      "source_domain": "Benzinga",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.915909"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.838642"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.724672"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.740764"
+        }
+      ],
+      "overall_sentiment_score": -0.302314,
+      "overall_sentiment_label": "Somewhat-Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SPY",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.009230",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.828756",
+          "ticker_sentiment_score": "-0.422046",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.731121",
+          "ticker_sentiment_score": "-0.447077",
+          "ticker_sentiment_label": "Bearish"
+        }
+      ]
+    },
+    {
+      "title": "KeyCorp highlights regional banking role amid evolving US credit cycle",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/keycorp-highlights-regional-banking-role-amid-evolving-us-credit-cycle/69675064",
+      "time_published": "20260702T164711",
+      "authors": [],
+      "summary": "KeyCorp outlines its role as a significant regional bank in the U.S., emphasizing its focus on commercial lending, digital banking, and risk management within an evolving credit cycle. The bank operates under the KeyBank brand, serving retail, small business, and commercial clients, with activities closely tied to U.S. interest rates and economic conditions. Its strategy balances retail stability with corporate lending opportunities, managing credit risk, and adapting to regulatory frameworks.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405015_1100_0.webp",
+      "source": "AD HOC NEWS",
+      "category_within_source": "General",
+      "source_domain": "AD HOC NEWS",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "0.912709"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.805331"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.718439"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.621799"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.636350"
+        }
+      ],
+      "overall_sentiment_score": 0.130393,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "KEY",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.129413",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Lam Research Corp Stock (LRCX) Moved Down by 7.40% on Jul 2: What Investors Need To Know",
+      "url": "https://www.tradingkey.com/news/market-movers/262007693-market-movers-lrcx-20260702",
+      "time_published": "20260702T161502",
+      "authors": [
+        "TradingKey"
+      ],
+      "summary": "Lam Research Corp (LRCX) stock dropped 7.40% due to macroeconomic uncertainty, fears of slowing AI infrastructure spending, and high stock valuations combined with insider selling. The company is particularly vulnerable to geopolitical risks given its significant revenue concentration in China. Technical indicators are mixed, while fundamental analysis notes solid revenue and net profit rankings within the Technology Equipment industry.",
+      "banner_image": "https://resource.tradingkey.com/uploads/20251024/68658377675a42e2bbed98144a729ddatradingkeylogo-ed79a44cf96240a287ca1bb541f06bff.png",
+      "source": "TradingKey",
+      "category_within_source": "General",
+      "source_domain": "TradingKey",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.944435"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.804325"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.706513"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.642180"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.648270"
+        }
+      ],
+      "overall_sentiment_score": -0.436118,
+      "overall_sentiment_label": "Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "LRCX",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.428937",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "MU",
+          "relevance_score": "0.724628",
+          "ticker_sentiment_score": "-0.403225",
+          "ticker_sentiment_label": "Bearish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.626301",
+          "ticker_sentiment_score": "-0.435359",
+          "ticker_sentiment_label": "Bearish"
+        }
+      ]
+    },
+    {
+      "title": "VBF and the Invesco Bond Fund. How a large fixed-income strategy fits into today’s markets",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/vbf-and-the-invesco-bond-fund-how-a-large-fixed-income-strategy-fits-into/69674775",
+      "time_published": "20260702T161152",
+      "authors": [],
+      "summary": "The Invesco Bond Fund (VBF) is a large US mutual fund focused on investment-grade bonds, aiming for income and capital preservation. This article explains its structure, how it navigates interest rate changes and credit quality, and its role as a stabilizing component in diversified investment portfolios. It highlights the fund's active management approach to interest-rate exposure and credit risk, offering a professional solution for long-term investors.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405019_1100_0.webp",
+      "source": "AD HOC NEWS",
+      "category_within_source": "General",
+      "source_domain": "AD HOC NEWS",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.904439"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.822035"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.728890"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.635344"
+        }
+      ],
+      "overall_sentiment_score": 0.376254,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VBF",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.432941",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "IVZ",
+          "relevance_score": "0.730811",
+          "ticker_sentiment_score": "0.340104",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Better Home & Finance Holding Company (BETR) Investigation: Bronstein, Gewirtz & Grossman, LLC Encourages Shareholders to Contact the Firm to Learn More About the Investigation",
+      "url": "https://natlawreview.com/press-releases/better-home-finance-holding-company-betr-investigation-bronstein-gewirtz-0",
+      "time_published": "20260702T161026",
+      "authors": [],
+      "summary": "Bronstein, Gewirtz & Grossman, LLC has launched an investigation into potential claims against Better Home & Finance Holding Company (BETR) following a significant drop in its stock price. This decline occurred after the company reported its first-quarter 2026 financial results and management discussed challenges in achieving loan volume targets and borrower hesitation due to high interest rates. The firm is encouraging investors who purchased Better securities to contact them to learn more about the investigation.",
+      "banner_image": "https://app.accessnewswire.com/imagelibrary/5ab026ca-9cf8-4c33-9cb8-418ac597dbc6/bronstein-gewirtz-and-grossman-llc.png",
+      "source": "The National Law Review",
+      "category_within_source": "General",
+      "source_domain": "The National Law Review",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.945693"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.820595"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.730406"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.623030"
+        }
+      ],
+      "overall_sentiment_score": -0.601011,
+      "overall_sentiment_label": "Bearish",
+      "ticker_sentiment": [
+        {
+          "ticker": "BETR",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "-0.611572",
+          "ticker_sentiment_label": "Bearish"
+        }
+      ]
+    },
+    {
+      "title": "What HAM Portfolio Managers Are Watching This Week",
+      "url": "https://app.hedgeye.com/insights/184214-what-ham-portfolio-managers-are-watching-this-week/print",
+      "time_published": "20260702T160908",
+      "authors": [],
+      "summary": "Hedgeye Asset Management's portfolio managers are focused on two main themes this week: the expanding economic influence of artificial intelligence and the market dynamics surrounding a significant index event. Managers like Sam Rahman are diversifying portfolios with healthcare and housing to mitigate AI-related tech volatility, while David Salem emphasizes bonds due to expected disinflation. Brooks Cutright notes the Russell reconstitution's impact and growing crowding in the AI trade, and Patrick Kent highlights a Quad 4 environment's potential effects on credit spreads and housing.",
+      "banner_image": "https://d1yhils6iwh5l5.cloudfront.net/charts/resized/157525/normal/rational_investors_cartoon_01.24.2017.png",
+      "source": "Hedgeye",
+      "category_within_source": "General",
+      "source_domain": "Hedgeye",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.928951"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.816103"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.734850"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.632369"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.624039"
+        }
+      ],
+      "overall_sentiment_score": 0.414957,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "HGRO",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.424643",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Zions Bancorp highlights its regional banking role as investors weigh credit and deposit trends",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/zions-bancorp-highlights-its-regional-banking-role-as-investors-weigh/69674735",
+      "time_published": "20260702T154040",
+      "authors": [],
+      "summary": "Zions Bancorp is a U.S. regional bank holding company focusing on commercial and retail clients in several Western states. The article highlights its business model, which balances commercial lending, deposit stability, and risk management, drawing investor attention to credit quality and funding costs. Zions Bancorp's performance is closely linked to regional economic conditions, with its deposit base being a key funding pillar and its earnings sensitive to interest rate movements.",
+      "banner_image": "https://mdb.ad-hoc-news.de/bild/bild-2405022_1100_0.webp",
+      "source": "AD HOC NEWS",
+      "category_within_source": "General",
+      "source_domain": "AD HOC NEWS",
+      "topics": [
+        {
+          "topic": "finance",
+          "relevance_score": "1.000000"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.847908"
+        },
+        {
+          "topic": "economy_monetary",
+          "relevance_score": "0.702333"
+        }
+      ],
+      "overall_sentiment_score": 0.284987,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "ZION",
+          "relevance_score": "1.000000",
+          "ticker_sentiment_score": "0.296687",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    }
+  ]
+}

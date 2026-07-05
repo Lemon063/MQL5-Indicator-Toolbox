@@ -1,0 +1,47 @@
+# Candidate news sources for USDJPY Daily Market Analysis.
+# This file documents source setup only. It does not execute API calls.
+
+sources:
+  - source_api: alpha_vantage
+    source_name: Alpha Vantage News & Sentiment API
+    enabled: false
+    role: candidate
+    api_key_env: ALPHA_VANTAGE_API_KEY
+    notes:
+      - "Evaluate macro, FX, USD, JPY, yield, and central-bank relevance."
+      - "Check free-tier practicality for a 07:00 UK daily report."
+
+  - source_api: marketaux
+    source_name: Marketaux Finance / Market News API
+    enabled: false
+    role: candidate
+    api_key_env: MARKETAUX_API_KEY
+    notes:
+      - "Evaluate headline quality, timestamp quality, and entity metadata."
+      - "Potential primary source if relevance and free-tier limits are acceptable."
+
+  - source_api: finnhub
+    source_name: Finnhub Market News API
+    enabled: false
+    role: candidate
+    api_key_env: FINNHUB_API_KEY
+    notes:
+      - "Evaluate market-news coverage and USDJPY usefulness."
+      - "Check duplicate rate and macro relevance."
+
+  - source_api: yahoo_rss
+    source_name: Yahoo Finance RSS / unofficial RSS fallback
+    enabled: false
+    role: backup_only
+    api_key_env: null
+    notes:
+      - "Use as fallback only when API-key sources are unavailable."
+      - "Expect weaker metadata and possible timestamp limitations."
+
+evaluation:
+  score_min: 0
+  score_max: 5
+  output_csv: output/logs/api_score_YYYYMMDD.csv
+  output_markdown: output/logs/api_score_YYYYMMDD.md
+  advisory_only: true
+

@@ -1,0 +1,1055 @@
+//@version=6
+indicator("Alterf Manual Trade Analyzer v0.1", overlay=true, max_lines_count=120, max_labels_count=120, max_boxes_count=20)
+
+// ============================================================================
+// 01. CONSTANTS, TYPES AND INPUTS
+// 常數、資料類型與輸入
+// ============================================================================
+
+const string STATUS_IMPLEMENTED = "IMPLEMENTED"
+const string STATUS_PARTIAL = "PARTIALLY_IMPLEMENTED"
+const string STATUS_PLACEHOLDER = "PLACEHOLDER"
+const string STATUS_NOT_POSSIBLE = "NOT_POSSIBLE_IN_PINE"
+
+const string STATE_IDLE = "IDLE"
+const string STATE_APPROACH = "LEVEL_APPROACH"
+const string STATE_BREAK = "LEVEL_BREAK"
+const string STATE_WAIT_FT = "WAITING_FOR_FOLLOW_THROUGH"
+const string STATE_CONFIRMED = "CONFIRMED_BREAKOUT"
+const string STATE_FAILED = "FAILED_BREAKOUT"
+const string STATE_WAIT_RETEST = "WAITING_FOR_RETEST"
+const string STATE_RETEST = "RETEST_IN_PROGRESS"
+const string STATE_RETEST_HOLD = "RETEST_HOLD"
+const string STATE_RETEST_FAIL = "RETEST_FAIL"
+const string STATE_EXPIRED = "EXPIRED"
+
+const string DIR_BULL = "BULLISH"
+const string DIR_BEAR = "BEARISH"
+const string DIR_NEUTRAL = "NEUTRAL"
+
+const string REGIME_TREND = "TREND"
+const string REGIME_CONSOLIDATION = "CONSOLIDATION"
+const string REGIME_BREAKOUT = "BREAKOUT_ATTEMPT"
+const string REGIME_MESSY = "MESSY"
+const string REGIME_TRANSITION = "TRANSITION_UNRESOLVED"
+
+const int DEFAULT_PROFILE_START_TIME = 1767225600000
+const int DEFAULT_PROFILE_END_TIME = 1767312000000
+const int DEFAULT_NEWS_EVENT_TIME = 1767274200000
+
+showDebugTable = input.bool(true, "Show Debug Table / 顯示除錯表格", group="01 Display / 顯示")
+showCandleLabels = input.bool(true, "Show Candle Labels / 顯示蠟燭標籤", group="01 Display / 顯示")
+showBreakoutLabels = input.bool(true, "Show Breakout State Labels / 顯示突破狀態標籤", group="01 Display / 顯示")
+showManualLevels = input.bool(true, "Show Manual Levels / 顯示人手水平", group="01 Display / 顯示")
+showPreviousLevels = input.bool(true, "Show Previous High/Low / 顯示前高前低", group="01 Display / 顯示")
+showSwings = input.bool(true, "Show Confirmed Swings / 顯示已確認擺動", group="01 Display / 顯示")
+showConsolidation = input.bool(true, "Show Consolidation Boundaries / 顯示整固邊界", group="01 Display / 顯示")
+showFib = input.bool(true, "Show Manual Fib / 顯示人手 Fibonacci", group="01 Display / 顯示")
+showStateTransitions = input.bool(true, "Show State Transition Labels / 顯示狀態轉換標籤", group="01 Display / 顯示")
+
+atrLength = input.int(14, "ATR Length For Normalisation / ATR 標準化長度", minval=1, group="02 Core Thresholds / 核心門檻")
+structureLookback = input.int(20, "Structure Lookback / 結構回望", minval=5, group="02 Core Thresholds / 核心門檻")
+swingLeft = input.int(3, "Swing Left Bars / 左側確認支數", minval=1, group="02 Core Thresholds / 核心門檻")
+swingRight = input.int(3, "Swing Right Bars / 右側確認支數", minval=1, group="02 Core Thresholds / 核心門檻")
+levelToleranceAtr = input.float(0.25, "Level Tolerance ATR / 水平容許距離 ATR", minval=0.0, step=0.05, group="02 Core Thresholds / 核心門檻")
+breakoutBufferAtr = input.float(0.05, "Breakout Buffer ATR / 突破緩衝 ATR", minval=0.0, step=0.01, group="02 Core Thresholds / 核心門檻")
+approachToleranceAtr = input.float(0.35, "Approach Tolerance ATR / 接近水平 ATR", minval=0.0, step=0.05, group="02 Core Thresholds / 核心門檻")
+retestToleranceAtr = input.float(0.25, "Retest Tolerance ATR / 回測容許 ATR", minval=0.0, step=0.05, group="02 Core Thresholds / 核心門檻")
+followThroughBars = input.int(3, "Follow-Through Bars / 突破確認等待支數", minval=1, maxval=20, group="02 Core Thresholds / 核心門檻")
+maxFailureBars = input.int(5, "Maximum Failure Bars / 最大假突破支數", minval=1, maxval=50, group="02 Core Thresholds / 核心門檻")
+stateExpiryBars = input.int(40, "Breakout State Expiry Bars / 突破狀態過期支數", minval=5, maxval=500, group="02 Core Thresholds / 核心門檻")
+breakDistanceQualityFullAtr = input.float(0.20, "Break Distance Full Quality ATR / 突破距離滿分 ATR", minval=0.01, step=0.01, group="02 Core Thresholds / 核心門檻")
+closeMomentumLookback = input.int(5, "Close Momentum Decline Lookback / 收市動能下降回望", minval=2, maxval=50, group="02 Core Thresholds / 核心門檻")
+closeMomentumComparisonOffset = input.int(5, "Close Momentum Prior Offset / 收市動能早段比較偏移", minval=1, maxval=100, group="02 Core Thresholds / 核心門檻")
+
+consolidationLookback = input.int(18, "Consolidation Lookback / 整固回望", minval=5, group="03 Consolidation / 整固")
+maxConsolidationEfficiency = input.float(0.35, "Max Consolidation Efficiency / 最高整固效率", minval=0, maxval=1, step=0.05, group="03 Consolidation / 整固")
+minOverlapThreshold = input.float(0.45, "Min Average Overlap / 最低平均重疊", minval=0, maxval=1, step=0.05, group="03 Consolidation / 整固")
+maxWindowRangeAtr = input.float(2.2, "Max Window Range ATR / 最大窗口範圍 ATR", minval=0.1, step=0.1, group="03 Consolidation / 整固")
+minDirectionChangeRatio = input.float(0.35, "Min Direction Change Ratio / 最低方向轉換比例", minval=0, maxval=1, step=0.05, group="03 Consolidation / 整固")
+
+minBodyRatio = input.float(0.45, "Minimum Body Ratio / 最低實體比例", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+minLowerWickRatio = input.float(0.35, "Minimum Lower Wick Ratio / 最低下影線比例", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+minUpperWickRatio = input.float(0.35, "Minimum Upper Wick Ratio / 最低上影線比例", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+minWickToBodyRatio = input.float(1.5, "Minimum Wick To Body Ratio / 最低影線對實體比例", minval=0, step=0.1, group="04 Candle Behaviour / 蠟燭行為")
+minBullishCloseLocation = input.float(0.65, "Bullish Close Location Min / 牛向收市位置最低", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+maxBearishCloseLocation = input.float(0.35, "Bearish Close Location Max / 熊向收市位置最高", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+longWickThreshold = input.float(0.45, "Long Wick Threshold / 長影線門檻", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+dojiBodyThreshold = input.float(0.12, "Doji Body Threshold / 十字星實體門檻", minval=0, maxval=1, step=0.01, group="04 Candle Behaviour / 蠟燭行為")
+smallBodyThreshold = input.float(0.25, "Small Body Threshold / 小實體門檻", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+minSmallBodyRangeExpansion = input.float(0.45, "Small Body Min Range Expansion / 小實體最低波幅擴張", minval=0, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+directionalCloseCount = input.int(3, "Consecutive Directional Closes / 連續方向收市支數", minval=2, maxval=10, group="04 Candle Behaviour / 蠟燭行為")
+rangeExpansionThreshold = input.float(1.35, "Range Expansion Threshold / 波幅擴張門檻", minval=0.1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+bodyExpansionThreshold = input.float(1.35, "Body Expansion Threshold / 實體擴張門檻", minval=0.1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+bullishStrongCloseThreshold = input.float(0.65, "Bullish Strong Close Threshold / 牛向強收市門檻", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+bearishStrongCloseThreshold = input.float(0.35, "Bearish Strong Close Threshold / 熊向強收市門檻", minval=0, maxval=1, step=0.05, group="04 Candle Behaviour / 蠟燭行為")
+
+momentumLookback = input.int(12, "Momentum Lookback / 動能回望", minval=3, group="05 Momentum / 動能")
+progressDecayLookback = input.int(4, "Progress Decay Lookback / 進展衰減回望", minval=2, group="05 Momentum / 動能")
+accelerationCloseLocation = input.float(0.70, "Acceleration Close Location / 加速收市位置", minval=0, maxval=1, step=0.05, group="05 Momentum / 動能")
+progressDecayThreshold = input.float(0.65, "Progress Decay Threshold / 進展衰減門檻", minval=0, step=0.05, group="05 Momentum / 動能")
+deepPullbackRatio = input.float(0.60, "Deep Pullback Ratio / 深回調比例", minval=0, step=0.05, group="05 Momentum / 動能")
+
+m5Weight = input.float(1.0, "M5 Alignment Weight / M5 權重", minval=0, step=0.1, group="06 MTF / 多時間框架")
+m15Weight = input.float(1.5, "M15 Alignment Weight / M15 權重", minval=0, step=0.1, group="06 MTF / 多時間框架")
+m30Weight = input.float(2.0, "M30 Alignment Weight / M30 權重", minval=0, step=0.1, group="06 MTF / 多時間框架")
+h1Weight = input.float(2.5, "H1 Alignment Weight / H1 權重", minval=0, step=0.1, group="06 MTF / 多時間框架")
+
+trendEfficiencyMin = input.float(0.35, "Trend Efficiency Min / 趨勢效率最低", minval=0, maxval=1, step=0.05, group="07 Regime Weights / 狀態權重")
+trendEfficiencyMax = input.float(0.80, "Trend Efficiency Max / 趨勢效率最高", minval=0, maxval=1, step=0.05, group="07 Regime Weights / 狀態權重")
+trendThreshold = input.float(0.62, "Trend Score Threshold / 趨勢分數門檻", minval=0, maxval=1, step=0.05, group="07 Regime Weights / 狀態權重")
+consolidationThreshold = input.float(0.62, "Consolidation Score Threshold / 整固分數門檻", minval=0, maxval=1, step=0.05, group="07 Regime Weights / 狀態權重")
+messyThreshold = input.float(0.62, "Messy Score Threshold / 混亂分數門檻", minval=0, maxval=1, step=0.05, group="07 Regime Weights / 狀態權重")
+wStructure = input.float(0.30, "Trend Structure Weight / 趨勢結構權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wEfficiency = input.float(0.25, "Trend Efficiency Weight / 趨勢效率權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wAlignment = input.float(0.25, "Trend Alignment Weight / 趨勢一致權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wDirectional = input.float(0.20, "Trend Directional Close Weight / 趨勢方向收市權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wConsoEfficiency = input.float(0.30, "Consolidation Low Efficiency Weight / 整固低效率權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wConsoOverlap = input.float(0.30, "Consolidation Overlap Weight / 整固重疊權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wConsoRange = input.float(0.20, "Consolidation Range Weight / 整固範圍權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wConsoChange = input.float(0.20, "Consolidation Direction Change Weight / 整固轉向權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wMessyChange = input.float(0.30, "Messy Direction Change Weight / 混亂轉向權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wMessyFailedBreak = input.float(0.25, "Messy Failed Break Weight / 混亂假突破權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wMessyConflict = input.float(0.25, "Messy Timeframe Conflict Weight / 混亂時間框架衝突權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+wMessyAlternating = input.float(0.20, "Messy Alternating Expansion Weight / 混亂交替擴張權重", minval=0, step=0.05, group="07 Regime Weights / 狀態權重")
+
+breakoutCandidateThreshold = input.float(0.60, "Breakout Candidate Quality Threshold / 突破候選質素門檻", minval=0, maxval=1, step=0.05, group="08 Breakout / 突破")
+breakoutBodyWeight = input.float(0.25, "Breakout Body Quality Weight / 突破實體權重", minval=0, step=0.05, group="08 Breakout / 突破")
+breakoutCloseWeight = input.float(0.25, "Breakout Close Quality Weight / 突破收市權重", minval=0, step=0.05, group="08 Breakout / 突破")
+breakoutDistanceWeight = input.float(0.25, "Breakout Distance Quality Weight / 突破距離權重", minval=0, step=0.05, group="08 Breakout / 突破")
+breakoutExpansionWeight = input.float(0.20, "Breakout Expansion Quality Weight / 突破擴張權重", minval=0, step=0.05, group="08 Breakout / 突破")
+breakoutWickPenaltyWeight = input.float(0.15, "Breakout Opposite Wick Penalty / 突破反向影線扣分", minval=0, step=0.05, group="08 Breakout / 突破")
+
+manualResistance1Enabled = input.bool(true, "Enable Resistance 1 / 啟用阻力1", group="09 Manual SR / 人手支持阻力")
+manualResistance1 = input.price(0.0, "Manual Resistance 1 / 人手阻力1", group="09 Manual SR / 人手支持阻力")
+manualResistance2Enabled = input.bool(false, "Enable Resistance 2 / 啟用阻力2", group="09 Manual SR / 人手支持阻力")
+manualResistance2 = input.price(0.0, "Manual Resistance 2 / 人手阻力2", group="09 Manual SR / 人手支持阻力")
+manualResistance3Enabled = input.bool(false, "Enable Resistance 3 / 啟用阻力3", group="09 Manual SR / 人手支持阻力")
+manualResistance3 = input.price(0.0, "Manual Resistance 3 / 人手阻力3", group="09 Manual SR / 人手支持阻力")
+manualSupport1Enabled = input.bool(true, "Enable Support 1 / 啟用支持1", group="09 Manual SR / 人手支持阻力")
+manualSupport1 = input.price(0.0, "Manual Support 1 / 人手支持1", group="09 Manual SR / 人手支持阻力")
+manualSupport2Enabled = input.bool(false, "Enable Support 2 / 啟用支持2", group="09 Manual SR / 人手支持阻力")
+manualSupport2 = input.price(0.0, "Manual Support 2 / 人手支持2", group="09 Manual SR / 人手支持阻力")
+manualSupport3Enabled = input.bool(false, "Enable Support 3 / 啟用支持3", group="09 Manual SR / 人手支持阻力")
+manualSupport3 = input.price(0.0, "Manual Support 3 / 人手支持3", group="09 Manual SR / 人手支持阻力")
+
+fibEnabled = input.bool(true, "Enable Manual Fib / 啟用人手 Fib", group="10 Manual Fib / 人手 Fibonacci")
+fibAnchorA = input.price(0.0, "Fib Anchor A / Fib 起點 A", group="10 Manual Fib / 人手 Fibonacci")
+fibAnchorB = input.price(0.0, "Fib Anchor B / Fib 起點 B", group="10 Manual Fib / 人手 Fibonacci")
+fibDirection = input.string("Bullish", "Fib Direction / Fib 方向", options=["Bullish", "Bearish"], group="10 Manual Fib / 人手 Fibonacci")
+
+profileMode = input.string("Manual", "VAH/VAL/POC Mode / 價值區模式", options=["Manual", "Pine Approximation"], group="11 VAH VAL POC / 價值區")
+manualVah = input.price(0.0, "Manual VAH / 人手 VAH", group="11 VAH VAL POC / 價值區")
+manualVal = input.price(0.0, "Manual VAL / 人手 VAL", group="11 VAH VAL POC / 價值區")
+manualPoc = input.price(0.0, "Manual POC / 人手 POC", group="11 VAH VAL POC / 價值區")
+profileStartTime = input.time(DEFAULT_PROFILE_START_TIME, "Approx Profile Start / 估算 Profile 開始", group="11 VAH VAL POC / 價值區")
+profileEndTime = input.time(DEFAULT_PROFILE_END_TIME, "Approx Profile End / 估算 Profile 完結", group="11 VAH VAL POC / 價值區")
+profileBins = input.int(24, "Approx Number Of Bins / 估算格數", minval=4, maxval=100, group="11 VAH VAL POC / 價值區")
+profileValueAreaPct = input.float(0.70, "Approx Value Area Percentage / 估算價值區百分比", minval=0.1, maxval=1.0, step=0.05, group="11 VAH VAL POC / 價值區")
+profileLowerTf = input.string("1", "Approx Lower TF / 估算低時間框架", group="11 VAH VAL POC / 價值區")
+
+londonSession = input.session("0700-1600", "London Session / 倫敦時段", group="12 Session / 時段")
+newYorkSession = input.session("1200-2100", "New York Session / 紐約時段", group="12 Session / 時段")
+asianSession = input.session("2200-0700", "Asian Overnight Session / 亞洲隔夜時段", group="12 Session / 時段")
+preLondonSession = input.session("0600-0700", "Pre-London Session / 倫敦前時段", group="12 Session / 時段")
+londonOpenSession = input.session("0700-0900", "London Open Window / 倫敦開市窗口", group="12 Session / 時段")
+londonMidSession = input.session("0900-1200", "London Mid Window / 倫敦中段窗口", group="12 Session / 時段")
+londonLateSession = input.session("1500-1600", "London Late Window / 倫敦尾段窗口", group="12 Session / 時段")
+newYorkOpenSession = input.session("1200-1400", "New York Open Window / 紐約開市窗口", group="12 Session / 時段")
+postLondonSession = input.session("1600-2100", "Post-London Window / 倫敦後窗口", group="12 Session / 時段")
+sessionTimezone = input.string("Europe/London", "Session Timezone / 時段時區", group="12 Session / 時段")
+
+newsActive = input.bool(false, "Event Active / 新聞事件啟用", group="13 Manual News / 人手新聞")
+newsEventTime = input.time(DEFAULT_NEWS_EVENT_TIME, "Event Time / 新聞時間", group="13 Manual News / 人手新聞")
+newsCurrency = input.string("USD", "Event Currency / 新聞貨幣", group="13 Manual News / 人手新聞")
+newsImpact = input.string("High", "Event Impact / 新聞影響", options=["Low", "Medium", "High"], group="13 Manual News / 人手新聞")
+newsExpectedDirection = input.string("Neutral", "Expected Direction / 預期方向", options=["Bullish", "Bearish", "Neutral"], group="13 Manual News / 人手新聞")
+newsWindowBeforeMinutes = input.int(15, "Event Window Before Minutes / 新聞前窗口分鐘", minval=0, group="13 Manual News / 人手新聞")
+newsWindowAfterMinutes = input.int(45, "Event Window After Minutes / 新聞後窗口分鐘", minval=1, group="13 Manual News / 人手新聞")
+newsFadeThreshold = input.float(0.50, "News Fade Ratio Threshold / 新聞回吐比例門檻", minval=0.0, step=0.05, group="13 Manual News / 人手新聞")
+newsDivergencePersistenceBars = input.int(20, "News Divergence Persistence Bars / 新聞背馳持續支數", minval=1, maxval=200, group="13 Manual News / 人手新聞")
+
+enableAlerts = input.bool(true, "Enable Checkpoint Alerts / 啟用檢查點警報", group="14 Alerts / 警報")
+confirmedAlertsOnly = input.bool(true, "Confirmed Bar Alerts Only / 只用已確認K線警報", group="14 Alerts / 警報")
+
+// ============================================================================
+// 02. SHARED PRICE CALCULATIONS
+// 共用價格計算
+// ============================================================================
+
+f_safeDiv(float numerator, float denominator, float fallback) =>
+    denominator == 0.0 or na(denominator) or na(numerator) ? fallback : numerator / denominator
+
+f_clamp(float value, float minimum, float maximum) =>
+    math.max(minimum, math.min(maximum, value))
+
+f_norm01(float value, float minimum, float maximum) =>
+    maximum == minimum ? 0.0 : f_clamp((value - minimum) / (maximum - minimum), 0.0, 1.0)
+
+f_dirText(int direction) =>
+    direction > 0 ? DIR_BULL : direction < 0 ? DIR_BEAR : DIR_NEUTRAL
+
+f_boolScore(bool condition) =>
+    condition ? 1.0 : 0.0
+
+barRange = high - low
+barBody = math.abs(close - open)
+upperWick = high - math.max(open, close)
+lowerWick = math.min(open, close) - low
+bodyRatio = f_safeDiv(barBody, barRange, 0.0)
+upperWickRatio = f_safeDiv(upperWick, barRange, 0.0)
+lowerWickRatio = f_safeDiv(lowerWick, barRange, 0.0)
+closeLocation = f_safeDiv(close - low, barRange, 0.5)
+bullishProgress = math.max(close - close[1], 0.0)
+bearishProgress = math.max(close[1] - close, 0.0)
+candleDirection = close > open ? 1 : close < open ? -1 : 0
+atrValue = ta.atr(atrLength)
+levelTolerance = atrValue * levelToleranceAtr
+approachTolerance = atrValue * approachToleranceAtr
+breakoutBuffer = atrValue * breakoutBufferAtr
+retestTolerance = atrValue * retestToleranceAtr
+medianRange = ta.median(barRange, momentumLookback)
+medianBody = ta.median(barBody, momentumLookback)
+rangeExpansionRatio = f_safeDiv(barRange, medianRange, 0.0)
+bodyExpansionRatio = f_safeDiv(barBody, medianBody, 0.0)
+
+// Returns true only when N closes move consecutively in one direction.
+// 只喺 N 支收市價連續同方向移動時回傳 true。
+f_consecutiveCloses(int bars, int direction) =>
+    bool ok = true
+    for i = 0 to bars - 2
+        ok := ok and (direction > 0 ? close[i] > close[i + 1] : close[i] < close[i + 1])
+    ok
+
+// ============================================================================
+// 03. MULTI-TIMEFRAME CONFIRMED DATA
+// 多時間框架已確認資料
+// ============================================================================
+
+// Calculates structure and evidence inside the requested timeframe.
+// 喺指定時間框架內計算結構與中間證據。
+f_tfMetrics() =>
+    float ph = ta.pivothigh(high, swingLeft, swingRight)
+    float pl = ta.pivotlow(low, swingLeft, swingRight)
+    float latestHigh = ta.valuewhen(not na(ph), ph, 0)
+    float previousHigh = ta.valuewhen(not na(ph), ph, 1)
+    float latestLow = ta.valuewhen(not na(pl), pl, 0)
+    float previousLow = ta.valuewhen(not na(pl), pl, 1)
+    int structureDirection = not na(latestHigh) and not na(previousHigh) and not na(latestLow) and not na(previousLow) ? latestHigh > previousHigh and latestLow > previousLow ? 1 : latestHigh < previousHigh and latestLow < previousLow ? -1 : 0 : 0
+    float path = math.sum(math.abs(close - close[1]), structureLookback)[1]
+    float efficiency = f_safeDiv(math.abs(close[1] - close[structureLookback + 1]), path, 0.0)
+    float bullishCloseRatio = f_safeDiv(math.sum(close > close[1] ? 1.0 : 0.0, structureLookback)[1], structureLookback, 0.0)
+    float bearishCloseRatio = f_safeDiv(math.sum(close < close[1] ? 1.0 : 0.0, structureLookback)[1], structureLookback, 0.0)
+    [open[1], high[1], low[1], close[1], volume[1], time[1], structureDirection, latestHigh, latestLow, efficiency, bullishCloseRatio, bearishCloseRatio]
+
+[m5ConfirmedOpen, m5ConfirmedHigh, m5ConfirmedLow, m5ConfirmedClose, m5ConfirmedVolume, m5ConfirmedTime, m5Direction, m5SwingHigh, m5SwingLow, m5Efficiency, m5BullCloseRatio, m5BearCloseRatio] = request.security(syminfo.tickerid, "5", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+[m15ConfirmedOpen, m15ConfirmedHigh, m15ConfirmedLow, m15ConfirmedClose, m15ConfirmedVolume, m15ConfirmedTime, m15Direction, m15SwingHigh, m15SwingLow, m15Efficiency, m15BullCloseRatio, m15BearCloseRatio] = request.security(syminfo.tickerid, "15", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+[m30ConfirmedOpen, m30ConfirmedHigh, m30ConfirmedLow, m30ConfirmedClose, m30ConfirmedVolume, m30ConfirmedTime, m30Direction, m30SwingHigh, m30SwingLow, m30Efficiency, m30BullCloseRatio, m30BearCloseRatio] = request.security(syminfo.tickerid, "30", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+[h1ConfirmedOpen, h1ConfirmedHigh, h1ConfirmedLow, h1ConfirmedClose, h1ConfirmedVolume, h1ConfirmedTime, h1Direction, h1SwingHigh, h1SwingLow, h1Efficiency, h1BullCloseRatio, h1BearCloseRatio] = request.security(syminfo.tickerid, "60", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+
+alignmentWeightTotal = math.max(m5Weight + m15Weight + m30Weight + h1Weight, 0.0001)
+alignmentRaw = m5Weight * m5Direction + m15Weight * m15Direction + m30Weight * m30Direction + h1Weight * h1Direction
+alignmentScoreSigned = alignmentRaw / alignmentWeightTotal
+alignmentScoreAbs = math.abs(alignmentScoreSigned)
+timeframeConflictScore = 1.0 - alignmentScoreAbs
+
+// ============================================================================
+// 04. MANUAL LEVELS, FIBONACCI AND PRICE LOCATION
+// 人手水平、Fibonacci 與價格位置
+// ============================================================================
+
+f_distanceToLevel(float level) =>
+    close - level
+
+f_normalisedDistance(float level) =>
+    f_safeDiv(math.abs(close - level), atrValue, na)
+
+f_nearLevel(float level) =>
+    not na(level) and level != 0.0 and math.abs(close - level) <= levelTolerance
+
+fibHigh = math.max(fibAnchorA, fibAnchorB)
+fibLow = math.min(fibAnchorA, fibAnchorB)
+fibRange = fibHigh - fibLow
+fib382 = fibDirection == "Bullish" ? fibHigh - fibRange * 0.382 : fibLow + fibRange * 0.382
+fib500 = fibDirection == "Bullish" ? fibHigh - fibRange * 0.500 : fibLow + fibRange * 0.500
+fib618 = fibDirection == "Bullish" ? fibHigh - fibRange * 0.618 : fibLow + fibRange * 0.618
+
+vah = profileMode == "Manual" ? manualVah : na
+val = profileMode == "Manual" ? manualVal : na
+poc = profileMode == "Manual" ? manualPoc : na
+profileStatus = profileMode == "Manual" ? STATUS_IMPLEMENTED : STATUS_PARTIAL
+
+float nearestManualLevel = na
+string nearestManualSource = "NONE"
+float nearestManualDistance = na
+
+f_considerNearest(bool enabled, float level, string source, float currentNearest, float currentDistance) =>
+    float candidateDistance = enabled and level != 0.0 ? math.abs(close - level) : na
+    bool useCandidate = not na(candidateDistance) and (na(currentDistance) or candidateDistance < currentDistance)
+    [useCandidate ? level : currentNearest, useCandidate ? candidateDistance : currentDistance, useCandidate ? source : ""]
+
+[tmpLevel1, tmpDistance1, tmpSource1] = f_considerNearest(manualResistance1Enabled, manualResistance1, "MANUAL_RESISTANCE_1", nearestManualLevel, nearestManualDistance)
+nearestManualLevel := tmpLevel1
+nearestManualDistance := tmpDistance1
+nearestManualSource := tmpSource1 != "" ? tmpSource1 : nearestManualSource
+[tmpLevel2, tmpDistance2, tmpSource2] = f_considerNearest(manualResistance2Enabled, manualResistance2, "MANUAL_RESISTANCE_2", nearestManualLevel, nearestManualDistance)
+nearestManualLevel := tmpLevel2
+nearestManualDistance := tmpDistance2
+nearestManualSource := tmpSource2 != "" ? tmpSource2 : nearestManualSource
+[tmpLevel3, tmpDistance3, tmpSource3] = f_considerNearest(manualResistance3Enabled, manualResistance3, "MANUAL_RESISTANCE_3", nearestManualLevel, nearestManualDistance)
+nearestManualLevel := tmpLevel3
+nearestManualDistance := tmpDistance3
+nearestManualSource := tmpSource3 != "" ? tmpSource3 : nearestManualSource
+[tmpLevel4, tmpDistance4, tmpSource4] = f_considerNearest(manualSupport1Enabled, manualSupport1, "MANUAL_SUPPORT_1", nearestManualLevel, nearestManualDistance)
+nearestManualLevel := tmpLevel4
+nearestManualDistance := tmpDistance4
+nearestManualSource := tmpSource4 != "" ? tmpSource4 : nearestManualSource
+[tmpLevel5, tmpDistance5, tmpSource5] = f_considerNearest(manualSupport2Enabled, manualSupport2, "MANUAL_SUPPORT_2", nearestManualLevel, nearestManualDistance)
+nearestManualLevel := tmpLevel5
+nearestManualDistance := tmpDistance5
+nearestManualSource := tmpSource5 != "" ? tmpSource5 : nearestManualSource
+[tmpLevel6, tmpDistance6, tmpSource6] = f_considerNearest(manualSupport3Enabled, manualSupport3, "MANUAL_SUPPORT_3", nearestManualLevel, nearestManualDistance)
+nearestManualLevel := tmpLevel6
+nearestManualDistance := tmpDistance6
+nearestManualSource := tmpSource6 != "" ? tmpSource6 : nearestManualSource
+
+nearManualSr = f_nearLevel(manualResistance1) or f_nearLevel(manualResistance2) or f_nearLevel(manualResistance3) or f_nearLevel(manualSupport1) or f_nearLevel(manualSupport2) or f_nearLevel(manualSupport3)
+nearManualFib = fibEnabled and (f_nearLevel(fib382) or f_nearLevel(fib500) or f_nearLevel(fib618))
+nearVahValPoc = f_nearLevel(vah) or f_nearLevel(val) or f_nearLevel(poc)
+
+// ============================================================================
+// 05. PREVIOUS HIGH / LOW AND CONFIRMED SWINGS
+// 前高前低與已確認擺動
+// ============================================================================
+
+previousDayHigh = request.security(syminfo.tickerid, "D", high[1], lookahead=barmerge.lookahead_off)
+previousDayLow = request.security(syminfo.tickerid, "D", low[1], lookahead=barmerge.lookahead_off)
+
+inLondon = not na(time(timeframe.period, londonSession, sessionTimezone))
+inNewYork = not na(time(timeframe.period, newYorkSession, sessionTimezone))
+inAsian = not na(time(timeframe.period, asianSession, sessionTimezone))
+inPreLondon = not na(time(timeframe.period, preLondonSession, sessionTimezone))
+inLondonOpenWindow = not na(time(timeframe.period, londonOpenSession, sessionTimezone))
+inLondonMidWindow = not na(time(timeframe.period, londonMidSession, sessionTimezone))
+inLondonLateWindow = not na(time(timeframe.period, londonLateSession, sessionTimezone))
+inNewYorkOpenWindow = not na(time(timeframe.period, newYorkOpenSession, sessionTimezone))
+inPostLondonWindow = not na(time(timeframe.period, postLondonSession, sessionTimezone))
+inOverlap = inLondon and inNewYork
+
+var float londonHigh = na
+var float londonLow = na
+var float previousLondonHigh = na
+var float previousLondonLow = na
+var float newYorkHigh = na
+var float newYorkLow = na
+var float previousNewYorkHigh = na
+var float previousNewYorkLow = na
+
+londonStart = inLondon and not inLondon[1]
+londonEnd = not inLondon and inLondon[1]
+newYorkStart = inNewYork and not inNewYork[1]
+newYorkEnd = not inNewYork and inNewYork[1]
+
+if londonStart
+    londonHigh := high
+    londonLow := low
+else if inLondon
+    londonHigh := math.max(nz(londonHigh, high), high)
+    londonLow := math.min(nz(londonLow, low), low)
+if londonEnd
+    previousLondonHigh := londonHigh
+    previousLondonLow := londonLow
+
+if newYorkStart
+    newYorkHigh := high
+    newYorkLow := low
+else if inNewYork
+    newYorkHigh := math.max(nz(newYorkHigh, high), high)
+    newYorkLow := math.min(nz(newYorkLow, low), low)
+if newYorkEnd
+    previousNewYorkHigh := newYorkHigh
+    previousNewYorkLow := newYorkLow
+
+previousSessionHigh = inLondon or inAsian ? previousNewYorkHigh : previousLondonHigh
+previousSessionLow = inLondon or inAsian ? previousNewYorkLow : previousLondonLow
+
+confirmedSwingHigh = ta.pivothigh(high, swingLeft, swingRight)
+confirmedSwingLow = ta.pivotlow(low, swingLeft, swingRight)
+latestSwingHigh = ta.valuewhen(not na(confirmedSwingHigh), confirmedSwingHigh, 0)
+previousSwingHigh = ta.valuewhen(not na(confirmedSwingHigh), confirmedSwingHigh, 1)
+latestSwingLow = ta.valuewhen(not na(confirmedSwingLow), confirmedSwingLow, 0)
+previousSwingLow = ta.valuewhen(not na(confirmedSwingLow), confirmedSwingLow, 1)
+
+localStructureDirection = not na(latestSwingHigh) and not na(previousSwingHigh) and not na(latestSwingLow) and not na(previousSwingLow) ? latestSwingHigh > previousSwingHigh and latestSwingLow > previousSwingLow ? 1 : latestSwingHigh < previousSwingHigh and latestSwingLow < previousSwingLow ? -1 : 0 : 0
+localStructureText = f_dirText(localStructureDirection)
+
+nearPreviousDay = f_nearLevel(previousDayHigh) or f_nearLevel(previousDayLow)
+nearPreviousSession = f_nearLevel(previousSessionHigh) or f_nearLevel(previousSessionLow)
+
+// ============================================================================
+// 06. CANDLE BEHAVIOUR ENGINE
+// 蠟燭行為分析
+// ============================================================================
+
+bullishEngulfing = close[1] < open[1] and close > open and open <= close[1] and close >= open[1]
+bearishEngulfing = close[1] > open[1] and close < open and open >= close[1] and close <= open[1]
+bullishRejection = lowerWickRatio >= minLowerWickRatio and lowerWick >= barBody * minWickToBodyRatio and closeLocation >= minBullishCloseLocation
+bearishRejection = upperWickRatio >= minUpperWickRatio and upperWick >= barBody * minWickToBodyRatio and closeLocation <= maxBearishCloseLocation
+longUpperWick = upperWickRatio >= longWickThreshold
+longLowerWick = lowerWickRatio >= longWickThreshold
+dojiLikeHesitation = bodyRatio <= dojiBodyThreshold
+smallBodyHesitation = bodyRatio <= smallBodyThreshold and rangeExpansionRatio >= minSmallBodyRangeExpansion
+insideBar = high <= high[1] and low >= low[1]
+outsideBar = high >= high[1] and low <= low[1]
+consecutiveBullishCloses = f_consecutiveCloses(directionalCloseCount, 1)
+consecutiveBearishCloses = f_consecutiveCloses(directionalCloseCount, -1)
+consecutiveBullishBodies = math.sum(close > open ? 1.0 : 0.0, directionalCloseCount) == directionalCloseCount
+consecutiveBearishBodies = math.sum(close < open ? 1.0 : 0.0, directionalCloseCount) == directionalCloseCount
+expansionCandle = rangeExpansionRatio >= rangeExpansionThreshold and bodyExpansionRatio >= bodyExpansionThreshold
+weakBullishClose = close > open and closeLocation < bullishStrongCloseThreshold
+weakBearishClose = close < open and closeLocation > bearishStrongCloseThreshold
+
+currentCandlePattern = bullishEngulfing ? "BULLISH_ENGULFING" : bearishEngulfing ? "BEARISH_ENGULFING" : bullishRejection ? "BULLISH_REJECTION" : bearishRejection ? "BEARISH_REJECTION" : dojiLikeHesitation ? "DOJI_LIKE_HESITATION" : smallBodyHesitation ? "SMALL_BODY_HESITATION" : insideBar ? "INSIDE_BAR" : outsideBar ? "OUTSIDE_BAR" : expansionCandle ? "EXPANSION_CANDLE" : weakBullishClose or weakBearishClose ? "WEAK_CLOSE" : "NONE"
+strongRejection = bullishRejection or bearishRejection
+
+// ============================================================================
+// 07. CONSOLIDATION EVIDENCE AND FROZEN BOUNDARIES
+// 整固證據與凍結邊界
+// ============================================================================
+
+windowHigh = ta.highest(high, consolidationLookback)
+windowLow = ta.lowest(low, consolidationLookback)
+windowRange = windowHigh - windowLow
+normalisedWindowRange = f_safeDiv(windowRange, atrValue, 999.0)
+netProgress = math.abs(close - close[consolidationLookback - 1])
+totalPath = math.sum(math.abs(close - close[1]), consolidationLookback)
+efficiencyRatio = f_safeDiv(netProgress, totalPath, 0.0)
+overlap = math.max(0.0, math.min(high, high[1]) - math.max(low, low[1]))
+minimumRange = math.min(barRange, barRange[1])
+overlapRatio = f_safeDiv(overlap, minimumRange, 0.0)
+averageOverlapRatio = ta.sma(overlapRatio, consolidationLookback)
+directionChanged = candleDirection != 0 and candleDirection[1] != 0 and candleDirection != candleDirection[1]
+directionChangeRatio = f_safeDiv(math.sum(directionChanged ? 1.0 : 0.0, consolidationLookback), math.max(consolidationLookback - 1, 1), 0.0)
+consolidationCandidate = efficiencyRatio <= maxConsolidationEfficiency and averageOverlapRatio >= minOverlapThreshold and normalisedWindowRange <= maxWindowRangeAtr and directionChangeRatio >= minDirectionChangeRatio
+
+var float frozenConsolidationHigh = na
+var float frozenConsolidationLow = na
+var int frozenConsolidationBar = na
+var bool consolidationFrozen = false
+
+if consolidationCandidate and not consolidationFrozen
+    frozenConsolidationHigh := windowHigh
+    frozenConsolidationLow := windowLow
+    frozenConsolidationBar := bar_index
+
+nearConsolidationBoundary = f_nearLevel(frozenConsolidationHigh) or f_nearLevel(frozenConsolidationLow)
+
+// ============================================================================
+// 08. BREAKOUT LEVEL SELECTION AND LIFECYCLE
+// 突破水平選擇與生命週期
+// ============================================================================
+
+float selectedBreakoutLevel = na
+string selectedBreakoutSource = "NONE"
+int selectedBreakoutDirection = 0
+float selectedDistance = na
+
+f_considerBreakLevel(bool enabled, float level, string source, int direction, float currentLevel, float currentDistance) =>
+    float candidateDistance = enabled and not na(level) and level != 0.0 ? math.abs(close - level) : na
+    bool useCandidate = not na(candidateDistance) and (na(currentDistance) or candidateDistance < currentDistance)
+    [useCandidate ? level : currentLevel, useCandidate ? candidateDistance : currentDistance, useCandidate ? source : "", useCandidate ? direction : 0]
+
+[bl1, bd1, bs1, bdir1] = f_considerBreakLevel(manualResistance1Enabled, manualResistance1, "MANUAL_RESISTANCE_1", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl1
+selectedDistance := bd1
+selectedBreakoutSource := bs1 != "" ? bs1 : selectedBreakoutSource
+selectedBreakoutDirection := bdir1 != 0 ? bdir1 : selectedBreakoutDirection
+[bl2, bd2, bs2, bdir2] = f_considerBreakLevel(manualResistance2Enabled, manualResistance2, "MANUAL_RESISTANCE_2", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl2
+selectedDistance := bd2
+selectedBreakoutSource := bs2 != "" ? bs2 : selectedBreakoutSource
+selectedBreakoutDirection := bdir2 != 0 ? bdir2 : selectedBreakoutDirection
+[bl3, bd3, bs3, bdir3] = f_considerBreakLevel(manualResistance3Enabled, manualResistance3, "MANUAL_RESISTANCE_3", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl3
+selectedDistance := bd3
+selectedBreakoutSource := bs3 != "" ? bs3 : selectedBreakoutSource
+selectedBreakoutDirection := bdir3 != 0 ? bdir3 : selectedBreakoutDirection
+[bl4, bd4, bs4, bdir4] = f_considerBreakLevel(manualSupport1Enabled, manualSupport1, "MANUAL_SUPPORT_1", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl4
+selectedDistance := bd4
+selectedBreakoutSource := bs4 != "" ? bs4 : selectedBreakoutSource
+selectedBreakoutDirection := bdir4 != 0 ? bdir4 : selectedBreakoutDirection
+[bl5, bd5, bs5, bdir5] = f_considerBreakLevel(manualSupport2Enabled, manualSupport2, "MANUAL_SUPPORT_2", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl5
+selectedDistance := bd5
+selectedBreakoutSource := bs5 != "" ? bs5 : selectedBreakoutSource
+selectedBreakoutDirection := bdir5 != 0 ? bdir5 : selectedBreakoutDirection
+[bl6, bd6, bs6, bdir6] = f_considerBreakLevel(manualSupport3Enabled, manualSupport3, "MANUAL_SUPPORT_3", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl6
+selectedDistance := bd6
+selectedBreakoutSource := bs6 != "" ? bs6 : selectedBreakoutSource
+selectedBreakoutDirection := bdir6 != 0 ? bdir6 : selectedBreakoutDirection
+[bl7, bd7, bs7, bdir7] = f_considerBreakLevel(fibEnabled, fib382, "MANUAL_FIB_38_2", fibDirection == "Bullish" ? -1 : 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl7
+selectedDistance := bd7
+selectedBreakoutSource := bs7 != "" ? bs7 : selectedBreakoutSource
+selectedBreakoutDirection := bdir7 != 0 ? bdir7 : selectedBreakoutDirection
+[bl8, bd8, bs8, bdir8] = f_considerBreakLevel(fibEnabled, fib500, "MANUAL_FIB_50_0", fibDirection == "Bullish" ? -1 : 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl8
+selectedDistance := bd8
+selectedBreakoutSource := bs8 != "" ? bs8 : selectedBreakoutSource
+selectedBreakoutDirection := bdir8 != 0 ? bdir8 : selectedBreakoutDirection
+[bl9, bd9, bs9, bdir9] = f_considerBreakLevel(fibEnabled, fib618, "MANUAL_FIB_61_8", fibDirection == "Bullish" ? -1 : 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl9
+selectedDistance := bd9
+selectedBreakoutSource := bs9 != "" ? bs9 : selectedBreakoutSource
+selectedBreakoutDirection := bdir9 != 0 ? bdir9 : selectedBreakoutDirection
+[bl10, bd10, bs10, bdir10] = f_considerBreakLevel(true, previousDayHigh, "PREVIOUS_DAY_HIGH", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl10
+selectedDistance := bd10
+selectedBreakoutSource := bs10 != "" ? bs10 : selectedBreakoutSource
+selectedBreakoutDirection := bdir10 != 0 ? bdir10 : selectedBreakoutDirection
+[bl11, bd11, bs11, bdir11] = f_considerBreakLevel(true, previousDayLow, "PREVIOUS_DAY_LOW", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl11
+selectedDistance := bd11
+selectedBreakoutSource := bs11 != "" ? bs11 : selectedBreakoutSource
+selectedBreakoutDirection := bdir11 != 0 ? bdir11 : selectedBreakoutDirection
+[bl12, bd12, bs12, bdir12] = f_considerBreakLevel(true, previousSessionHigh, "PREVIOUS_SESSION_HIGH", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl12
+selectedDistance := bd12
+selectedBreakoutSource := bs12 != "" ? bs12 : selectedBreakoutSource
+selectedBreakoutDirection := bdir12 != 0 ? bdir12 : selectedBreakoutDirection
+[bl13, bd13, bs13, bdir13] = f_considerBreakLevel(true, previousSessionLow, "PREVIOUS_SESSION_LOW", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl13
+selectedDistance := bd13
+selectedBreakoutSource := bs13 != "" ? bs13 : selectedBreakoutSource
+selectedBreakoutDirection := bdir13 != 0 ? bdir13 : selectedBreakoutDirection
+[bl14, bd14, bs14, bdir14] = f_considerBreakLevel(true, latestSwingHigh, "CONFIRMED_SWING_HIGH", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl14
+selectedDistance := bd14
+selectedBreakoutSource := bs14 != "" ? bs14 : selectedBreakoutSource
+selectedBreakoutDirection := bdir14 != 0 ? bdir14 : selectedBreakoutDirection
+[bl15, bd15, bs15, bdir15] = f_considerBreakLevel(true, latestSwingLow, "CONFIRMED_SWING_LOW", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl15
+selectedDistance := bd15
+selectedBreakoutSource := bs15 != "" ? bs15 : selectedBreakoutSource
+selectedBreakoutDirection := bdir15 != 0 ? bdir15 : selectedBreakoutDirection
+[bl16, bd16, bs16, bdir16] = f_considerBreakLevel(not na(frozenConsolidationHigh), frozenConsolidationHigh, "CONSOLIDATION_HIGH", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl16
+selectedDistance := bd16
+selectedBreakoutSource := bs16 != "" ? bs16 : selectedBreakoutSource
+selectedBreakoutDirection := bdir16 != 0 ? bdir16 : selectedBreakoutDirection
+[bl17, bd17, bs17, bdir17] = f_considerBreakLevel(not na(frozenConsolidationLow), frozenConsolidationLow, "CONSOLIDATION_LOW", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl17
+selectedDistance := bd17
+selectedBreakoutSource := bs17 != "" ? bs17 : selectedBreakoutSource
+selectedBreakoutDirection := bdir17 != 0 ? bdir17 : selectedBreakoutDirection
+[bl18, bd18, bs18, bdir18] = f_considerBreakLevel(not na(vah), vah, "VAH", 1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl18
+selectedDistance := bd18
+selectedBreakoutSource := bs18 != "" ? bs18 : selectedBreakoutSource
+selectedBreakoutDirection := bdir18 != 0 ? bdir18 : selectedBreakoutDirection
+[bl19, bd19, bs19, bdir19] = f_considerBreakLevel(not na(val), val, "VAL", -1, selectedBreakoutLevel, selectedDistance)
+selectedBreakoutLevel := bl19
+selectedDistance := bd19
+selectedBreakoutSource := bs19 != "" ? bs19 : selectedBreakoutSource
+selectedBreakoutDirection := bdir19 != 0 ? bdir19 : selectedBreakoutDirection
+
+levelApproach = not na(selectedBreakoutLevel) and math.abs(close - selectedBreakoutLevel) <= approachTolerance
+bullishLevelBreak = selectedBreakoutDirection > 0 and close[1] <= selectedBreakoutLevel and close > selectedBreakoutLevel + breakoutBuffer
+bearishLevelBreak = selectedBreakoutDirection < 0 and close[1] >= selectedBreakoutLevel and close < selectedBreakoutLevel - breakoutBuffer
+levelBreak = bullishLevelBreak or bearishLevelBreak
+wickBreak = selectedBreakoutDirection > 0 ? high > selectedBreakoutLevel and close <= selectedBreakoutLevel : selectedBreakoutDirection < 0 ? low < selectedBreakoutLevel and close >= selectedBreakoutLevel : false
+breakDistance = selectedBreakoutDirection > 0 ? close - selectedBreakoutLevel : selectedBreakoutDirection < 0 ? selectedBreakoutLevel - close : 0.0
+normalisedBreakDistance = f_safeDiv(breakDistance, atrValue, 0.0)
+
+bodyQuality = f_clamp(bodyRatio / math.max(minBodyRatio, 0.0001), 0.0, 1.0)
+closeQuality = selectedBreakoutDirection > 0 ? closeLocation : selectedBreakoutDirection < 0 ? 1.0 - closeLocation : 0.0
+breakDistanceQuality = f_clamp(normalisedBreakDistance / math.max(breakDistanceQualityFullAtr, 0.0001), 0.0, 1.0)
+expansionQuality = f_clamp((rangeExpansionRatio + bodyExpansionRatio) / 2.0 / math.max(rangeExpansionThreshold, 0.0001), 0.0, 1.0)
+oppositeWickPenalty = selectedBreakoutDirection > 0 ? upperWickRatio : selectedBreakoutDirection < 0 ? lowerWickRatio : 0.0
+breakoutQualityRaw = breakoutBodyWeight * bodyQuality + breakoutCloseWeight * closeQuality + breakoutDistanceWeight * breakDistanceQuality + breakoutExpansionWeight * expansionQuality - breakoutWickPenaltyWeight * oppositeWickPenalty
+breakoutWeightTotal = math.max(breakoutBodyWeight + breakoutCloseWeight + breakoutDistanceWeight + breakoutExpansionWeight, 0.0001)
+breakoutQualityScore = f_clamp(breakoutQualityRaw / breakoutWeightTotal, 0.0, 1.0)
+breakoutCandidate = levelBreak and breakoutQualityScore >= breakoutCandidateThreshold
+
+var string breakoutState = STATE_IDLE
+var float activeBreakoutLevel = na
+var string activeBreakoutSource = "NONE"
+var int activeBreakoutDirection = 0
+var int activeBreakoutCreationBar = na
+var int activeBreakoutCreationTime = na
+var float activeConsolidationHigh = na
+var float activeConsolidationLow = na
+var int breakoutAttemptCount = 0
+var int failedBreakCount = 0
+var string followThroughResult = "NONE"
+var float activeBreakoutQualityScore = na
+var bool activeBreakoutCandidateQualified = false
+var int consecutiveOutsideCloses = 0
+var int breakoutAttemptId = 0
+var int breakoutBarIndex = na
+var int breakoutBarTime = na
+var int followThroughEvaluatedAttemptId = na
+var int followThroughAlertedAttemptId = na
+var string followThroughAlertedEvent = "NONE"
+var int followThroughAlertedBar = na
+var string transitionPreviousState = "NONE"
+var string transitionNewState = "NONE"
+var int transitionTime = na
+var float transitionPrice = na
+var string transitionTrigger = "NONE"
+var float transitionRelevantLevel = na
+var string transitionTimeframe = timeframe.period
+
+previousBreakoutState = breakoutState
+breakoutAge = na(activeBreakoutCreationBar) ? 0 : bar_index - activeBreakoutCreationBar
+barOffsetFromBreakout = na(breakoutBarIndex) ? na : bar_index - breakoutBarIndex
+outsideActiveLevel = activeBreakoutDirection > 0 ? close > activeBreakoutLevel : activeBreakoutDirection < 0 ? close < activeBreakoutLevel : false
+insideOldRange = activeBreakoutDirection > 0 ? close < activeBreakoutLevel : activeBreakoutDirection < 0 ? close > activeBreakoutLevel : false
+secondBarProgress = activeBreakoutDirection > 0 ? close > close[1] : activeBreakoutDirection < 0 ? close < close[1] : false
+strongDirectionalClose = activeBreakoutDirection > 0 ? closeLocation >= minBullishCloseLocation : activeBreakoutDirection < 0 ? closeLocation <= maxBearishCloseLocation : false
+strongOppositeRejection = activeBreakoutDirection > 0 ? bearishRejection : activeBreakoutDirection < 0 ? bullishRejection : false
+strongFollowThrough = breakoutState == STATE_BREAK and activeBreakoutCandidateQualified and barOffsetFromBreakout == 1 and secondBarProgress and outsideActiveLevel and strongDirectionalClose and not strongOppositeRejection
+weakFollowThrough = breakoutState == STATE_BREAK and activeBreakoutCandidateQualified and barOffsetFromBreakout == 1 and outsideActiveLevel and not strongOppositeRejection and not strongFollowThrough
+noFollowThrough = breakoutState == STATE_BREAK and barOffsetFromBreakout == 1 and not outsideActiveLevel and not insideOldRange
+immediateFailure = breakoutState == STATE_BREAK and barOffsetFromBreakout == 1 and insideOldRange
+followThroughEvaluatedThisBar = false
+followThroughEventThisBar = false
+lifecycleResetPending = breakoutState == STATE_EXPIRED and barstate.isconfirmed
+transitionOccurredThisBar = false
+string breakoutTransitionTrigger = "NONE"
+float breakoutTransitionLevel = activeBreakoutLevel
+string breakoutStateBeforeTransition = breakoutState
+
+if barstate.isconfirmed and breakoutState != STATE_IDLE and breakoutState != STATE_EXPIRED
+    consecutiveOutsideCloses := outsideActiveLevel ? consecutiveOutsideCloses + 1 : 0
+
+if lifecycleResetPending
+    breakoutTransitionTrigger := "LIFECYCLE_RESET"
+    breakoutTransitionLevel := activeBreakoutLevel
+    breakoutState := STATE_IDLE
+    activeBreakoutLevel := na
+    activeBreakoutSource := "NONE"
+    activeBreakoutDirection := 0
+    activeBreakoutCreationBar := na
+    activeBreakoutCreationTime := na
+    activeConsolidationHigh := na
+    activeConsolidationLow := na
+    activeBreakoutQualityScore := na
+    activeBreakoutCandidateQualified := false
+    breakoutBarIndex := na
+    breakoutBarTime := na
+    breakoutAge := 0
+    barOffsetFromBreakout := na
+    consecutiveOutsideCloses := 0
+    followThroughResult := "NONE"
+    followThroughEvaluatedAttemptId := na
+    consolidationFrozen := false
+else if barstate.isconfirmed and breakoutState != STATE_IDLE and breakoutAge > stateExpiryBars
+    breakoutState := STATE_EXPIRED
+    breakoutTransitionTrigger := "STATE_EXPIRY"
+    consolidationFrozen := false
+else if barstate.isconfirmed and (breakoutState == STATE_IDLE or breakoutState == STATE_APPROACH) and levelBreak
+    breakoutState := STATE_BREAK
+    breakoutTransitionTrigger := "LEVEL_BREAK"
+    activeBreakoutLevel := selectedBreakoutLevel
+    activeBreakoutSource := selectedBreakoutSource
+    activeBreakoutDirection := selectedBreakoutDirection
+    activeBreakoutCreationBar := bar_index
+    activeBreakoutCreationTime := time
+    breakoutBarIndex := bar_index
+    breakoutBarTime := time
+    activeConsolidationHigh := frozenConsolidationHigh
+    activeConsolidationLow := frozenConsolidationLow
+    activeBreakoutQualityScore := breakoutQualityScore
+    activeBreakoutCandidateQualified := breakoutCandidate
+    consecutiveOutsideCloses := 1
+    followThroughResult := "NONE"
+    followThroughEvaluatedAttemptId := na
+    consolidationFrozen := true
+    breakoutAttemptCount += 1
+    breakoutAttemptId += 1
+else if barstate.isconfirmed and breakoutState == STATE_IDLE and levelApproach
+    breakoutState := STATE_APPROACH
+    breakoutTransitionTrigger := "APPROACH_TOLERANCE"
+else if barstate.isconfirmed and breakoutState == STATE_BREAK and barOffsetFromBreakout == 1
+    followThroughEvaluatedThisBar := true
+    followThroughEvaluatedAttemptId := breakoutAttemptId
+    if strongFollowThrough
+        followThroughResult := "STRONG_FOLLOW_THROUGH"
+        breakoutState := STATE_CONFIRMED
+        breakoutTransitionTrigger := "SECOND_BAR_STRONG_FOLLOW_THROUGH"
+        followThroughEventThisBar := true
+    else if weakFollowThrough
+        followThroughResult := "WEAK_FOLLOW_THROUGH"
+        breakoutState := STATE_WAIT_FT
+        breakoutTransitionTrigger := "SECOND_BAR_WEAK_FOLLOW_THROUGH"
+        followThroughEventThisBar := true
+    else if immediateFailure
+        followThroughResult := "IMMEDIATE_FAILURE"
+        breakoutState := STATE_FAILED
+        breakoutTransitionTrigger := "SECOND_BAR_IMMEDIATE_FAILURE"
+        followThroughEventThisBar := true
+        failedBreakCount += 1
+    else if noFollowThrough
+        followThroughResult := "NO_FOLLOW_THROUGH"
+        breakoutState := STATE_WAIT_FT
+        breakoutTransitionTrigger := "SECOND_BAR_NO_FOLLOW_THROUGH"
+        followThroughEventThisBar := true
+    else
+        followThroughResult := activeBreakoutCandidateQualified ? "UNRESOLVED_SECOND_BAR" : "NOT_A_CANDIDATE"
+        breakoutState := STATE_WAIT_FT
+        breakoutTransitionTrigger := activeBreakoutCandidateQualified ? "SECOND_BAR_UNRESOLVED" : "BREAKOUT_NOT_CANDIDATE"
+        followThroughEventThisBar := true
+else if barstate.isconfirmed and breakoutState == STATE_WAIT_FT
+    bool routeBConfirmed = consecutiveOutsideCloses >= followThroughBars
+    bool routeFailed = breakoutAge <= maxFailureBars and insideOldRange
+    if routeBConfirmed
+        breakoutState := STATE_CONFIRMED
+        breakoutTransitionTrigger := "CONSECUTIVE_OUTSIDE_CLOSES"
+    else if routeFailed
+        breakoutState := STATE_FAILED
+        breakoutTransitionTrigger := "CLOSE_BACK_INSIDE"
+        failedBreakCount += 1
+else if barstate.isconfirmed and breakoutState == STATE_CONFIRMED and breakoutAge >= 1
+    breakoutState := STATE_WAIT_RETEST
+    breakoutTransitionTrigger := "CONFIRMED_TO_RETEST_WAIT"
+else if barstate.isconfirmed and breakoutState == STATE_WAIT_RETEST
+    bool inRetestZone = not na(activeBreakoutLevel) and low <= activeBreakoutLevel + retestTolerance and high >= activeBreakoutLevel - retestTolerance
+    if inRetestZone
+        breakoutState := STATE_RETEST
+        breakoutTransitionTrigger := "PRICE_ENTERED_RETEST_ZONE"
+else if barstate.isconfirmed and breakoutState == STATE_RETEST
+    bool retestHold = outsideActiveLevel and (activeBreakoutDirection > 0 ? bullishRejection or close > open : bearishRejection or close < open)
+    bool retestFail = insideOldRange and (activeBreakoutDirection > 0 ? close < activeBreakoutLevel - retestTolerance : close > activeBreakoutLevel + retestTolerance)
+    if retestHold
+        breakoutState := STATE_RETEST_HOLD
+        breakoutTransitionTrigger := "RETEST_HOLD_EVIDENCE"
+    else if retestFail
+        breakoutState := STATE_RETEST_FAIL
+        breakoutTransitionTrigger := "RETEST_FAIL_EVIDENCE"
+        failedBreakCount += 1
+if breakoutState == STATE_FAILED or breakoutState == STATE_RETEST_FAIL or breakoutState == STATE_EXPIRED
+    consolidationFrozen := false
+
+if breakoutState != breakoutStateBeforeTransition
+    transitionOccurredThisBar := true
+    transitionPreviousState := breakoutStateBeforeTransition
+    transitionNewState := breakoutState
+    transitionTime := time
+    transitionPrice := close
+    transitionTrigger := breakoutTransitionTrigger
+    transitionRelevantLevel := breakoutTransitionLevel
+    transitionTimeframe := timeframe.period
+
+failedBreakRatio = f_safeDiv(failedBreakCount, breakoutAttemptCount, 0.0)
+
+// ============================================================================
+// 09. MOMENTUM CLASSIFICATION
+// 動能分類
+// ============================================================================
+
+directionalProgress = localStructureDirection >= 0 ? bullishProgress : bearishProgress
+previousDirectionalProgress = localStructureDirection >= 0 ? bullishProgress[1] : bearishProgress[1]
+selectedProgressSeries = localStructureDirection >= 0 ? bullishProgress : bearishProgress
+averagePreviousProgress = f_safeDiv(math.sum(selectedProgressSeries[1], progressDecayLookback), progressDecayLookback, 0.0)
+progressDecayRatio = f_safeDiv(directionalProgress, averagePreviousProgress, 0.0)
+recentImpulseHigh = ta.highest(high, momentumLookback)
+recentImpulseLow = ta.lowest(low, momentumLookback)
+impulseDistanceBull = recentImpulseHigh - recentImpulseLow
+pullbackDistanceBull = recentImpulseHigh - low
+pullbackRatioBull = f_safeDiv(pullbackDistanceBull, impulseDistanceBull, 0.0)
+impulseDistanceBear = recentImpulseHigh - recentImpulseLow
+pullbackDistanceBear = high - recentImpulseLow
+pullbackRatioBear = f_safeDiv(pullbackDistanceBear, impulseDistanceBear, 0.0)
+activePullbackRatio = localStructureDirection >= 0 ? pullbackRatioBull : pullbackRatioBear
+oppositeWick = localStructureDirection >= 0 ? upperWickRatio : lowerWickRatio
+importantLevelContextScore = f_boolScore(nearManualSr) + f_boolScore(nearManualFib) + f_boolScore(nearPreviousDay) + f_boolScore(nearPreviousSession) + f_boolScore(nearVahValPoc) + f_boolScore(nearConsolidationBoundary)
+
+momentumAcceleration = directionalProgress > previousDirectionalProgress and rangeExpansionRatio > rangeExpansionRatio[1] and bodyExpansionRatio > bodyExpansionRatio[1] and (localStructureDirection >= 0 ? closeLocation >= accelerationCloseLocation : closeLocation <= 1.0 - accelerationCloseLocation)
+healthyContinuation = localStructureDirection != 0 and (localStructureDirection > 0 ? consecutiveBullishCloses : consecutiveBearishCloses) and activePullbackRatio < deepPullbackRatio and not strongOppositeRejection and directionalProgress > 0
+momentumSlowing = directionalProgress < previousDirectionalProgress and barBody < barBody[1] and oppositeWick > oppositeWick[1] and directionalProgress > 0 and progressDecayRatio <= progressDecayThreshold
+exhaustionCandidate = importantLevelContextScore > 0 and (rangeExpansionRatio >= rangeExpansionThreshold or oppositeWick >= longWickThreshold) and not strongDirectionalClose and not (localStructureDirection > 0 ? close > close[1] : close < close[1])
+reversalCandidate = exhaustionCandidate[1] and (localStructureDirection > 0 ? bearishEngulfing or bearishRejection : bullishEngulfing or bullishRejection) and (localStructureDirection > 0 ? close < latestSwingLow : close > latestSwingHigh) and (localStructureDirection > 0 ? close < close[1] : close > close[1])
+momentumState = momentumAcceleration ? "ACCELERATING" : healthyContinuation ? "HEALTHY_CONTINUATION" : momentumSlowing ? "SLOWING" : exhaustionCandidate ? "EXHAUSTION_CANDIDATE" : reversalCandidate ? "REVERSING" : "UNRESOLVED"
+
+// ============================================================================
+// 10. MARKET REGIME SCORES
+// 市場狀態分數
+// ============================================================================
+
+structureScore = localStructureDirection == 0 ? 0.0 : 1.0
+efficiencyScore = f_norm01(efficiencyRatio, trendEfficiencyMin, trendEfficiencyMax)
+bullishDirectionalCloseRatio = f_safeDiv(math.sum(close > close[1] ? 1.0 : 0.0, structureLookback), structureLookback, 0.0)
+bearishDirectionalCloseRatio = f_safeDiv(math.sum(close < close[1] ? 1.0 : 0.0, structureLookback), structureLookback, 0.0)
+directionalCloseScore = localStructureDirection >= 0 ? bullishDirectionalCloseRatio : bearishDirectionalCloseRatio
+trendWeightTotal = math.max(wStructure + wEfficiency + wAlignment + wDirectional, 0.0001)
+trendScore = (wStructure * structureScore + wEfficiency * efficiencyScore + wAlignment * alignmentScoreAbs + wDirectional * directionalCloseScore) / trendWeightTotal
+
+lowEfficiencyScore = 1.0 - f_clamp(efficiencyRatio, 0.0, 1.0)
+highOverlapScore = f_clamp(averageOverlapRatio, 0.0, 1.0)
+containedRangeScore = 1.0 - f_clamp(normalisedWindowRange / math.max(maxWindowRangeAtr, 0.0001), 0.0, 1.0)
+directionChangeScore = f_clamp(directionChangeRatio, 0.0, 1.0)
+consoWeightTotal = math.max(wConsoEfficiency + wConsoOverlap + wConsoRange + wConsoChange, 0.0001)
+consolidationScore = (wConsoEfficiency * lowEfficiencyScore + wConsoOverlap * highOverlapScore + wConsoRange * containedRangeScore + wConsoChange * directionChangeScore) / consoWeightTotal
+
+alternatingExpansion = candleDirection != 0 and candleDirection[1] != 0 and candleDirection != candleDirection[1] and rangeExpansionRatio >= rangeExpansionThreshold and rangeExpansionRatio[1] >= rangeExpansionThreshold
+alternatingExpansionScore = f_boolScore(alternatingExpansion)
+failedBreakScore = f_clamp(failedBreakRatio, 0.0, 1.0)
+messyWeightTotal = math.max(wMessyChange + wMessyFailedBreak + wMessyConflict + wMessyAlternating, 0.0001)
+messyScore = (wMessyChange * directionChangeScore + wMessyFailedBreak * failedBreakScore + wMessyConflict * timeframeConflictScore + wMessyAlternating * alternatingExpansionScore) / messyWeightTotal
+
+activeBreakoutLifecycle = breakoutState != STATE_IDLE and breakoutState != STATE_EXPIRED
+currentRegime = activeBreakoutLifecycle ? REGIME_BREAKOUT : trendScore >= trendThreshold ? REGIME_TREND : consolidationScore >= consolidationThreshold ? REGIME_CONSOLIDATION : messyScore >= messyThreshold ? REGIME_MESSY : REGIME_TRANSITION
+
+// ============================================================================
+// 11. SESSION CONTEXT
+// 交易時段背景
+// ============================================================================
+
+currentSession = inOverlap ? "LONDON_NEW_YORK_OVERLAP" : inPreLondon ? "PRE_LONDON" : inLondonOpenWindow ? "LONDON_OPEN" : inLondonMidWindow ? "LONDON_MID" : inLondonLateWindow ? "LONDON_LATE" : inNewYorkOpenWindow ? "NEW_YORK_OPEN" : inNewYork ? "NEW_YORK_SESSION" : inPostLondonWindow ? "POST_LONDON_CLOSE_DECLINE" : inAsian ? "ASIAN_OVERNIGHT" : "OUT_OF_DEFINED_SESSIONS"
+var float sessionOpen = na
+var float sessionHigh = na
+var float sessionLow = na
+var float sessionPath = 0.0
+sessionChanged = currentSession != currentSession[1]
+if sessionChanged
+    sessionOpen := open
+    sessionHigh := high
+    sessionLow := low
+    sessionPath := math.abs(close - close[1])
+else
+    sessionHigh := math.max(nz(sessionHigh, high), high)
+    sessionLow := math.min(nz(sessionLow, low), low)
+    sessionPath += math.abs(close - close[1])
+sessionRange = sessionHigh - sessionLow
+sessionNetProgress = math.abs(close - sessionOpen)
+sessionEfficiency = f_safeDiv(sessionNetProgress, sessionPath, 0.0)
+overnightConsolidation = inAsian and consolidationCandidate and f_safeDiv(sessionRange, atrValue, 999.0) <= maxWindowRangeAtr
+closeMomentumDecline = ta.sma(barRange, closeMomentumLookback) < ta.sma(barRange[closeMomentumComparisonOffset], closeMomentumLookback) and progressDecayRatio <= progressDecayThreshold and volume <= volume[1]
+
+// ============================================================================
+// 12. MANUAL NEWS CONTEXT
+// 人手新聞背景
+// ============================================================================
+
+newsBeforeMs = newsWindowBeforeMinutes * 60 * 1000
+newsAfterMs = newsWindowAfterMinutes * 60 * 1000
+preNewsWindow = newsActive and time >= newsEventTime - newsBeforeMs and time < newsEventTime
+newsReleaseWindow = newsActive and time >= newsEventTime and time <= newsEventTime + newsAfterMs
+postNewsWindow = newsActive and time > newsEventTime + newsAfterMs
+
+var float preNewsClose = na
+var float reactionExtreme = na
+var int observedReactionDirection = 0
+var float initialReactionDistance = na
+
+if newsActive and time < newsEventTime
+    preNewsClose := close
+if newsActive and time >= newsEventTime and observedReactionDirection == 0 and not na(preNewsClose)
+    observedReactionDirection := close > preNewsClose ? 1 : close < preNewsClose ? -1 : 0
+    reactionExtreme := close
+    initialReactionDistance := math.abs(close - preNewsClose)
+if newsActive and time >= newsEventTime and observedReactionDirection != 0
+    reactionExtreme := na(reactionExtreme) ? close : observedReactionDirection > 0 ? math.max(reactionExtreme, high) : math.min(reactionExtreme, low)
+
+reactionDistance = not na(preNewsClose) ? math.abs(close - preNewsClose) : na
+normalisedReaction = f_safeDiv(reactionDistance, atrValue, na)
+expectedDirectionValue = newsExpectedDirection == "Bullish" ? 1 : newsExpectedDirection == "Bearish" ? -1 : 0
+newsDivergence = newsActive and expectedDirectionValue != 0 and observedReactionDirection != 0 and expectedDirectionValue != observedReactionDirection
+fadeDistance = not na(reactionExtreme) ? math.abs(close - reactionExtreme) : na
+fadeRatio = f_safeDiv(fadeDistance, initialReactionDistance, na)
+newsFollowThrough = newsReleaseWindow and observedReactionDirection != 0 and (observedReactionDirection > 0 ? close > preNewsClose and close > close[1] : close < preNewsClose and close < close[1])
+newsFade = newsReleaseWindow and not na(fadeRatio) and fadeRatio >= newsFadeThreshold
+divergencePersistence = f_safeDiv(math.sum(newsDivergence ? 1.0 : 0.0, newsDivergencePersistenceBars), newsDivergencePersistenceBars, 0.0)
+newsState = not newsActive ? "INACTIVE" : preNewsWindow ? "PRE_NEWS_WINDOW" : newsReleaseWindow ? newsFollowThrough ? "NEWS_FOLLOW_THROUGH" : newsFade ? "NEWS_FADE" : "NEWS_RELEASE_WINDOW" : postNewsWindow ? "POST_NEWS_REACTION" : "SCHEDULED"
+
+// ============================================================================
+// 13. STATE TRANSITION ENGINE
+// 狀態轉換引擎
+// ============================================================================
+
+var string previousGlobalState = REGIME_TRANSITION
+globalState = currentRegime + "|" + breakoutState + "|" + momentumState
+regimeOrMomentumTransition = bar_index > 0 and not transitionOccurredThisBar and (currentRegime != currentRegime[1] or momentumState != momentumState[1])
+stateTransition = transitionOccurredThisBar or regimeOrMomentumTransition
+transitionEvidence = transitionOccurredThisBar ? transitionTrigger : currentRegime != currentRegime[1] ? "REGIME_SCORE_CHANGE" : momentumState != momentumState[1] ? "MOMENTUM_EVIDENCE_CHANGE" : "NONE"
+if stateTransition
+    previousGlobalState := bar_index > 0 ? globalState[1] : REGIME_TRANSITION
+    if regimeOrMomentumTransition
+        transitionOccurredThisBar := true
+        transitionPreviousState := previousGlobalState
+        transitionNewState := globalState
+        transitionTime := time
+        transitionPrice := close
+        transitionTrigger := transitionEvidence
+        transitionRelevantLevel := activeBreakoutLevel
+        transitionTimeframe := timeframe.period
+
+// ============================================================================
+// 14. VISUAL OUTPUT WITH OBJECT LIMITS
+// 圖表輸出與物件數量限制
+// ============================================================================
+
+plot(showManualLevels and manualResistance1Enabled ? manualResistance1 : na, "Manual Resistance 1", color=color.new(color.red, 20), linewidth=1, style=plot.style_linebr)
+plot(showManualLevels and manualResistance2Enabled ? manualResistance2 : na, "Manual Resistance 2", color=color.new(color.red, 35), linewidth=1, style=plot.style_linebr)
+plot(showManualLevels and manualResistance3Enabled ? manualResistance3 : na, "Manual Resistance 3", color=color.new(color.red, 50), linewidth=1, style=plot.style_linebr)
+plot(showManualLevels and manualSupport1Enabled ? manualSupport1 : na, "Manual Support 1", color=color.new(color.green, 20), linewidth=1, style=plot.style_linebr)
+plot(showManualLevels and manualSupport2Enabled ? manualSupport2 : na, "Manual Support 2", color=color.new(color.green, 35), linewidth=1, style=plot.style_linebr)
+plot(showManualLevels and manualSupport3Enabled ? manualSupport3 : na, "Manual Support 3", color=color.new(color.green, 50), linewidth=1, style=plot.style_linebr)
+plot(showFib and fibEnabled ? fib382 : na, "Manual Fib 38.2", color=color.new(color.orange, 25), linewidth=1, style=plot.style_linebr)
+plot(showFib and fibEnabled ? fib500 : na, "Manual Fib 50.0", color=color.new(color.orange, 10), linewidth=1, style=plot.style_linebr)
+plot(showFib and fibEnabled ? fib618 : na, "Manual Fib 61.8", color=color.new(color.orange, 25), linewidth=1, style=plot.style_linebr)
+plot(showPreviousLevels ? previousDayHigh : na, "Previous Day High", color=color.new(color.blue, 25), linewidth=1, style=plot.style_linebr)
+plot(showPreviousLevels ? previousDayLow : na, "Previous Day Low", color=color.new(color.blue, 25), linewidth=1, style=plot.style_linebr)
+plot(showPreviousLevels ? previousSessionHigh : na, "Previous Session High", color=color.new(color.purple, 35), linewidth=1, style=plot.style_linebr)
+plot(showPreviousLevels ? previousSessionLow : na, "Previous Session Low", color=color.new(color.purple, 35), linewidth=1, style=plot.style_linebr)
+plot(showConsolidation ? frozenConsolidationHigh : na, "Frozen Consolidation High", color=color.new(color.yellow, 0), linewidth=2, style=plot.style_linebr)
+plot(showConsolidation ? frozenConsolidationLow : na, "Frozen Consolidation Low", color=color.new(color.yellow, 0), linewidth=2, style=plot.style_linebr)
+plot(activeBreakoutLevel, "Active Breakout Level", color=color.new(color.white, 0), linewidth=2, style=plot.style_linebr)
+plot(not na(activeBreakoutLevel) ? activeBreakoutLevel + retestTolerance : na, "Retest Zone Upper", color=color.new(color.gray, 60), linewidth=1, style=plot.style_linebr)
+plot(not na(activeBreakoutLevel) ? activeBreakoutLevel - retestTolerance : na, "Retest Zone Lower", color=color.new(color.gray, 60), linewidth=1, style=plot.style_linebr)
+
+plotshape(showSwings and not na(confirmedSwingHigh), "Confirmed Swing High", shape.triangledown, location.abovebar, color=color.new(color.red, 0), offset=-swingRight, size=size.tiny)
+plotshape(showSwings and not na(confirmedSwingLow), "Confirmed Swing Low", shape.triangleup, location.belowbar, color=color.new(color.green, 0), offset=-swingRight, size=size.tiny)
+
+var array<label> managedLabels = array.new<label>()
+f_addLabel(bool enabled, float price, string labelText, color labelColor, styleValue) =>
+    if enabled
+        label newLabel = label.new(bar_index, price, labelText, style=styleValue, color=labelColor, textcolor=color.white, size=size.tiny)
+        array.push(managedLabels, newLabel)
+        if array.size(managedLabels) > 80
+            label.delete(array.shift(managedLabels))
+
+if showCandleLabels and currentCandlePattern != "NONE" and barstate.isconfirmed
+    f_addLabel(true, high, currentCandlePattern, color.new(color.teal, 10), label.style_label_down)
+if showBreakoutLabels and breakoutState != previousBreakoutState and barstate.isconfirmed
+    f_addLabel(true, close, breakoutState, color.new(color.orange, 10), breakoutState == STATE_FAILED or breakoutState == STATE_RETEST_FAIL ? label.style_label_down : label.style_label_up)
+if showStateTransitions and stateTransition and barstate.isconfirmed
+    f_addLabel(true, close, transitionPreviousState + " -> " + transitionNewState + "\n" + transitionTrigger, color.new(color.gray, 20), label.style_label_left)
+
+// ============================================================================
+// 15. DEBUG TABLE
+// 除錯表格
+// ============================================================================
+
+f_fmt(float value) =>
+    na(value) ? "na" : str.tostring(value, "#.####")
+
+f_jsonFloat(float value) =>
+    na(value) ? "null" : str.tostring(value, "#.####")
+
+f_jsonInt(int value) =>
+    na(value) ? "null" : str.tostring(value)
+
+var table debugTable = table.new(position.top_right, 2, 32, border_width=1)
+f_tableRow(int row, string name, string value) =>
+    table.cell(debugTable, 0, row, name, text_color=color.white, bgcolor=color.new(color.black, 15), text_size=size.tiny)
+    table.cell(debugTable, 1, row, value, text_color=color.white, bgcolor=color.new(color.black, 35), text_size=size.tiny)
+
+if showDebugTable and barstate.islast
+    f_tableRow(0, "Current Regime / 目前狀態", currentRegime)
+    f_tableRow(1, "Trend Score / 趨勢分", f_fmt(trendScore) + " S:" + f_fmt(structureScore) + " E:" + f_fmt(efficiencyScore) + " A:" + f_fmt(alignmentScoreAbs) + " D:" + f_fmt(directionalCloseScore))
+    f_tableRow(2, "Consolidation Score / 整固分", f_fmt(consolidationScore) + " LE:" + f_fmt(lowEfficiencyScore) + " O:" + f_fmt(highOverlapScore) + " R:" + f_fmt(containedRangeScore) + " C:" + f_fmt(directionChangeScore))
+    f_tableRow(3, "Messy Score / 混亂分", f_fmt(messyScore) + " DC:" + f_fmt(directionChangeScore) + " FB:" + f_fmt(failedBreakScore) + " TF:" + f_fmt(timeframeConflictScore) + " AE:" + f_fmt(alternatingExpansionScore))
+    f_tableRow(4, "M5 Structure / M5 結構", f_dirText(m5Direction) + " O:" + f_fmt(m5ConfirmedOpen) + " H:" + f_fmt(m5ConfirmedHigh) + " L:" + f_fmt(m5ConfirmedLow) + " C:" + f_fmt(m5ConfirmedClose) + " V:" + f_fmt(m5ConfirmedVolume) + " ER:" + f_fmt(m5Efficiency))
+    f_tableRow(5, "M15 Structure / M15 結構", f_dirText(m15Direction) + " O:" + f_fmt(m15ConfirmedOpen) + " H:" + f_fmt(m15ConfirmedHigh) + " L:" + f_fmt(m15ConfirmedLow) + " C:" + f_fmt(m15ConfirmedClose) + " V:" + f_fmt(m15ConfirmedVolume) + " ER:" + f_fmt(m15Efficiency))
+    f_tableRow(6, "M30 Structure / M30 結構", f_dirText(m30Direction) + " O:" + f_fmt(m30ConfirmedOpen) + " H:" + f_fmt(m30ConfirmedHigh) + " L:" + f_fmt(m30ConfirmedLow) + " C:" + f_fmt(m30ConfirmedClose) + " V:" + f_fmt(m30ConfirmedVolume) + " ER:" + f_fmt(m30Efficiency))
+    f_tableRow(7, "H1 Structure / H1 結構", f_dirText(h1Direction) + " O:" + f_fmt(h1ConfirmedOpen) + " H:" + f_fmt(h1ConfirmedHigh) + " L:" + f_fmt(h1ConfirmedLow) + " C:" + f_fmt(h1ConfirmedClose) + " V:" + f_fmt(h1ConfirmedVolume) + " ER:" + f_fmt(h1Efficiency))
+    f_tableRow(8, "Alignment Score / 一致分", f_fmt(alignmentScoreSigned))
+    f_tableRow(9, "Momentum State / 動能", momentumState)
+    f_tableRow(10, "Efficiency Ratio / 效率", f_fmt(efficiencyRatio))
+    f_tableRow(11, "Average Overlap Ratio / 平均重疊", f_fmt(averageOverlapRatio))
+    f_tableRow(12, "Direction Change Ratio / 方向轉換", f_fmt(directionChangeRatio))
+    f_tableRow(13, "Current Candle Pattern / 蠟燭形態", currentCandlePattern + " BR:" + f_fmt(bodyRatio) + " CL:" + f_fmt(closeLocation) + " RER:" + f_fmt(rangeExpansionRatio))
+    f_tableRow(14, "Breakout State / 突破狀態", breakoutState + " Attempt:" + str.tostring(breakoutAttemptId))
+    f_tableRow(15, "Breakout Bar / 突破K線", "Level:" + f_fmt(activeBreakoutLevel) + " Src:" + activeBreakoutSource + " Idx:" + str.tostring(breakoutBarIndex) + " Time:" + str.tostring(breakoutBarTime) + " Offset:" + str.tostring(barOffsetFromBreakout) + " ResetPending:" + str.tostring(lifecycleResetPending))
+    f_tableRow(16, "Breakout Quality / 突破質素", "Candidate:" + str.tostring(activeBreakoutCandidateQualified) + " Q:" + f_fmt(activeBreakoutQualityScore) + " Live:" + f_fmt(breakoutQualityScore) + " B:" + f_fmt(bodyQuality) + " C:" + f_fmt(closeQuality) + " D:" + f_fmt(breakDistanceQuality) + " X:" + f_fmt(expansionQuality) + " W:" + f_fmt(oppositeWickPenalty))
+    f_tableRow(17, "Follow-Through / 跟進", "Eval:" + str.tostring(followThroughEvaluatedThisBar) + " Result:" + followThroughResult + " Outside:" + str.tostring(consecutiveOutsideCloses))
+    f_tableRow(18, "Nearest Manual Level / 最近人手水平", nearestManualSource + " " + f_fmt(nearestManualLevel) + " D_ATR:" + f_fmt(f_safeDiv(nearestManualDistance, atrValue, na)))
+    f_tableRow(19, "Previous Day H/L / 前日高低", f_fmt(previousDayHigh) + " / " + f_fmt(previousDayLow))
+    f_tableRow(20, "Previous Session H/L / 前時段高低", f_fmt(previousSessionHigh) + " / " + f_fmt(previousSessionLow))
+    f_tableRow(21, "Consolidation H/L / 整固高低", f_fmt(frozenConsolidationHigh) + " / " + f_fmt(frozenConsolidationLow) + " Frozen:" + str.tostring(consolidationFrozen))
+    f_tableRow(22, "VAH/VAL/POC / 價值區", f_fmt(vah) + " / " + f_fmt(val) + " / " + f_fmt(poc) + " " + profileStatus)
+    f_tableRow(23, "Current Session / 目前時段", currentSession + " ER:" + f_fmt(sessionEfficiency))
+    f_tableRow(24, "News State / 新聞狀態", newsState + " " + newsCurrency + " " + newsImpact)
+    f_tableRow(25, "News Evidence / 新聞證據", "Dir:" + str.tostring(observedReactionDirection) + " Dist:" + f_fmt(normalisedReaction) + " Fade:" + f_fmt(fadeRatio) + " Div:" + str.tostring(newsDivergence))
+    f_tableRow(26, "Important Level Score / 重要水平分", str.tostring(importantLevelContextScore))
+    f_tableRow(27, "Candle Equations / 蠟燭公式", "Range:" + f_fmt(barRange) + " Body:" + f_fmt(barBody) + " UW:" + f_fmt(upperWickRatio) + " LW:" + f_fmt(lowerWickRatio))
+    f_tableRow(28, "Profile Approx / Profile 估算", profileMode == "Pine Approximation" ? STATUS_PARTIAL + " Bins:" + str.tostring(profileBins) + " VA%:" + f_fmt(profileValueAreaPct) + " Alloc:TYPICAL_PRICE_BIN" : STATUS_IMPLEMENTED)
+    f_tableRow(29, "Session R/NP / 時段範圍進展", "R:" + f_fmt(sessionRange) + " NP:" + f_fmt(sessionNetProgress))
+    f_tableRow(30, "Break Counts / 突破次數", "Attempts:" + str.tostring(breakoutAttemptCount) + " Failed:" + str.tostring(failedBreakCount) + " Ratio:" + f_fmt(failedBreakRatio))
+    f_tableRow(31, "Transition Record / 轉換記錄", "Occurred:" + str.tostring(transitionOccurredThisBar) + " " + transitionPreviousState + " -> " + transitionNewState + " T:" + str.tostring(transitionTime) + " P:" + f_fmt(transitionPrice) + " E:" + transitionTrigger + " L:" + f_fmt(transitionRelevantLevel) + " TF:" + transitionTimeframe)
+
+// ============================================================================
+// 16. CHECKPOINT ALERTS AND JSON OUTPUT
+// 檢查點警報與 JSON 輸出
+// ============================================================================
+
+checkpointSessionChange = sessionChanged
+checkpointApproach = breakoutState == STATE_APPROACH and previousBreakoutState != STATE_APPROACH
+checkpointLevelBreak = breakoutState == STATE_BREAK and previousBreakoutState != STATE_BREAK
+checkpointFollowThrough = followThroughEventThisBar and breakoutAttemptId != followThroughAlertedAttemptId
+checkpointFailedBreakout = breakoutState == STATE_FAILED and previousBreakoutState != STATE_FAILED
+checkpointRetestStart = breakoutState == STATE_RETEST and previousBreakoutState != STATE_RETEST
+checkpointRetestHold = breakoutState == STATE_RETEST_HOLD and previousBreakoutState != STATE_RETEST_HOLD
+checkpointRetestFail = breakoutState == STATE_RETEST_FAIL and previousBreakoutState != STATE_RETEST_FAIL
+checkpointExpired = breakoutState == STATE_EXPIRED and previousBreakoutState != STATE_EXPIRED
+checkpointLifecycleReset = transitionOccurredThisBar and transitionTrigger == "LIFECYCLE_RESET"
+checkpointBullishEngulfing = bullishEngulfing
+checkpointBearishEngulfing = bearishEngulfing
+checkpointStrongRejection = strongRejection
+checkpointMomentumAcceleration = momentumState == "ACCELERATING" and momentumState[1] != "ACCELERATING"
+checkpointMomentumSlowing = momentumState == "SLOWING" and momentumState[1] != "SLOWING"
+checkpointExhaustion = momentumState == "EXHAUSTION_CANDIDATE" and momentumState[1] != "EXHAUSTION_CANDIDATE"
+checkpointRegimeChange = currentRegime != currentRegime[1]
+checkpointNewsWindowStart = newsState == "PRE_NEWS_WINDOW" and newsState[1] != "PRE_NEWS_WINDOW"
+checkpointNewsFollowThrough = newsFollowThrough and not newsFollowThrough[1]
+checkpointNewsFade = newsFade and not newsFade[1]
+
+checkpointEvent = checkpointLevelBreak ? "LEVEL_BREAK" : checkpointFollowThrough ? "SECOND_BAR_FOLLOW_THROUGH_RESULT" : checkpointFailedBreakout ? "FAILED_BREAKOUT" : checkpointRetestStart ? "RETEST_START" : checkpointRetestHold ? "RETEST_HOLD" : checkpointRetestFail ? "RETEST_FAIL" : checkpointExpired ? "BREAKOUT_EXPIRED" : checkpointLifecycleReset ? "BREAKOUT_LIFECYCLE_RESET" : checkpointApproach ? "APPROACH_TO_IMPORTANT_LEVEL" : checkpointSessionChange ? "SESSION_CHANGE" : checkpointBullishEngulfing ? "BULLISH_ENGULFING" : checkpointBearishEngulfing ? "BEARISH_ENGULFING" : checkpointStrongRejection ? "STRONG_REJECTION" : checkpointMomentumAcceleration ? "MOMENTUM_ACCELERATION" : checkpointMomentumSlowing ? "MOMENTUM_SLOWING" : checkpointExhaustion ? "EXHAUSTION_CANDIDATE" : checkpointRegimeChange ? "REGIME_CHANGE" : checkpointNewsWindowStart ? "NEWS_WINDOW_START" : checkpointNewsFollowThrough ? "NEWS_FOLLOW_THROUGH" : checkpointNewsFade ? "NEWS_FADE" : "NONE"
+
+checkpointTriggered = checkpointEvent != "NONE"
+var int lastAlertBar = na
+var string lastAlertEvent = "NONE"
+var int lastAlertAttemptId = na
+alertAlreadySent = lastAlertBar == bar_index and lastAlertEvent == checkpointEvent and lastAlertAttemptId == breakoutAttemptId
+alertAllowed = enableAlerts and checkpointTriggered and not alertAlreadySent and (confirmedAlertsOnly ? barstate.isconfirmed : true)
+
+jsonOutput = "{" +
+     "\"event\":\"" + checkpointEvent + "\"," +
+     "\"symbol\":\"" + syminfo.ticker + "\"," +
+     "\"chart_timeframe\":\"" + timeframe.period + "\"," +
+     "\"timestamp\":" + str.tostring(time) + "," +
+     "\"breakout_attempt_id\":" + str.tostring(breakoutAttemptId) + "," +
+     "\"breakout_bar_index\":" + f_jsonInt(breakoutBarIndex) + "," +
+     "\"breakout_bar_time\":" + f_jsonInt(breakoutBarTime) + "," +
+     "\"bar_offset_from_breakout\":" + f_jsonInt(barOffsetFromBreakout) + "," +
+     "\"transition_occurred_this_bar\":" + str.tostring(transitionOccurredThisBar) + "," +
+     "\"follow_through_evaluated_this_bar\":" + str.tostring(followThroughEvaluatedThisBar) + "," +
+     "\"lifecycle_reset_pending\":" + str.tostring(lifecycleResetPending) + "," +
+     "\"session\":\"" + currentSession + "\"," +
+     "\"regime\":\"" + currentRegime + "\"," +
+     "\"structure\":{\"m5\":{\"direction\":\"" + f_dirText(m5Direction) + "\",\"open\":" + f_jsonFloat(m5ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m5ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m5ConfirmedLow) + ",\"close\":" + f_jsonFloat(m5ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m5ConfirmedVolume) + ",\"time\":" + f_jsonInt(m5ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(m5SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m5SwingLow) + ",\"efficiency\":" + f_jsonFloat(m5Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m5BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m5BearCloseRatio) + "}," +
+     "\"m15\":{\"direction\":\"" + f_dirText(m15Direction) + "\",\"open\":" + f_jsonFloat(m15ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m15ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m15ConfirmedLow) + ",\"close\":" + f_jsonFloat(m15ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m15ConfirmedVolume) + ",\"time\":" + f_jsonInt(m15ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(m15SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m15SwingLow) + ",\"efficiency\":" + f_jsonFloat(m15Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m15BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m15BearCloseRatio) + "}," +
+     "\"m30\":{\"direction\":\"" + f_dirText(m30Direction) + "\",\"open\":" + f_jsonFloat(m30ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m30ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m30ConfirmedLow) + ",\"close\":" + f_jsonFloat(m30ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m30ConfirmedVolume) + ",\"time\":" + f_jsonInt(m30ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(m30SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m30SwingLow) + ",\"efficiency\":" + f_jsonFloat(m30Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m30BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m30BearCloseRatio) + "}," +
+     "\"h1\":{\"direction\":\"" + f_dirText(h1Direction) + "\",\"open\":" + f_jsonFloat(h1ConfirmedOpen) + ",\"high\":" + f_jsonFloat(h1ConfirmedHigh) + ",\"low\":" + f_jsonFloat(h1ConfirmedLow) + ",\"close\":" + f_jsonFloat(h1ConfirmedClose) + ",\"volume\":" + f_jsonFloat(h1ConfirmedVolume) + ",\"time\":" + f_jsonInt(h1ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(h1SwingHigh) + ",\"swing_low\":" + f_jsonFloat(h1SwingLow) + ",\"efficiency\":" + f_jsonFloat(h1Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(h1BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(h1BearCloseRatio) + "}}," +
+     "\"momentum\":\"" + momentumState + "\"," +
+     "\"breakout\":{\"level\":" + f_jsonFloat(activeBreakoutLevel) + ",\"level_type\":\"" + activeBreakoutSource + "\",\"direction\":" + str.tostring(activeBreakoutDirection) + ",\"state\":\"" + breakoutState + "\",\"creation_time\":" + f_jsonInt(activeBreakoutCreationTime) + ",\"age_bars\":" + str.tostring(breakoutAge) + ",\"consecutive_outside_closes\":" + str.tostring(consecutiveOutsideCloses) + ",\"quality_score\":" + f_jsonFloat(activeBreakoutQualityScore) + ",\"live_quality_score\":" + f_jsonFloat(breakoutQualityScore) + "}," +
+     "\"candle\":{\"body_ratio\":" + f_jsonFloat(bodyRatio) + ",\"close_location\":" + f_jsonFloat(closeLocation) + ",\"range_expansion_ratio\":" + f_jsonFloat(rangeExpansionRatio) + "}," +
+     "\"scores\":{\"trend\":" + f_jsonFloat(trendScore) + ",\"consolidation\":" + f_jsonFloat(consolidationScore) + ",\"messy\":" + f_jsonFloat(messyScore) + ",\"alignment\":" + f_jsonFloat(alignmentScoreSigned) + "}," +
+     "\"levels\":{\"nearest_manual\":{\"source\":\"" + nearestManualSource + "\",\"level\":" + f_jsonFloat(nearestManualLevel) + ",\"distance_atr\":" + f_jsonFloat(f_safeDiv(nearestManualDistance, atrValue, na)) + "},\"previous_day\":{\"high\":" + f_jsonFloat(previousDayHigh) + ",\"low\":" + f_jsonFloat(previousDayLow) + "},\"previous_session\":{\"high\":" + f_jsonFloat(previousSessionHigh) + ",\"low\":" + f_jsonFloat(previousSessionLow) + "},\"consolidation\":{\"high\":" + f_jsonFloat(frozenConsolidationHigh) + ",\"low\":" + f_jsonFloat(frozenConsolidationLow) + ",\"active_high\":" + f_jsonFloat(activeConsolidationHigh) + ",\"active_low\":" + f_jsonFloat(activeConsolidationLow) + "},\"value_area\":{\"vah\":" + f_jsonFloat(vah) + ",\"val\":" + f_jsonFloat(val) + ",\"poc\":" + f_jsonFloat(poc) + ",\"status\":\"" + profileStatus + "\"}}," +
+     "\"transition\":{\"previous_state\":\"" + transitionPreviousState + "\",\"new_state\":\"" + transitionNewState + "\",\"time\":" + f_jsonInt(transitionTime) + ",\"price\":" + f_jsonFloat(transitionPrice) + ",\"trigger\":\"" + transitionTrigger + "\",\"relevant_level\":" + f_jsonFloat(transitionRelevantLevel) + ",\"timeframe\":\"" + transitionTimeframe + "\"}," +
+     "\"news\":{\"state\":\"" + newsState + "\",\"currency\":\"" + newsCurrency + "\",\"impact\":\"" + newsImpact + "\",\"expected_direction\":\"" + newsExpectedDirection + "\",\"observed_direction\":" + str.tostring(observedReactionDirection) + ",\"normalised_reaction\":" + f_jsonFloat(normalisedReaction) + ",\"fade_ratio\":" + f_jsonFloat(fadeRatio) + ",\"divergence\":" + str.tostring(newsDivergence) + "}" +
+     "}"
+
+if alertAllowed and lastAlertBar != bar_index
+    alert(jsonOutput, alert.freq_once_per_bar_close)
+    lastAlertBar := bar_index
+    lastAlertEvent := checkpointEvent
+    lastAlertAttemptId := breakoutAttemptId
+    if checkpointFollowThrough
+        followThroughAlertedAttemptId := breakoutAttemptId
+        followThroughAlertedEvent := checkpointEvent
+        followThroughAlertedBar := bar_index

@@ -57,6 +57,9 @@ const string INTERP_CONFLICTING = "CONFLICTING_EVIDENCE"
 const string INTERP_INSUFFICIENT = "INSUFFICIENT_EVIDENCE"
 const string INTERP_RULE_UNDEFINED = "RULE_NOT_DEFINED"
 
+const string EXPORT_SCHEMA_VERSION = "export_layer_v1"
+const string INDICATOR_VERSION = "Alterf_Manual_Trade_Analyzer_v0_2"
+
 const int DEFAULT_PROFILE_START_TIME = 1767225600000
 const int DEFAULT_PROFILE_END_TIME = 1767312000000
 const int DEFAULT_NEWS_EVENT_TIME = 1767274200000
@@ -239,6 +242,33 @@ f_dirText(int direction) =>
 f_boolScore(bool condition) =>
     condition ? 1.0 : 0.0
 
+f_boolCode(bool condition) =>
+    condition ? 1 : 0
+
+f_directionCode(string direction) =>
+    direction == DIR_BULL ? 1 : direction == DIR_BEAR ? -1 : direction == DIR_NEUTRAL ? 0 : 99
+
+f_breakoutStateCode(string state) =>
+    state == STATE_IDLE ? 0 : state == STATE_APPROACH ? 1 : state == STATE_BREAK ? 2 : state == STATE_WAIT_FT ? 3 : state == STATE_CONFIRMED ? 4 : state == STATE_FAILED ? 5 : state == STATE_WAIT_RETEST ? 6 : state == STATE_RETEST ? 7 : state == STATE_RETEST_HOLD ? 8 : state == STATE_RETEST_FAIL ? 9 : state == STATE_EXPIRED ? 10 : 99
+
+f_interpretationCode(string interpretation) =>
+    interpretation == INTERP_NONE ? 0 : interpretation == INTERP_HEALTHY ? 1 : interpretation == INTERP_MESSY ? 2 : interpretation == INTERP_BO_STRONG ? 3 : interpretation == INTERP_BO_WEAK ? 4 : interpretation == INTERP_FAILED_BO ? 5 : interpretation == INTERP_RETEST_HOLD ? 6 : interpretation == INTERP_RETEST_FAIL ? 7 : interpretation == INTERP_PULLBACK_ORDERLY ? 8 : interpretation == INTERP_PULLBACK_MESSY ? 9 : interpretation == INTERP_MOMENTUM_ACCEL ? 10 : interpretation == INTERP_MOMENTUM_SLOW ? 11 : interpretation == INTERP_EXHAUSTION ? 12 : interpretation == INTERP_SECOND_PUSH ? 13 : interpretation == INTERP_FAILED_CONT ? 14 : interpretation == INTERP_CONFLICTING ? 15 : interpretation == INTERP_INSUFFICIENT ? 16 : interpretation == INTERP_RULE_UNDEFINED ? 17 : 99
+
+f_regimeCode(string regime) =>
+    regime == REGIME_TREND ? 1 : regime == REGIME_CONSOLIDATION ? 2 : regime == REGIME_BREAKOUT ? 3 : regime == REGIME_MESSY ? 4 : regime == REGIME_TRANSITION ? 5 : 99
+
+f_momentumCode(string state) =>
+    state == "ACCELERATING" ? 1 : state == "HEALTHY_CONTINUATION" ? 2 : state == "SLOWING" ? 3 : state == "EXHAUSTION_CANDIDATE" ? 4 : state == "REVERSING" ? 5 : state == "UNRESOLVED" ? 0 : 99
+
+f_sessionCode(string session) =>
+    session == "OUT_OF_DEFINED_SESSIONS" ? 0 : session == "PRE_LONDON" ? 1 : session == "LONDON_OPEN" ? 2 : session == "LONDON_MID" ? 3 : session == "LONDON_LATE" ? 4 : session == "LONDON_NEW_YORK_OVERLAP" ? 5 : session == "NEW_YORK_OPEN" ? 6 : session == "NEW_YORK_SESSION" ? 7 : session == "POST_LONDON_CLOSE_DECLINE" ? 8 : session == "ASIAN_OVERNIGHT" ? 9 : 99
+
+f_profileStatusCode(string status) =>
+    status == STATUS_IMPLEMENTED ? 1 : status == STATUS_PARTIAL ? 2 : status == STATUS_PLACEHOLDER ? 3 : status == STATUS_NOT_POSSIBLE ? 4 : 99
+
+f_jsonString(string value) =>
+    "\"" + str.replace_all(str.replace_all(str.replace_all(str.replace_all(value, "\\", "\\\\"), "\"", "\\\""), "\n", "\\n"), "\r", "\\r") + "\""
+
 barRange = high - low
 barBody = math.abs(close - open)
 upperWick = high - math.max(open, close)
@@ -287,12 +317,12 @@ f_tfMetrics() =>
     float efficiency = f_safeDiv(math.abs(close[1] - close[structureLookback + 1]), path, 0.0)
     float bullishCloseRatio = f_safeDiv(math.sum(close > close[1] ? 1.0 : 0.0, structureLookback)[1], structureLookback, 0.0)
     float bearishCloseRatio = f_safeDiv(math.sum(close < close[1] ? 1.0 : 0.0, structureLookback)[1], structureLookback, 0.0)
-    [open[1], high[1], low[1], close[1], volume[1], time[1], structureDirection, latestHigh, latestLow, efficiency, bullishCloseRatio, bearishCloseRatio]
+    [open[1], high[1], low[1], close[1], volume[1], time[1], structureDirection, latestHigh, latestLow, efficiency, bullishCloseRatio, bearishCloseRatio, high[1] - low[1], ta.atr(atrLength)[1]]
 
-[m5ConfirmedOpen, m5ConfirmedHigh, m5ConfirmedLow, m5ConfirmedClose, m5ConfirmedVolume, m5ConfirmedTime, m5Direction, m5SwingHigh, m5SwingLow, m5Efficiency, m5BullCloseRatio, m5BearCloseRatio] = request.security(syminfo.tickerid, "5", f_tfMetrics(), lookahead=barmerge.lookahead_off)
-[m15ConfirmedOpen, m15ConfirmedHigh, m15ConfirmedLow, m15ConfirmedClose, m15ConfirmedVolume, m15ConfirmedTime, m15Direction, m15SwingHigh, m15SwingLow, m15Efficiency, m15BullCloseRatio, m15BearCloseRatio] = request.security(syminfo.tickerid, "15", f_tfMetrics(), lookahead=barmerge.lookahead_off)
-[m30ConfirmedOpen, m30ConfirmedHigh, m30ConfirmedLow, m30ConfirmedClose, m30ConfirmedVolume, m30ConfirmedTime, m30Direction, m30SwingHigh, m30SwingLow, m30Efficiency, m30BullCloseRatio, m30BearCloseRatio] = request.security(syminfo.tickerid, "30", f_tfMetrics(), lookahead=barmerge.lookahead_off)
-[h1ConfirmedOpen, h1ConfirmedHigh, h1ConfirmedLow, h1ConfirmedClose, h1ConfirmedVolume, h1ConfirmedTime, h1Direction, h1SwingHigh, h1SwingLow, h1Efficiency, h1BullCloseRatio, h1BearCloseRatio] = request.security(syminfo.tickerid, "60", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+[m5ConfirmedOpen, m5ConfirmedHigh, m5ConfirmedLow, m5ConfirmedClose, m5ConfirmedVolume, m5ConfirmedTime, m5Direction, m5SwingHigh, m5SwingLow, m5Efficiency, m5BullCloseRatio, m5BearCloseRatio, m5Range, m5Atr] = request.security(syminfo.tickerid, "5", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+[m15ConfirmedOpen, m15ConfirmedHigh, m15ConfirmedLow, m15ConfirmedClose, m15ConfirmedVolume, m15ConfirmedTime, m15Direction, m15SwingHigh, m15SwingLow, m15Efficiency, m15BullCloseRatio, m15BearCloseRatio, m15Range, m15Atr] = request.security(syminfo.tickerid, "15", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+[m30ConfirmedOpen, m30ConfirmedHigh, m30ConfirmedLow, m30ConfirmedClose, m30ConfirmedVolume, m30ConfirmedTime, m30Direction, m30SwingHigh, m30SwingLow, m30Efficiency, m30BullCloseRatio, m30BearCloseRatio, m30Range, m30Atr] = request.security(syminfo.tickerid, "30", f_tfMetrics(), lookahead=barmerge.lookahead_off)
+[h1ConfirmedOpen, h1ConfirmedHigh, h1ConfirmedLow, h1ConfirmedClose, h1ConfirmedVolume, h1ConfirmedTime, h1Direction, h1SwingHigh, h1SwingLow, h1Efficiency, h1BullCloseRatio, h1BearCloseRatio, h1Range, h1Atr] = request.security(syminfo.tickerid, "60", f_tfMetrics(), lookahead=barmerge.lookahead_off)
 
 alignmentWeightTotal = math.max(m5Weight + m15Weight + m30Weight + h1Weight, 0.0001)
 alignmentRaw = m5Weight * m5Direction + m15Weight * m15Direction + m30Weight * m30Direction + h1Weight * h1Direction
@@ -1279,19 +1309,40 @@ var int lastAlertBar = na
 var string lastAlertEvent = "NONE"
 var int lastAlertAttemptId = na
 alertAlreadySent = lastAlertBar == bar_index and lastAlertEvent == checkpointEvent and lastAlertAttemptId == breakoutAttemptId
-alertAllowed = enableAlerts and checkpointTriggered and not alertAlreadySent and (confirmedAlertsOnly ? barstate.isconfirmed : true)
+alertAllowed = barstate.isrealtime and barstate.isconfirmed
+
+exportBreakoutStateCode = f_breakoutStateCode(breakoutState)
+exportInterpretationCode = f_interpretationCode(currentInterpretation)
+exportInterpretationDirectionCode = f_directionCode(currentInterpretationDirection)
+exportRegimeCode = f_regimeCode(currentRegime)
+exportMomentumCode = f_momentumCode(momentumState)
+exportSessionCode = f_sessionCode(currentSession)
+exportSessionDirectionCode = f_directionCode(sessionDirection)
+exportProfileStatusCode = f_profileStatusCode(profileStatus)
+exportNearestManualDistanceAtr = f_safeDiv(nearestManualDistance, atrValue, na)
+exportAtrNormalisedRange = f_safeDiv(barRange, atrValue, na)
 
 jsonOutput = "{" +
-     "\"event\":\"" + checkpointEvent + "\"," +
-     "\"primary_event\":\"" + primaryEvent + "\"," +
-     "\"secondary_events\":\"" + secondaryEvents + "\"," +
-     "\"symbol\":\"" + syminfo.ticker + "\"," +
-     "\"chart_timeframe\":\"" + timeframe.period + "\"," +
+     "\"schema_version\":" + f_jsonString(EXPORT_SCHEMA_VERSION) + "," +
+     "\"indicator_version\":" + f_jsonString(INDICATOR_VERSION) + "," +
+     "\"event\":" + f_jsonString(checkpointEvent) + "," +
+     "\"primary_event\":" + f_jsonString(primaryEvent) + "," +
+     "\"secondary_events\":" + f_jsonString(secondaryEvents) + "," +
+     "\"checkpoint_event\":" + f_jsonString(checkpointEvent) + "," +
+     "\"symbol\":" + f_jsonString(syminfo.ticker) + "," +
+     "\"exchange\":" + f_jsonString(syminfo.prefix) + "," +
+     "\"timeframe\":" + f_jsonString(timeframe.period) + "," +
+     "\"chart_timeframe\":" + f_jsonString(timeframe.period) + "," +
+     "\"bar_index\":" + str.tostring(bar_index) + "," +
+     "\"bar_time\":" + str.tostring(time) + "," +
+     "\"confirmed\":" + str.tostring(barstate.isconfirmed) + "," +
      "\"timestamp\":" + str.tostring(time) + "," +
-     "\"interpretation\":{\"name\":\"" + currentInterpretation + "\",\"direction\":\"" + currentInterpretationDirection + "\",\"rule_status\":\"" + currentInterpretationRuleStatus + "\",\"confidence\":" + f_jsonFloat(currentInterpretationConfidence) + ",\"created_time\":" + f_jsonInt(interpretationCreationTime) + ",\"created_bar_index\":" + f_jsonInt(interpretationCreationBarIndex) + ",\"updated_time\":" + f_jsonInt(interpretationUpdatedTime) + ",\"updated_bar_index\":" + f_jsonInt(interpretationUpdatedBarIndex) + ",\"changed_this_bar\":" + str.tostring(interpretationChangedThisBar) + "}," +
-     "\"evidence\":{\"supporting\":[\"" + support_reason_1 + "\",\"" + support_reason_2 + "\",\"" + support_reason_3 + "\"],\"contradicting\":[\"" + contradiction_reason_1 + "\",\"" + contradiction_reason_2 + "\",\"" + contradiction_reason_3 + "\"],\"missing\":[\"" + missing_evidence_1 + "\",\"" + missing_evidence_2 + "\"]}," +
+     "\"ohlcv\":{\"open\":" + f_jsonFloat(open) + ",\"high\":" + f_jsonFloat(high) + ",\"low\":" + f_jsonFloat(low) + ",\"close\":" + f_jsonFloat(close) + ",\"volume\":" + f_jsonFloat(volume) + "}," +
+     "\"interpretation\":{\"name\":" + f_jsonString(currentInterpretation) + ",\"direction\":" + f_jsonString(currentInterpretationDirection) + ",\"rule_status\":" + f_jsonString(currentInterpretationRuleStatus) + ",\"confidence\":" + f_jsonFloat(currentInterpretationConfidence) + ",\"created_time\":" + f_jsonInt(interpretationCreationTime) + ",\"created_bar_index\":" + f_jsonInt(interpretationCreationBarIndex) + ",\"updated_time\":" + f_jsonInt(interpretationUpdatedTime) + ",\"updated_bar_index\":" + f_jsonInt(interpretationUpdatedBarIndex) + ",\"changed_this_bar\":" + str.tostring(interpretationChangedThisBar) + "}," +
+     "\"evidence\":{\"supporting\":[" + f_jsonString(support_reason_1) + "," + f_jsonString(support_reason_2) + "," + f_jsonString(support_reason_3) + "],\"contradicting\":[" + f_jsonString(contradiction_reason_1) + "," + f_jsonString(contradiction_reason_2) + "," + f_jsonString(contradiction_reason_3) + "],\"missing\":[" + f_jsonString(missing_evidence_1) + "," + f_jsonString(missing_evidence_2) + "]}," +
      "\"raw_candle_evidence\":{\"expansion\":" + str.tostring(expansionCandle) + ",\"bullish_engulfing\":" + str.tostring(bullishEngulfing) + ",\"bearish_engulfing\":" + str.tostring(bearishEngulfing) + ",\"bullish_rejection\":" + str.tostring(bullishRejection) + ",\"bearish_rejection\":" + str.tostring(bearishRejection) + ",\"inside_bar\":" + str.tostring(insideBar) + ",\"outside_bar\":" + str.tostring(outsideBar) + ",\"doji\":" + str.tostring(dojiLikeHesitation) + ",\"small_body\":" + str.tostring(smallBodyHesitation) + ",\"weak_close\":" + str.tostring(weakCloseEvidence) + ",\"strong_close\":" + str.tostring(strongCloseEvidence) + "}," +
-     "\"session_context\":{\"phase\":\"" + currentSession + "\",\"minutes_from_start\":" + f_jsonInt(minutesFromSessionStart) + ",\"session_open\":" + f_jsonFloat(sessionOpen) + ",\"session_high\":" + f_jsonFloat(sessionHigh) + ",\"session_low\":" + f_jsonFloat(sessionLow) + ",\"range_atr\":" + f_jsonFloat(sessionRangeAtr) + ",\"net_progress_atr\":" + f_jsonFloat(sessionNetProgressAtr) + ",\"efficiency\":" + f_jsonFloat(sessionEfficiency) + ",\"direction\":\"" + sessionDirection + "\",\"high_swept\":" + str.tostring(sessionHighSwept) + ",\"low_swept\":" + str.tostring(sessionLowSwept) + ",\"overnight_consolidation\":" + str.tostring(overnightConsolidation) + ",\"london_breaks_asian_high\":" + str.tostring(londonBreaksAsianHigh) + ",\"london_breaks_asian_low\":" + str.tostring(londonBreaksAsianLow) + ",\"post_london_momentum_decline\":" + str.tostring(postLondonMomentumDecline) + "}," +
+     "\"context_flags\":{\"near_manual_level\":" + str.tostring(evidence_near_manual_level) + ",\"near_previous_day\":" + str.tostring(evidence_near_previous_day_level) + ",\"near_previous_session\":" + str.tostring(evidence_near_previous_session_level) + ",\"near_consolidation_boundary\":" + str.tostring(evidence_near_consolidation_boundary) + ",\"near_value_area\":" + str.tostring(evidence_near_value_area_level) + ",\"during_breakout\":" + str.tostring(evidence_during_breakout_lifecycle) + ",\"after_expansion\":" + str.tostring(evidence_after_expansion) + ",\"after_failed_push\":" + str.tostring(evidence_after_failed_push) + ",\"with_mtf_direction\":" + str.tostring(evidence_with_mtf_direction) + ",\"against_mtf_direction\":" + str.tostring(evidence_against_mtf_direction) + ",\"progress_accelerating\":" + str.tostring(evidence_progress_accelerating) + ",\"progress_declining\":" + str.tostring(evidence_progress_declining) + ",\"range_expanding\":" + str.tostring(evidence_range_expanding) + ",\"range_contracting\":" + str.tostring(evidence_range_contracting) + ",\"close_quality_improving\":" + str.tostring(evidence_close_quality_improving) + ",\"close_quality_weakening\":" + str.tostring(evidence_close_quality_weakening) + ",\"session_open_phase\":" + str.tostring(evidence_session_open_phase) + ",\"session_late_phase\":" + str.tostring(evidence_session_late_phase) + ",\"at_important_level\":" + str.tostring(evidence_at_important_level) + ",\"at_decision_checkpoint\":" + str.tostring(evidence_at_decision_checkpoint) + ",\"session_phase\":" + f_jsonString(currentSession) + "}," +
+     "\"session_context\":{\"phase\":" + f_jsonString(currentSession) + ",\"minutes_from_start\":" + f_jsonInt(minutesFromSessionStart) + ",\"session_open\":" + f_jsonFloat(sessionOpen) + ",\"session_high\":" + f_jsonFloat(sessionHigh) + ",\"session_low\":" + f_jsonFloat(sessionLow) + ",\"range_atr\":" + f_jsonFloat(sessionRangeAtr) + ",\"net_progress_atr\":" + f_jsonFloat(sessionNetProgressAtr) + ",\"efficiency\":" + f_jsonFloat(sessionEfficiency) + ",\"direction\":" + f_jsonString(sessionDirection) + ",\"high_swept\":" + str.tostring(sessionHighSwept) + ",\"low_swept\":" + str.tostring(sessionLowSwept) + ",\"overnight_consolidation\":" + str.tostring(overnightConsolidation) + ",\"london_breaks_asian_high\":" + str.tostring(londonBreaksAsianHigh) + ",\"london_breaks_asian_low\":" + str.tostring(londonBreaksAsianLow) + ",\"post_london_momentum_decline\":" + str.tostring(postLondonMomentumDecline) + "}," +
      "\"breakout_attempt_id\":" + str.tostring(breakoutAttemptId) + "," +
      "\"breakout_bar_index\":" + f_jsonInt(breakoutBarIndex) + "," +
      "\"breakout_bar_time\":" + f_jsonInt(breakoutBarTime) + "," +
@@ -1299,19 +1350,20 @@ jsonOutput = "{" +
      "\"transition_occurred_this_bar\":" + str.tostring(transitionOccurredThisBar) + "," +
      "\"follow_through_evaluated_this_bar\":" + str.tostring(followThroughEvaluatedThisBar) + "," +
      "\"lifecycle_reset_pending\":" + str.tostring(lifecycleResetPending) + "," +
-     "\"session\":\"" + currentSession + "\"," +
-     "\"regime\":\"" + currentRegime + "\"," +
-     "\"structure\":{\"m5\":{\"direction\":\"" + f_dirText(m5Direction) + "\",\"open\":" + f_jsonFloat(m5ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m5ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m5ConfirmedLow) + ",\"close\":" + f_jsonFloat(m5ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m5ConfirmedVolume) + ",\"time\":" + f_jsonInt(m5ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(m5SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m5SwingLow) + ",\"efficiency\":" + f_jsonFloat(m5Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m5BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m5BearCloseRatio) + "}," +
-     "\"m15\":{\"direction\":\"" + f_dirText(m15Direction) + "\",\"open\":" + f_jsonFloat(m15ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m15ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m15ConfirmedLow) + ",\"close\":" + f_jsonFloat(m15ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m15ConfirmedVolume) + ",\"time\":" + f_jsonInt(m15ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(m15SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m15SwingLow) + ",\"efficiency\":" + f_jsonFloat(m15Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m15BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m15BearCloseRatio) + "}," +
-     "\"m30\":{\"direction\":\"" + f_dirText(m30Direction) + "\",\"open\":" + f_jsonFloat(m30ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m30ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m30ConfirmedLow) + ",\"close\":" + f_jsonFloat(m30ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m30ConfirmedVolume) + ",\"time\":" + f_jsonInt(m30ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(m30SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m30SwingLow) + ",\"efficiency\":" + f_jsonFloat(m30Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m30BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m30BearCloseRatio) + "}," +
-     "\"h1\":{\"direction\":\"" + f_dirText(h1Direction) + "\",\"open\":" + f_jsonFloat(h1ConfirmedOpen) + ",\"high\":" + f_jsonFloat(h1ConfirmedHigh) + ",\"low\":" + f_jsonFloat(h1ConfirmedLow) + ",\"close\":" + f_jsonFloat(h1ConfirmedClose) + ",\"volume\":" + f_jsonFloat(h1ConfirmedVolume) + ",\"time\":" + f_jsonInt(h1ConfirmedTime) + ",\"swing_high\":" + f_jsonFloat(h1SwingHigh) + ",\"swing_low\":" + f_jsonFloat(h1SwingLow) + ",\"efficiency\":" + f_jsonFloat(h1Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(h1BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(h1BearCloseRatio) + "}}," +
-     "\"momentum\":\"" + momentumState + "\"," +
-     "\"breakout\":{\"level\":" + f_jsonFloat(activeBreakoutLevel) + ",\"level_type\":\"" + activeBreakoutSource + "\",\"direction\":" + str.tostring(activeBreakoutDirection) + ",\"state\":\"" + breakoutState + "\",\"creation_time\":" + f_jsonInt(activeBreakoutCreationTime) + ",\"age_bars\":" + str.tostring(breakoutAge) + ",\"consecutive_outside_closes\":" + str.tostring(consecutiveOutsideCloses) + ",\"quality_score\":" + f_jsonFloat(activeBreakoutQualityScore) + ",\"live_quality_score\":" + f_jsonFloat(breakoutQualityScore) + "}," +
-     "\"candle\":{\"body_ratio\":" + f_jsonFloat(bodyRatio) + ",\"close_location\":" + f_jsonFloat(closeLocation) + ",\"range_expansion_ratio\":" + f_jsonFloat(rangeExpansionRatio) + "}," +
-     "\"scores\":{\"trend\":" + f_jsonFloat(trendScore) + ",\"consolidation\":" + f_jsonFloat(consolidationScore) + ",\"messy\":" + f_jsonFloat(messyScore) + ",\"alignment\":" + f_jsonFloat(alignmentScoreSigned) + "}," +
-     "\"levels\":{\"nearest_manual\":{\"source\":\"" + nearestManualSource + "\",\"level\":" + f_jsonFloat(nearestManualLevel) + ",\"distance_atr\":" + f_jsonFloat(f_safeDiv(nearestManualDistance, atrValue, na)) + "},\"previous_day\":{\"high\":" + f_jsonFloat(previousDayHigh) + ",\"low\":" + f_jsonFloat(previousDayLow) + "},\"previous_session\":{\"high\":" + f_jsonFloat(previousSessionHigh) + ",\"low\":" + f_jsonFloat(previousSessionLow) + "},\"consolidation\":{\"high\":" + f_jsonFloat(frozenConsolidationHigh) + ",\"low\":" + f_jsonFloat(frozenConsolidationLow) + ",\"active_high\":" + f_jsonFloat(activeConsolidationHigh) + ",\"active_low\":" + f_jsonFloat(activeConsolidationLow) + "},\"value_area\":{\"vah\":" + f_jsonFloat(vah) + ",\"val\":" + f_jsonFloat(val) + ",\"poc\":" + f_jsonFloat(poc) + ",\"status\":\"" + profileStatus + "\"}}," +
-     "\"transition\":{\"previous_state\":\"" + transitionPreviousState + "\",\"new_state\":\"" + transitionNewState + "\",\"time\":" + f_jsonInt(transitionTime) + ",\"price\":" + f_jsonFloat(transitionPrice) + ",\"trigger\":\"" + transitionTrigger + "\",\"relevant_level\":" + f_jsonFloat(transitionRelevantLevel) + ",\"timeframe\":\"" + transitionTimeframe + "\"}," +
-     "\"news\":{\"state\":\"" + newsState + "\",\"currency\":\"" + newsCurrency + "\",\"impact\":\"" + newsImpact + "\",\"expected_direction\":\"" + newsExpectedDirection + "\",\"observed_direction\":" + str.tostring(observedReactionDirection) + ",\"normalised_reaction\":" + f_jsonFloat(normalisedReaction) + ",\"fade_ratio\":" + f_jsonFloat(fadeRatio) + ",\"divergence\":" + str.tostring(newsDivergence) + "}" +
+     "\"session\":" + f_jsonString(currentSession) + "," +
+     "\"regime\":" + f_jsonString(currentRegime) + "," +
+     "\"structure\":{\"m5\":{\"direction\":" + f_jsonString(f_dirText(m5Direction)) + ",\"trend\":" + str.tostring(m5Direction) + ",\"open\":" + f_jsonFloat(m5ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m5ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m5ConfirmedLow) + ",\"close\":" + f_jsonFloat(m5ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m5ConfirmedVolume) + ",\"time\":" + f_jsonInt(m5ConfirmedTime) + ",\"range\":" + f_jsonFloat(m5Range) + ",\"atr\":" + f_jsonFloat(m5Atr) + ",\"swing_high\":" + f_jsonFloat(m5SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m5SwingLow) + ",\"efficiency\":" + f_jsonFloat(m5Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m5BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m5BearCloseRatio) + "}," +
+     "\"m15\":{\"direction\":" + f_jsonString(f_dirText(m15Direction)) + ",\"trend\":" + str.tostring(m15Direction) + ",\"open\":" + f_jsonFloat(m15ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m15ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m15ConfirmedLow) + ",\"close\":" + f_jsonFloat(m15ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m15ConfirmedVolume) + ",\"time\":" + f_jsonInt(m15ConfirmedTime) + ",\"range\":" + f_jsonFloat(m15Range) + ",\"atr\":" + f_jsonFloat(m15Atr) + ",\"swing_high\":" + f_jsonFloat(m15SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m15SwingLow) + ",\"efficiency\":" + f_jsonFloat(m15Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m15BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m15BearCloseRatio) + "}," +
+     "\"m30\":{\"direction\":" + f_jsonString(f_dirText(m30Direction)) + ",\"trend\":" + str.tostring(m30Direction) + ",\"open\":" + f_jsonFloat(m30ConfirmedOpen) + ",\"high\":" + f_jsonFloat(m30ConfirmedHigh) + ",\"low\":" + f_jsonFloat(m30ConfirmedLow) + ",\"close\":" + f_jsonFloat(m30ConfirmedClose) + ",\"volume\":" + f_jsonFloat(m30ConfirmedVolume) + ",\"time\":" + f_jsonInt(m30ConfirmedTime) + ",\"range\":" + f_jsonFloat(m30Range) + ",\"atr\":" + f_jsonFloat(m30Atr) + ",\"swing_high\":" + f_jsonFloat(m30SwingHigh) + ",\"swing_low\":" + f_jsonFloat(m30SwingLow) + ",\"efficiency\":" + f_jsonFloat(m30Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(m30BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(m30BearCloseRatio) + "}," +
+     "\"h1\":{\"direction\":" + f_jsonString(f_dirText(h1Direction)) + ",\"trend\":" + str.tostring(h1Direction) + ",\"open\":" + f_jsonFloat(h1ConfirmedOpen) + ",\"high\":" + f_jsonFloat(h1ConfirmedHigh) + ",\"low\":" + f_jsonFloat(h1ConfirmedLow) + ",\"close\":" + f_jsonFloat(h1ConfirmedClose) + ",\"volume\":" + f_jsonFloat(h1ConfirmedVolume) + ",\"time\":" + f_jsonInt(h1ConfirmedTime) + ",\"range\":" + f_jsonFloat(h1Range) + ",\"atr\":" + f_jsonFloat(h1Atr) + ",\"swing_high\":" + f_jsonFloat(h1SwingHigh) + ",\"swing_low\":" + f_jsonFloat(h1SwingLow) + ",\"efficiency\":" + f_jsonFloat(h1Efficiency) + ",\"bullish_close_ratio\":" + f_jsonFloat(h1BullCloseRatio) + ",\"bearish_close_ratio\":" + f_jsonFloat(h1BearCloseRatio) + "}}," +
+     "\"momentum\":" + f_jsonString(momentumState) + "," +
+     "\"enum_codes\":{\"breakout_state\":" + str.tostring(exportBreakoutStateCode) + ",\"interpretation\":" + str.tostring(exportInterpretationCode) + ",\"interpretation_direction\":" + str.tostring(exportInterpretationDirectionCode) + ",\"market_regime\":" + str.tostring(exportRegimeCode) + ",\"momentum_state\":" + str.tostring(exportMomentumCode) + ",\"session_phase\":" + str.tostring(exportSessionCode) + ",\"session_direction\":" + str.tostring(exportSessionDirectionCode) + ",\"profile_status\":" + str.tostring(exportProfileStatusCode) + "}," +
+     "\"breakout\":{\"level\":" + f_jsonFloat(activeBreakoutLevel) + ",\"level_type\":" + f_jsonString(activeBreakoutSource) + ",\"direction\":" + str.tostring(activeBreakoutDirection) + ",\"state\":" + f_jsonString(breakoutState) + ",\"attempt_id\":" + str.tostring(breakoutAttemptId) + ",\"breakout_high\":" + f_jsonFloat(activeBreakoutDirection > 0 ? activeBreakoutLevel : activeConsolidationHigh) + ",\"breakout_low\":" + f_jsonFloat(activeBreakoutDirection < 0 ? activeBreakoutLevel : activeConsolidationLow) + ",\"candidate\":" + str.tostring(breakoutCandidate) + ",\"active_candidate\":" + str.tostring(activeBreakoutCandidateQualified) + ",\"follow_through\":" + f_jsonString(followThroughResult) + ",\"failed_breakout\":" + str.tostring(breakoutState == STATE_FAILED or breakoutState == STATE_RETEST_FAIL) + ",\"expired\":" + str.tostring(breakoutState == STATE_EXPIRED) + ",\"creation_time\":" + f_jsonInt(activeBreakoutCreationTime) + ",\"age_bars\":" + str.tostring(breakoutAge) + ",\"consecutive_outside_closes\":" + str.tostring(consecutiveOutsideCloses) + ",\"quality_score\":" + f_jsonFloat(activeBreakoutQualityScore) + ",\"live_quality_score\":" + f_jsonFloat(breakoutQualityScore) + "}," +
+     "\"candle\":{\"body_size\":" + f_jsonFloat(barBody) + ",\"body_ratio\":" + f_jsonFloat(bodyRatio) + ",\"body_expansion_ratio\":" + f_jsonFloat(bodyExpansionRatio) + ",\"range\":" + f_jsonFloat(barRange) + ",\"range_expansion_ratio\":" + f_jsonFloat(rangeExpansionRatio) + ",\"upper_wick\":" + f_jsonFloat(upperWick) + ",\"lower_wick\":" + f_jsonFloat(lowerWick) + ",\"upper_wick_ratio\":" + f_jsonFloat(upperWickRatio) + ",\"lower_wick_ratio\":" + f_jsonFloat(lowerWickRatio) + ",\"close_location\":" + f_jsonFloat(closeLocation) + ",\"atr\":" + f_jsonFloat(atrValue) + ",\"atr_normalised_range\":" + f_jsonFloat(exportAtrNormalisedRange) + "}," +
+     "\"scores\":{\"trend\":" + f_jsonFloat(trendScore) + ",\"structure\":" + f_jsonFloat(structureScore) + ",\"efficiency\":" + f_jsonFloat(efficiencyScore) + ",\"alignment_abs\":" + f_jsonFloat(alignmentScoreAbs) + ",\"alignment\":" + f_jsonFloat(alignmentScoreSigned) + ",\"timeframe_conflict\":" + f_jsonFloat(timeframeConflictScore) + ",\"directional_close\":" + f_jsonFloat(directionalCloseScore) + ",\"consolidation\":" + f_jsonFloat(consolidationScore) + ",\"low_efficiency\":" + f_jsonFloat(lowEfficiencyScore) + ",\"high_overlap\":" + f_jsonFloat(highOverlapScore) + ",\"contained_range\":" + f_jsonFloat(containedRangeScore) + ",\"direction_change\":" + f_jsonFloat(directionChangeScore) + ",\"messy\":" + f_jsonFloat(messyScore) + ",\"alternating_expansion\":" + f_jsonFloat(alternatingExpansionScore) + ",\"failed_break\":" + f_jsonFloat(failedBreakScore) + ",\"breakout_quality_raw\":" + f_jsonFloat(breakoutQualityRaw) + ",\"breakout_quality\":" + f_jsonFloat(breakoutQualityScore) + ",\"active_breakout_quality\":" + f_jsonFloat(activeBreakoutQualityScore) + ",\"body_quality\":" + f_jsonFloat(bodyQuality) + ",\"close_quality\":" + f_jsonFloat(closeQuality) + ",\"break_distance_quality\":" + f_jsonFloat(breakDistanceQuality) + ",\"expansion_quality\":" + f_jsonFloat(expansionQuality) + ",\"opposite_wick_penalty\":" + f_jsonFloat(oppositeWickPenalty) + ",\"support_evidence_count\":" + f_jsonFloat(supportEvidenceCount) + ",\"contradiction_evidence_count\":" + f_jsonFloat(contradictionEvidenceCount) + ",\"important_level_context\":" + f_jsonFloat(importantLevelContextScore) + ",\"candidate_confidence_raw\":" + f_jsonFloat(candidateConfidenceRaw) + ",\"interpretation_candidate_confidence\":" + f_jsonFloat(interpretationCandidateConfidence) + ",\"confidence\":" + f_jsonFloat(currentInterpretationConfidence) + "}," +
+     "\"levels\":{\"manual\":{\"resistance_1\":" + f_jsonFloat(manualResistance1Enabled ? manualResistance1 : na) + ",\"resistance_2\":" + f_jsonFloat(manualResistance2Enabled ? manualResistance2 : na) + ",\"resistance_3\":" + f_jsonFloat(manualResistance3Enabled ? manualResistance3 : na) + ",\"support_1\":" + f_jsonFloat(manualSupport1Enabled ? manualSupport1 : na) + ",\"support_2\":" + f_jsonFloat(manualSupport2Enabled ? manualSupport2 : na) + ",\"support_3\":" + f_jsonFloat(manualSupport3Enabled ? manualSupport3 : na) + ",\"fib_382\":" + f_jsonFloat(fibEnabled ? fib382 : na) + ",\"fib_500\":" + f_jsonFloat(fibEnabled ? fib500 : na) + ",\"fib_618\":" + f_jsonFloat(fibEnabled ? fib618 : na) + "},\"nearest_manual\":{\"source\":" + f_jsonString(nearestManualSource) + ",\"level\":" + f_jsonFloat(nearestManualLevel) + ",\"distance\":" + f_jsonFloat(nearestManualDistance) + ",\"distance_atr\":" + f_jsonFloat(exportNearestManualDistanceAtr) + "},\"nearest_level\":{\"source\":" + f_jsonString(selectedBreakoutSource) + ",\"level\":" + f_jsonFloat(selectedBreakoutLevel) + ",\"distance\":" + f_jsonFloat(selectedDistance) + ",\"distance_atr\":" + f_jsonFloat(f_safeDiv(selectedDistance, atrValue, na)) + "},\"previous_day\":{\"high\":" + f_jsonFloat(previousDayHigh) + ",\"low\":" + f_jsonFloat(previousDayLow) + "},\"previous_session\":{\"high\":" + f_jsonFloat(previousSessionHigh) + ",\"low\":" + f_jsonFloat(previousSessionLow) + "},\"consolidation\":{\"high\":" + f_jsonFloat(frozenConsolidationHigh) + ",\"low\":" + f_jsonFloat(frozenConsolidationLow) + ",\"active_high\":" + f_jsonFloat(activeConsolidationHigh) + ",\"active_low\":" + f_jsonFloat(activeConsolidationLow) + "},\"value_area\":{\"vah\":" + f_jsonFloat(vah) + ",\"val\":" + f_jsonFloat(val) + ",\"poc\":" + f_jsonFloat(poc) + ",\"status\":" + f_jsonString(profileStatus) + "}}," +
+     "\"transition\":{\"previous_state\":" + f_jsonString(transitionPreviousState) + ",\"new_state\":" + f_jsonString(transitionNewState) + ",\"time\":" + f_jsonInt(transitionTime) + ",\"price\":" + f_jsonFloat(transitionPrice) + ",\"trigger\":" + f_jsonString(transitionTrigger) + ",\"relevant_level\":" + f_jsonFloat(transitionRelevantLevel) + ",\"timeframe\":" + f_jsonString(transitionTimeframe) + "}," +
+     "\"news\":{\"state\":" + f_jsonString(newsState) + ",\"currency\":" + f_jsonString(newsCurrency) + ",\"impact\":" + f_jsonString(newsImpact) + ",\"expected_direction\":" + f_jsonString(newsExpectedDirection) + ",\"observed_direction\":" + str.tostring(observedReactionDirection) + ",\"normalised_reaction\":" + f_jsonFloat(normalisedReaction) + ",\"fade_ratio\":" + f_jsonFloat(fadeRatio) + ",\"divergence\":" + str.tostring(newsDivergence) + "}" +
      "}"
 
 if alertAllowed and lastAlertBar != bar_index
@@ -1323,3 +1375,53 @@ if alertAllowed and lastAlertBar != bar_index
         followThroughAlertedAttemptId := breakoutAttemptId
         followThroughAlertedEvent := checkpointEvent
         followThroughAlertedBar := bar_index
+
+// ============================================================================
+// 17. EXPORT LAYER V1 HIDDEN CHART-DATA COLUMNS
+// Export Chart Data only; all plots are invisible on the chart.
+// ============================================================================
+
+plot(open, "export_open", display=display.none)
+plot(high, "export_high", display=display.none)
+plot(low, "export_low", display=display.none)
+plot(close, "export_close", display=display.none)
+plot(volume, "export_volume", display=display.none)
+plot(atrValue, "export_atr", display=display.none)
+plot(bodyRatio, "export_body_ratio", display=display.none)
+plot(bodyExpansionRatio, "export_body_expansion_ratio", display=display.none)
+plot(rangeExpansionRatio, "export_range_expansion_ratio", display=display.none)
+plot(closeLocation, "export_close_location", display=display.none)
+plot(exportAtrNormalisedRange, "export_atr_normalised_range", display=display.none)
+plot(exportNearestManualDistanceAtr, "export_nearest_manual_distance_atr", display=display.none)
+plot(trendScore, "export_score_trend", display=display.none)
+plot(structureScore, "export_score_structure", display=display.none)
+plot(efficiencyScore, "export_score_efficiency", display=display.none)
+plot(alignmentScoreSigned, "export_score_alignment_signed", display=display.none)
+plot(timeframeConflictScore, "export_score_timeframe_conflict", display=display.none)
+plot(directionalCloseScore, "export_score_directional_close", display=display.none)
+plot(consolidationScore, "export_score_consolidation", display=display.none)
+plot(lowEfficiencyScore, "export_score_low_efficiency", display=display.none)
+plot(highOverlapScore, "export_score_high_overlap", display=display.none)
+plot(containedRangeScore, "export_score_contained_range", display=display.none)
+plot(directionChangeScore, "export_score_direction_change", display=display.none)
+plot(messyScore, "export_score_messy", display=display.none)
+plot(alternatingExpansionScore, "export_score_alternating_expansion", display=display.none)
+plot(failedBreakScore, "export_score_failed_break", display=display.none)
+plot(breakoutQualityScore, "export_score_breakout_quality", display=display.none)
+plot(bodyQuality, "export_score_body_quality", display=display.none)
+plot(closeQuality, "export_score_close_quality", display=display.none)
+plot(breakDistanceQuality, "export_score_break_distance_quality", display=display.none)
+plot(expansionQuality, "export_score_expansion_quality", display=display.none)
+plot(oppositeWickPenalty, "export_score_opposite_wick_penalty", display=display.none)
+plot(supportEvidenceCount, "export_support_evidence_count", display=display.none)
+plot(contradictionEvidenceCount, "export_contradiction_evidence_count", display=display.none)
+plot(currentInterpretationConfidence, "export_confidence", display=display.none)
+plot(exportBreakoutStateCode, "export_enum_breakout_state", display=display.none)
+plot(exportInterpretationCode, "export_enum_interpretation", display=display.none)
+plot(exportRegimeCode, "export_enum_market_regime", display=display.none)
+plot(exportMomentumCode, "export_enum_momentum_state", display=display.none)
+plot(exportSessionCode, "export_enum_session_phase", display=display.none)
+plot(m5Direction, "export_mtf_m5_trend", display=display.none)
+plot(m15Direction, "export_mtf_m15_trend", display=display.none)
+plot(m30Direction, "export_mtf_m30_trend", display=display.none)
+plot(h1Direction, "export_mtf_h1_trend", display=display.none)

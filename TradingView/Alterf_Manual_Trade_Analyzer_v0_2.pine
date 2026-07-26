@@ -267,7 +267,7 @@ f_profileStatusCode(string status) =>
     status == STATUS_IMPLEMENTED ? 1 : status == STATUS_PARTIAL ? 2 : status == STATUS_PLACEHOLDER ? 3 : status == STATUS_NOT_POSSIBLE ? 4 : 99
 
 f_jsonString(string value) =>
-    "\"" + str.replace_all(str.replace_all(str.replace_all(str.replace_all(value, "\\", "\\\\"), "\"", "\\\""), "\n", "\\n"), "\r", "\\r") + "\""
+    "\"" + str.replace_all(str.replace_all(str.replace_all(str.replace_all(value, "\\", "\\\\"), "\"", "\\\""), "\n", "\\n"), "\t", "\\t") + "\""
 
 barRange = high - low
 barBody = math.abs(close - open)
@@ -1366,7 +1366,7 @@ jsonOutput = "{" +
      "\"news\":{\"state\":" + f_jsonString(newsState) + ",\"currency\":" + f_jsonString(newsCurrency) + ",\"impact\":" + f_jsonString(newsImpact) + ",\"expected_direction\":" + f_jsonString(newsExpectedDirection) + ",\"observed_direction\":" + str.tostring(observedReactionDirection) + ",\"normalised_reaction\":" + f_jsonFloat(normalisedReaction) + ",\"fade_ratio\":" + f_jsonFloat(fadeRatio) + ",\"divergence\":" + str.tostring(newsDivergence) + "}" +
      "}"
 
-if alertAllowed and lastAlertBar != bar_index
+if alertAllowed and (na(lastAlertBar) or lastAlertBar != bar_index)
     alert(jsonOutput, alert.freq_once_per_bar_close)
     lastAlertBar := bar_index
     lastAlertEvent := checkpointEvent
